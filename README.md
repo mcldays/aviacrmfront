@@ -1,8 +1,18 @@
-# vuets-vuetify
+# aviacrmfront
 
-## Project setup
+## Установить 
 ```
 npm install
+```
+
+## Необходимые пакеты
+```
+Для стабильной работы необходим NodeJs версии не ниже 14 и VueJs не ниже 2 версии. 
+Сначала скаиваем npm, потом npm install vue 
+Далее открываем проект в любом IDE или редакторе и вводим npm install
+Ждем завершения установки. 
+Для того чтобы скомпилировать в дебаг версии - npm run serve 
+Для того чтобы скомпилировать в прод версии - npm run build
 ```
 
 ### Compiles and hot-reloads for development

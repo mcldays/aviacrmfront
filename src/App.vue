@@ -1,17 +1,16 @@
 <template>
   <v-app>
-
+    <GlobalDisplayForm/>
   </v-app>
 </template>
 
 <script lang="ts">
 
-import HelloWorld from './components/HelloWorld.vue';
 import { Component, Prop, Vue } from 'vue-property-decorator'
-
+import GlobalDisplayForm from './components/GlobalForms/GlobalDisplayForm.vue'
 @Component({
   components:{
-    HelloWorld
+    GlobalDisplayForm
   }
 })
 export default class App extends Vue {}

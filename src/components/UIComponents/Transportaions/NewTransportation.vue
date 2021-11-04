@@ -201,6 +201,113 @@
         </v-container>
         <v-container>
           <v-card-title>Места</v-card-title>
+          <v-data-table
+              :headers="headers"
+              :items="places"
+              :items-per-page="5"
+              class="elevation-1"
+          >
+            <template v-slot:top>
+              <v-toolbar
+                  flat
+              >
+                <v-toolbar-title>Добавить место</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn
+                  icon
+                  @click="dialogNewPlace=true"
+              >
+                <v-icon>
+                  mdi-plus
+                </v-icon>
+              </v-btn>
+                <v-dialog
+                    v-model="dialogNewPlace"
+                    max-width="500px"
+                >
+                  <v-card>
+                    <v-card-title>
+                      <span class="text-h5">Добавить место</span>
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <v-row>
+                          <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                          >
+                            <v-text-field
+                                v-model="place.Seats"
+                                label="Кол-во мест"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                          >
+                            <v-text-field
+                                v-model="place.Weight"
+                                label="Вес"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                          >
+                            <v-text-field
+                                v-model="place.Width"
+                                label="Длинна"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                          >
+                            <v-text-field
+                                v-model="place.Volume"
+                                label="Ширина"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                          >
+                            <v-text-field
+                                v-model="place.Height"
+                                label="Высота"
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-card-text>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="close"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="Save"
+                      >
+                        Save
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-toolbar>
+            </template>
+          </v-data-table>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -228,6 +335,7 @@
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import {PlaceModel} from "@/components/UIComponents/Transportaions/Models/PlaceModel";
 
 
 @Component({
@@ -236,9 +344,43 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
 })
 export default class NewTransportation extends Vue {
-  private menu2 : boolean = false;
-  private menu3 : boolean = false;
+  private dialogNewPlace: boolean = false;
+  private menu2: boolean = false;
+  private menu3: boolean = false;
+  private place: PlaceModel = new PlaceModel(0,0,0,0,0)
+  private editedIndex: number = -1
+  private places: PlaceModel[] = []
+  private headers: object = [
+    {
+      text: 'Кол-во мест',
+      align: 'start',
+      sortable: false,
+      value: 'Seats',
+    },
+    {text: 'Вес к.г', value: 'Weight'},
+    {text: 'Ширина, см', value: 'Volume'},
+    {text: 'Длинна, см', value: 'Width'},
+    {text: 'Высота, см', value: 'Height'},
+    {text: 'Обьем', value: 'VolumeTotal'},
+    {text: 'Общий вес', value: 'TotalKg'},
+    {text: 'Обьемный вес', value: 'TotalVolume'},
+  ];
+
+  public Save(){
+    this.places.push(this.place)
+    console.log(this.place);
+    this.close()
+  }
+
+  public close() {
+    this.dialogNewPlace = !this.dialogNewPlace
+    this.printDefaultModel()
+  }
+  printDefaultModel(){
+   this.place =  new PlaceModel(0,0,0,0,0)
+  }
 }
+
 </script>
 
 <style scoped lang="scss">

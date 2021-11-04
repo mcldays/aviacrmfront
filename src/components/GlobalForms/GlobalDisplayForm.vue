@@ -31,8 +31,8 @@
           </v-btn>
           <template v-slot:extension>
             <v-tabs align-with-title>
-              <v-tab>История</v-tab>
-              <v-tab>Перевозки</v-tab>
+              <v-tab @click="$router.push('/history')">История</v-tab>
+              <v-tab @click="$router.push('/transporations')">Перевозки</v-tab>
               <v-tab>Отчеты</v-tab>
               <v-tab>География</v-tab>
               <v-tab>Тарифы</v-tab>
@@ -50,9 +50,7 @@
              content-class="trans"
          >
            <v-container style="height: auto;" fluid>
-             <Transportations
-                 ref="trans"
-             style="height: 100%"/>
+                <slot name = "content"></slot>
            </v-container>
 
          </v-sheet>
@@ -66,11 +64,9 @@
 
 import { Vue, Component} from "vue-property-decorator";
 import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
-import Transportations from "@/components/GlobalForms/Transportations.vue";
 @Component({
   components:{
     AviaToolbar,
-    Transportations
   }
 })
 export default class GlobalDisplayForm extends Vue {

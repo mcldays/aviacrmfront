@@ -1,6 +1,10 @@
 <template>
   <v-app>
-    <GlobalDisplayForm/>
+    <GlobalDisplayForm>
+      <template v-slot:content>
+        <router-view></router-view>
+      </template>
+    </GlobalDisplayForm>
   </v-app>
 </template>
 

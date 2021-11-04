@@ -298,7 +298,7 @@
                       <v-btn
                           color="blue darken-1"
                           text
-                          @click="Save"
+                          @click="SaveVolume"
                       >
                         Save
                       </v-btn>
@@ -308,6 +308,10 @@
               </v-toolbar>
             </template>
           </v-data-table>
+        </v-container>
+        <v-container>
+          <v-card-title>Перевозчик</v-card-title>
+
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -362,13 +366,13 @@ export default class NewTransportation extends Vue {
     {text: 'Длинна, см', value: 'Width'},
     {text: 'Высота, см', value: 'Height'},
     {text: 'Обьем', value: 'VolumeTotal'},
-    {text: 'Общий вес', value: 'TotalKg'},
+    {text: 'Общий вес', value: 'TotalWeight'},
     {text: 'Обьемный вес', value: 'TotalVolume'},
   ];
 
-  public Save(){
-    this.places.push(this.place)
-    console.log(this.place);
+  public SaveVolume(){
+    let result = this.calculateVolume(this.place)
+    this.places.push(result)
     this.close()
   }
 
@@ -378,6 +382,10 @@ export default class NewTransportation extends Vue {
   }
   printDefaultModel(){
    this.place =  new PlaceModel(0,0,0,0,0)
+  }
+  calculateVolume(place : PlaceModel){
+      place.TotalWeight = place.Seats * place.Weight
+    return place
   }
 }
 

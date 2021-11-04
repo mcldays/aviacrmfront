@@ -7,7 +7,7 @@
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import NewTransportation from "../UIComponents/Transportaions/NewTransportation.vue";
+import NewTransportation from "./NewTransportation.vue";
 import ListTransportations from "@/components/UIComponents/Transportaions/ListTransportations.vue";
 
 

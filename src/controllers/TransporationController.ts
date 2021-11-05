@@ -3,6 +3,6 @@ import NewTransportation from "@/components/UIComponents/Transportaions/NewTrans
 
 export class TransporationController{
     public AddNewTransporation(model : NewTransportation) {
-       return Axios.post("89.108.103.251/api/Domain/TransportationsController/Add", model)
+       return Axios.post("89.108.103.251/api/transportations/add", model)
 }
 }

@@ -1,4 +1,4 @@
-export default class CarrierModel{
+export class CarrierModel{
     constructor(Name : string, Prefix : string) {
         this.Name = Name
         this.Prefix = Prefix

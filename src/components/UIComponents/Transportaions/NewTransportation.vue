@@ -1,6 +1,7 @@
 <template>
   <div>
   <v-app>
+    <v-form>
     <v-card>
       <v-toolbar
           flat
@@ -50,19 +51,19 @@
             <v-col>
               <v-select
                   label="Перевозчик"
-                  :items="items"
+                  v-model="transModel.Carrier"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Агент"
-                  :items="items"
+                  v-model="transModel.Agent"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="ФИО отв"
-                  :items="items"
+                  v-model="transModel.Fio"
               ></v-select>
             </v-col>
             </v-row>
@@ -72,11 +73,11 @@
               <v-text-field
                   label="Номер А/Н"
                   required
+                  v-model="transModel.Number"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-menu
-                  v-model="menu2"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -85,7 +86,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model="date2"
+                      v-model="transModel.DateAN"
                       label="Дата А/Н"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -94,7 +95,6 @@
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                    v-model="date2"
                     @input="menu2 = false"
                 ></v-date-picker>
               </v-menu>
@@ -103,6 +103,7 @@
               <v-text-field
                   label="Email отв"
                   required
+                  v-model="transModel.Email"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -111,19 +112,20 @@
             <v-col>
               <v-select
                   label="Аэропорт вылета"
-                  :items="items"
+                  v-model="transModel.AirportFromId"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Аэропорт назначения"
-                  :items="items"
+                  v-model="transModel.AirportToId"
               ></v-select>
             </v-col>
             <v-col>
               <v-text-field
                   label="Flight code"
                   required
+                  v-model="transModel.FlightCode"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -140,16 +142,15 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model="date"
                       label="Дата вылета"
                       prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      v-model="transModel.DateOfLeave"
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                    v-model="date"
                     @input="menu3 = false"
                 ></v-date-picker>
               </v-menu>
@@ -158,12 +159,14 @@
               <v-text-field
                   label="Goods Natures Code"
                   required
+                  v-model="transModel.GoodsNatureCode"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                   label="Агентское вознаграждение"
                   required
+                  v-model="transModel.AgentsCommission"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -173,28 +176,30 @@
               <v-text-field
                   label="FZ price"
                   required
+                  v-model="transModel.FZPrice"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                   label="Goods Natures Description"
                   required
+                  v-model="transModel.GoodsNatureDescription"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-checkbox
-                  v-model="ex4"
                   label="Arrival General"
                   color="indigo"
                   value="indigo"
+                  v-model="transModel.ArrivalGeneral"
                   hide-details
               ></v-checkbox>
               <v-checkbox
-                  v-model="ex4"
                   label="Emergency"
                   color="indigo darken-3"
                   value="indigo"
                   hide-details
+                  v-model="transModel.Emergency"
               ></v-checkbox>
             </v-col>
           </v-row>
@@ -203,8 +208,6 @@
           <v-card-title class="pa-2">Места</v-card-title>
           <v-data-table
               :headers="headers"
-              :items="places"
-              :items-per-page="5"
               class="elevation-1"
           >
             <template v-slot:top>
@@ -321,7 +324,6 @@
               >
                 <template v-slot:append-outer>
                   <v-checkbox
-                      v-model="ex4"
                       class="pa-0 ma-0"
                       label="Авто"
                       color="primary"
@@ -336,7 +338,6 @@
               >
                 <template v-slot:append-outer>
                   <v-checkbox
-                      v-model="ex4"
                       class="pa-0 ma-0"
                       label="Авто"
                       color="primary"
@@ -351,7 +352,6 @@
               >
                 <template v-slot:append-outer>
                   <v-checkbox
-                      v-model="ex4"
                       class="pa-0 ma-0"
                       label="Авто"
                       color="primary"
@@ -366,7 +366,6 @@
               >
                 <template v-slot:append-outer>
                   <v-checkbox
-                      v-model="ex4"
                       class="pa-0 ma-0"
                       label="Авто"
                       color="primary"
@@ -383,7 +382,6 @@
               >
                 <template v-slot:append-outer>
                   <v-checkbox
-                      v-model="ex4"
                       class="pa-0 ma-0"
                       label="Авто"
                       color="primary"
@@ -417,7 +415,6 @@
                 >
                   <template v-slot:append-outer>
                     <v-checkbox
-                        v-model="ex4"
                         class="pa-0 ma-0"
                         label="Авто"
                         color="primary"
@@ -432,7 +429,6 @@
                 >
                   <template v-slot:append-outer>
                     <v-checkbox
-                        v-model="ex4"
                         class="pa-0 ma-0"
                         label="Авто"
                         color="primary"
@@ -447,7 +443,6 @@
                 >
                   <template v-slot:append-outer>
                     <v-checkbox
-                        v-model="ex4"
                         class="pa-0 ma-0"
                         label="Авто"
                         color="primary"
@@ -462,7 +457,6 @@
                 >
                   <template v-slot:append-outer>
                     <v-checkbox
-                        v-model="ex4"
                         class="pa-0 ma-0"
                         label="Авто"
                         color="primary"
@@ -479,7 +473,6 @@
                 >
                   <template v-slot:append-outer>
                     <v-checkbox
-                        v-model="ex4"
                         class="pa-0 ma-0"
                         label="Авто"
                         color="primary"
@@ -514,21 +507,23 @@
         <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="this.AddModel"
         >
           Сохранить
         </v-btn>
       </v-card-actions>
     </v-card>
+    </v-form>
   </v-app>
   </div>
 </template>
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import {PlaceModel} from "@/components/UIComponents/Transportaions/Models/PlaceModel";
+import {Component, Model, Prop, Vue} from 'vue-property-decorator'
+import {PlaceModel} from "@/models/transporations/PlaceModel";
 import {TransporationController} from "@/controllers/TransporationController"
+import NewTransportationModel from "@/models/transporations/NewTransportationModel";
 
 
 @Component({
@@ -537,6 +532,7 @@ import {TransporationController} from "@/controllers/TransporationController"
   }
 })
 export default class NewTransportation extends Vue {
+  private transModel : NewTransportationModel = []
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
   private menu3: boolean = false;
@@ -578,7 +574,7 @@ export default class NewTransportation extends Vue {
     return place
   }
   AddModel(){
-   TransporationController.AddNewTransporation()
+   console.log(this.transModel)
 
   }
 }

@@ -51,19 +51,19 @@
             <v-col>
               <v-select
                   label="Перевозчик"
-                  v-model="transModel.Carrier"
+                  v-bind:value="transModel.Carrier"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Агент"
-                  v-model="transModel.Agent"
+                  v-model.lazy="transModel.Agent"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="ФИО отв"
-                  v-model="transModel.Fio"
+                  v-model.lazy="transModel.Fio"
               ></v-select>
             </v-col>
             </v-row>
@@ -73,7 +73,7 @@
               <v-text-field
                   label="Номер А/Н"
                   required
-                  v-model="transModel.Number"
+                  v-bind:value="transModel.Number"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -86,7 +86,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model="transModel.DateAN"
+                      v-model.lazy="transModel.DateAN"
                       label="Дата А/Н"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -103,7 +103,7 @@
               <v-text-field
                   label="Email отв"
                   required
-                  v-model="transModel.Email"
+                  v-model.lazy="transModel.Email"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -112,20 +112,20 @@
             <v-col>
               <v-select
                   label="Аэропорт вылета"
-                  v-model="transModel.AirportFromId"
+                  v-model.lazy="transModel.AirportFromId"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Аэропорт назначения"
-                  v-model="transModel.AirportToId"
+                  v-model.lazy="transModel.AirportToId"
               ></v-select>
             </v-col>
             <v-col>
               <v-text-field
                   label="Flight code"
                   required
-                  v-model="transModel.FlightCode"
+                  v-model.lazy="transModel.FlightCode"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -147,7 +147,7 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
-                      v-model="transModel.DateOfLeave"
+                      v-model.lazy="transModel.DateOfLeave"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -532,7 +532,7 @@ import NewTransportationModel from "@/models/transporations/NewTransportationMod
   }
 })
 export default class NewTransportation extends Vue {
-  private transModel : NewTransportationModel = []
+  private transModel = {} as NewTransportationModel
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
   private menu3: boolean = false;
@@ -574,6 +574,7 @@ export default class NewTransportation extends Vue {
     return place
   }
   AddModel(){
+
    console.log(this.transModel)
 
   }

@@ -44,7 +44,7 @@
       </v-data-table>
       </v-card>
       <v-dialog
-          v-model="this.modalVision"
+          v-bind:value="this.modalVision"
           fullscreen
           hide-overlay
           transition="dialog-bottom-transition"
@@ -70,11 +70,12 @@ import 'vue-resize/dist/vue-resize.css'
   }
 })
 export default class ListTransportations extends Vue {
-  handleResize(){
-    console.log("Changed!")
-  }
   private finderVision : boolean = false;
   private modalVision : boolean = false;
+  @Watch("modalVision")
+  dialog(value : boolean){
+
+  }
   private menuTitle : object =[
     { title: 'Click Me' },
     { title: 'Click Me' },

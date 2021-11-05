@@ -61,6 +61,7 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import NewTransportation from "./NewTransportation.vue";
 import Finder from './Finder.vue'
 import 'vue-resize/dist/vue-resize.css'
+import {TransportationController} from "@/controllers/TransportationController";
 
 
 @Component({
@@ -72,8 +73,13 @@ import 'vue-resize/dist/vue-resize.css'
 export default class ListTransportations extends Vue {
   private finderVision : boolean = false;
   private modalVision : boolean = false;
+  private controller  = new TransportationController()
   @Watch("modalVision")
   dialog(value : boolean){
+
+  }
+
+ async mounted(){
 
   }
   private menuTitle : object =[
@@ -212,8 +218,10 @@ export default class ListTransportations extends Vue {
       agent : "Пупа",
     },
   ]
-  mounted(){
 
+ async mounted(){
+    let response = await this.controller.GetAllTransportations()
+   console.log(response)
   }
 
   findData(){

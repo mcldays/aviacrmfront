@@ -37,7 +37,7 @@
               <v-tab>География</v-tab>
               <v-tab>Тарифы</v-tab>
               <v-tab>Перевозчики</v-tab>
-              <v-tab>Агенты</v-tab>
+              <v-tab @click="$router.push('/agents')">Агенты</v-tab>
               <v-tab>Курсы конвертации</v-tab>
             </v-tabs>
           </template>

@@ -1,6 +1,7 @@
 import VueRouter from 'vue-router'
 import Transportations from "@/components/UIComponents/Transportaions/Transportations.vue";
 import History from "@/components/UIComponents/History/History.vue"
+import Agents from "@/components/UIComponents/Agents/Agents.vue"
 export default new VueRouter({
     routes : [
         {
@@ -10,6 +11,10 @@ export default new VueRouter({
         {
             path:'/History',
             component: History
+        },
+        {
+            path:'/Agents',
+            component: Agents
         }
     ]
 })

@@ -7,7 +7,7 @@ import router from './router/index'
 Vue.use(VueRouter)
 
 Vue.config.productionTip = false;
-
+const axios = require('axios').default;
 new Vue({
   vuetify,
   router,

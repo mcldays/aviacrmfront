@@ -10,6 +10,6 @@ export default new VueRouter({
         {
             path:'/History',
             component: History
-        }
+        },
     ]
 })

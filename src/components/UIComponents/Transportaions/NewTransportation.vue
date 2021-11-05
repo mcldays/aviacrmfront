@@ -44,7 +44,7 @@
       </v-toolbar>
       <v-card-text>
         <v-container>
-          <v-card-title>Общая информация</v-card-title>
+          <v-card-title class="pa-1">Общая информация</v-card-title>
           <v-row
               style="height: 70px;">
             <v-col>
@@ -200,7 +200,7 @@
           </v-row>
         </v-container>
         <v-container>
-          <v-card-title>Места</v-card-title>
+          <v-card-title class="pa-2">Места</v-card-title>
           <v-data-table
               :headers="headers"
               :items="places"
@@ -309,10 +309,198 @@
             </template>
           </v-data-table>
         </v-container>
+        <div style="display: flex">
         <v-container>
-          <v-card-title>Перевозчик</v-card-title>
-
+          <v-card-title class="pa-1">Перевозчик</v-card-title>
+          <div style="display: flex;">
+          <v-row>
+            <v-col>
+              <v-text-field
+                  hide-details
+                  label="Оплачиваемый вес"
+              >
+                <template v-slot:append-outer>
+                  <v-checkbox
+                      v-model="ex4"
+                      class="pa-0 ma-0"
+                      label="Авто"
+                      color="primary"
+                      value="red"
+                      hide-details
+                  ></v-checkbox>
+                </template>
+              </v-text-field>
+              <v-text-field
+                  hide-details
+                  label="Способ расчета"
+              >
+                <template v-slot:append-outer>
+                  <v-checkbox
+                      v-model="ex4"
+                      class="pa-0 ma-0"
+                      label="Авто"
+                      color="primary"
+                      value="red"
+                      hide-details
+                  ></v-checkbox>
+                </template>
+              </v-text-field>
+              <v-text-field
+                  hide-details
+                  label="Цена за кг"
+              >
+                <template v-slot:append-outer>
+                  <v-checkbox
+                      v-model="ex4"
+                      class="pa-0 ma-0"
+                      label="Авто"
+                      color="primary"
+                      value="red"
+                      hide-details
+                  ></v-checkbox>
+                </template>
+              </v-text-field>
+              <v-text-field
+                  hide-details
+                  label="Стоимость"
+              >
+                <template v-slot:append-outer>
+                  <v-checkbox
+                      v-model="ex4"
+                      class="pa-0 ma-0"
+                      label="Авто"
+                      color="primary"
+                      value="red"
+                      hide-details
+                  ></v-checkbox>
+                </template>
+              </v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                  hide-details
+                  label="MZC"
+              >
+                <template v-slot:append-outer>
+                  <v-checkbox
+                      v-model="ex4"
+                      class="pa-0 ma-0"
+                      label="Авто"
+                      color="primary"
+                      value="red"
+                      hide-details
+                  ></v-checkbox>
+                </template>
+              </v-text-field>
+              <v-text-field
+                  hide-details
+                  label="Сумма сборов"
+              >
+              </v-text-field>
+              <v-text-field
+                  hide-details
+                  label="Итого"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          </div>
         </v-container>
+        <v-container>
+          <v-card-title class="pa-1">Агент</v-card-title>
+          <div style="display: flex;">
+            <v-row>
+              <v-col>
+                <v-text-field
+                    hide-details
+                    label="Оплачиваемый вес"
+                >
+                  <template v-slot:append-outer>
+                    <v-checkbox
+                        v-model="ex4"
+                        class="pa-0 ma-0"
+                        label="Авто"
+                        color="primary"
+                        value="red"
+                        hide-details
+                    ></v-checkbox>
+                  </template>
+                </v-text-field>
+                <v-text-field
+                    hide-details
+                    label="Способ расчета"
+                >
+                  <template v-slot:append-outer>
+                    <v-checkbox
+                        v-model="ex4"
+                        class="pa-0 ma-0"
+                        label="Авто"
+                        color="primary"
+                        value="red"
+                        hide-details
+                    ></v-checkbox>
+                  </template>
+                </v-text-field>
+                <v-text-field
+                    hide-details
+                    label="Цена за кг"
+                >
+                  <template v-slot:append-outer>
+                    <v-checkbox
+                        v-model="ex4"
+                        class="pa-0 ma-0"
+                        label="Авто"
+                        color="primary"
+                        value="red"
+                        hide-details
+                    ></v-checkbox>
+                  </template>
+                </v-text-field>
+                <v-text-field
+                    hide-details
+                    label="Стоимость"
+                >
+                  <template v-slot:append-outer>
+                    <v-checkbox
+                        v-model="ex4"
+                        class="pa-0 ma-0"
+                        label="Авто"
+                        color="primary"
+                        value="red"
+                        hide-details
+                    ></v-checkbox>
+                  </template>
+                </v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                    hide-details
+                    label="MZC"
+                >
+                  <template v-slot:append-outer>
+                    <v-checkbox
+                        v-model="ex4"
+                        class="pa-0 ma-0"
+                        label="Авто"
+                        color="primary"
+                        value="red"
+                        hide-details
+                    ></v-checkbox>
+                  </template>
+                </v-text-field>
+                <v-text-field
+                    hide-details
+                    label="Сумма сборов"
+                ></v-text-field>
+                <v-text-field
+                    hide-details
+                    label="Итого"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </div>
+        </v-container>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -321,14 +509,14 @@
             text
             @click="dialog = false"
         >
-          Close
+          Закрыть
         </v-btn>
         <v-btn
             color="blue darken-1"
             text
             @click="dialog = false"
         >
-          Save
+          Сохранить
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -340,6 +528,7 @@
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import {PlaceModel} from "@/components/UIComponents/Transportaions/Models/PlaceModel";
+import {TransporationController} from "@/controllers/TransporationController"
 
 
 @Component({
@@ -370,6 +559,7 @@ export default class NewTransportation extends Vue {
     {text: 'Обьемный вес', value: 'TotalVolume'},
   ];
 
+
   public SaveVolume(){
     let result = this.calculateVolume(this.place)
     this.places.push(result)
@@ -387,10 +577,16 @@ export default class NewTransportation extends Vue {
       place.TotalWeight = place.Seats * place.Weight
     return place
   }
+  AddModel(){
+   TransporationController.AddNewTransporation()
+
+  }
 }
 
 </script>
 
 <style scoped lang="scss">
+.rowAgents{
 
+}
 </style>

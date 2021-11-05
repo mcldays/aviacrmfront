@@ -55,26 +55,26 @@
         </v-col>
       </v-row>
     </div>
-  </template>
+</template>
 
-  <script>
-    export default {
-      name: "Finder"
-    }
-  </script>
+<script>
+  export default {
+    name: "Finder"
+  }
+</script>
 
-  <style scoped>
-    .vrowStyle{
-      padding: 0 50px 0 0;
-    }
-    .v-text-field{
-      padding: 5px
-    }
+<style scoped>
+  .vrowStyle{
+    padding: 0 50px 0 0;
+  }
+  .v-text-field{
+    padding: 5px
+  }
 
-    .v-input{
-      padding: 5px !important;
-    }
-  </style>
+  .v-input{
+    padding: 5px !important;
+  }
+</style>
 
 <script>
 export default {

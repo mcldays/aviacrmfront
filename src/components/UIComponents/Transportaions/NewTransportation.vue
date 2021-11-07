@@ -51,19 +51,19 @@
             <v-col>
               <v-select
                   label="Перевозчик"
-                  v-bind:value="transModel.Carrier"
+                  v-bind:value="transModel.carrier"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Агент"
-                  v-model.lazy="transModel.Agent"
+                  v-model.lazy="transModel.agent"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="ФИО отв"
-                  v-model.lazy="transModel.Fio"
+                  v-model.lazy="transModel.fio"
               ></v-select>
             </v-col>
             </v-row>
@@ -73,11 +73,13 @@
               <v-text-field
                   label="Номер А/Н"
                   required
-                  v-bind:value="transModel.Number"
+                  :value="transModel.number"
+                  @change="transModel.number = $event"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-menu
+                  v-model="menu2"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -86,8 +88,8 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model.lazy="transModel.DateAN"
                       label="Дата А/Н"
+                      :value="transModel.dateAN"
                       prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
@@ -96,6 +98,8 @@
                 </template>
                 <v-date-picker
                     @input="menu2 = false"
+                    :value="transModel.dateAN"
+                    @change="transModel.dateAN = $event"
                 ></v-date-picker>
               </v-menu>
             </v-col>
@@ -103,7 +107,8 @@
               <v-text-field
                   label="Email отв"
                   required
-                  v-model.lazy="transModel.Email"
+                  :value="transModel.email"
+                  @change="transModel.email = $event"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -112,20 +117,21 @@
             <v-col>
               <v-select
                   label="Аэропорт вылета"
-                  v-model.lazy="transModel.AirportFromId"
+                  v-model.lazy="transModel.airportFromId"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Аэропорт назначения"
-                  v-model.lazy="transModel.AirportToId"
+                  v-model.lazy="transModel.airportToId"
               ></v-select>
             </v-col>
             <v-col>
               <v-text-field
                   label="Flight code"
                   required
-                  v-model.lazy="transModel.FlightCode"
+                  :value="transModel.flightCode"
+                  @change="transModel.flightCode = $event"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -142,16 +148,18 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
+                      :value="transModel.dateOfLeave"
                       label="Дата вылета"
                       prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
                       v-on="on"
-                      v-model.lazy="transModel.DateOfLeave"
                   ></v-text-field>
                 </template>
                 <v-date-picker
                     @input="menu3 = false"
+                    :value="transModel.dateOfLeave"
+                    @change="transModel.dateOfLeave = $event"
                 ></v-date-picker>
               </v-menu>
             </v-col>
@@ -159,14 +167,16 @@
               <v-text-field
                   label="Goods Natures Code"
                   required
-                  v-model="transModel.GoodsNatureCode"
+                  :value="transModel.goodsNatureCode"
+                  @change="transModel.goodsNatureCode = $event"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                   label="Агентское вознаграждение"
                   required
-                  v-model="transModel.AgentsCommission"
+                  :value="transModel.agentsCommission"
+                  @change="transModel.agentsCommission = $event"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -176,14 +186,16 @@
               <v-text-field
                   label="FZ price"
                   required
-                  v-model="transModel.FZPrice"
+                  :value="transModel.fzPrice"
+                  @change="transModel.fzPrice = $event"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                   label="Goods Natures Description"
                   required
-                  v-model="transModel.GoodsNatureDescription"
+                  :value="transModel.goodsNatureDescription"
+                  @change="transModel.goodsNatureDescription = $event"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -191,7 +203,8 @@
                   label="Arrival General"
                   color="indigo"
                   value="indigo"
-                  v-model="transModel.ArrivalGeneral"
+                  :value="transModel.arrivalGeneral"
+                  @change="transModel.arrivalGeneral = $event"
                   hide-details
               ></v-checkbox>
               <v-checkbox
@@ -199,7 +212,8 @@
                   color="indigo darken-3"
                   value="indigo"
                   hide-details
-                  v-model="transModel.Emergency"
+                  :value="transModel.emergency"
+                  @change="transModel.emergency= $event"
               ></v-checkbox>
             </v-col>
           </v-row>
@@ -209,6 +223,7 @@
           <v-data-table
               :headers="headers"
               class="elevation-1"
+              :items="places"
           >
             <template v-slot:top>
               <v-toolbar
@@ -241,7 +256,9 @@
                               md="4"
                           >
                             <v-text-field
-                                v-model="place.Seats"
+                                type="number"
+                                :value="place.seats"
+                                @change="place.seats = Number($event)"
                                 label="Кол-во мест"
                             ></v-text-field>
                           </v-col>
@@ -251,7 +268,9 @@
                               md="4"
                           >
                             <v-text-field
-                                v-model="place.Weight"
+                                type="number"
+                                :value="place.weight"
+                                @change="place.weight = Number($event)"
                                 label="Вес"
                             ></v-text-field>
                           </v-col>
@@ -261,7 +280,9 @@
                               md="4"
                           >
                             <v-text-field
-                                v-model="place.Width"
+                                type="number"
+                                :value="place.width"
+                                @change="place.width = Number($event)"
                                 label="Длинна"
                             ></v-text-field>
                           </v-col>
@@ -271,7 +292,9 @@
                               md="4"
                           >
                             <v-text-field
-                                v-model="place.Volume"
+                                type="number"
+                                :value="place.volume"
+                                @change="place.volume = Number($event)"
                                 label="Ширина"
                             ></v-text-field>
                           </v-col>
@@ -281,7 +304,9 @@
                               md="4"
                           >
                             <v-text-field
-                                v-model="place.Height"
+                                type="number"
+                                :value="place.height"
+                                @change="place.height = Number($event)"
                                 label="Высота"
                             ></v-text-field>
                           </v-col>
@@ -505,6 +530,7 @@
           Закрыть
         </v-btn>
         <v-btn
+            :loading="this.loading"
             color="blue darken-1"
             text
             @click="this.AddModel"
@@ -522,8 +548,8 @@
 
 import {Component, Model, Prop, Vue} from 'vue-property-decorator'
 import {PlaceModel} from "@/models/transporations/PlaceModel";
-import {TransporationController} from "@/controllers/TransporationController"
-import NewTransportationModel from "@/models/transporations/NewTransportationModel";
+import {TransportationController} from "@/controllers/TransportationController"
+import {TransportationModel} from "@/models/transporations/TransportationModel";
 
 
 @Component({
@@ -532,11 +558,12 @@ import NewTransportationModel from "@/models/transporations/NewTransportationMod
   }
 })
 export default class NewTransportation extends Vue {
-  private transModel = {} as NewTransportationModel
+  private transModel = {} as TransportationModel
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
+  private loading : boolean = false;
   private menu3: boolean = false;
-  private place: PlaceModel = new PlaceModel(0,0,0,0,0)
+  private place = {} as PlaceModel
   private editedIndex: number = -1
   private places: PlaceModel[] = []
   private headers: object = [
@@ -544,15 +571,15 @@ export default class NewTransportation extends Vue {
       text: 'Кол-во мест',
       align: 'start',
       sortable: false,
-      value: 'Seats',
+      value: 'seats',
     },
-    {text: 'Вес к.г', value: 'Weight'},
-    {text: 'Ширина, см', value: 'Volume'},
-    {text: 'Длинна, см', value: 'Width'},
-    {text: 'Высота, см', value: 'Height'},
-    {text: 'Обьем', value: 'VolumeTotal'},
-    {text: 'Общий вес', value: 'TotalWeight'},
-    {text: 'Обьемный вес', value: 'TotalVolume'},
+    {text: 'Вес к.г', value: 'weight'},
+    {text: 'Ширина, см', value: 'volume'},
+    {text: 'Длинна, см', value: 'width'},
+    {text: 'Высота, см', value: 'height'},
+    {text: 'Обьем', value: 'volumeTotal'},
+    {text: 'Общий вес', value: 'totalWeight'},
+    {text: 'Обьемный вес', value: 'totalVolume'},
   ];
 
 
@@ -567,16 +594,28 @@ export default class NewTransportation extends Vue {
     this.printDefaultModel()
   }
   printDefaultModel(){
-   this.place =  new PlaceModel(0,0,0,0,0)
+   this.place = {} as PlaceModel
   }
   calculateVolume(place : PlaceModel){
-      place.TotalWeight = place.Seats * place.Weight
+
+      place.totalWeight = place.seats * place.weight
     return place
   }
-  AddModel(){
-
+ AddModel(){
+    this.transModel.places = this.places
    console.log(this.transModel)
+    let controller = new TransportationController()
+    this.loading = true
 
+   controller.AddNewTransportation(this.transModel).then(this.clean)
+
+  }
+  clean(){
+    this.transModel = new TransportationModel()
+    this.place = {} as PlaceModel
+    this.places = []
+    this.loading = false
+    this.$emit("successAdd")
   }
 }
 

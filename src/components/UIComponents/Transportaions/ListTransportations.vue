@@ -21,8 +21,10 @@
         v-show="this.finderVision"/>
 
       <v-data-table
+          v-model="readTransModel"
+          :key="componentKey"
           :headers="headers"
-          :items="lorem"
+          :items="items"
           :items-per-page="5"
           class="elevation-1"
       >
@@ -50,7 +52,10 @@
           transition="dialog-bottom-transition"
           scrollable
       >
-      <NewTransportation/>
+      <NewTransportation
+      @successAdd = "refresh"
+      >
+      </NewTransportation>
       </v-dialog>
     </div>
   </v-app>
@@ -61,6 +66,10 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import NewTransportation from "./NewTransportation.vue";
 import Finder from './Finder.vue'
 import 'vue-resize/dist/vue-resize.css'
+import {TransportationController} from "@/controllers/TransportationController";
+import {AxiosResponse} from "axios";
+import {TransportationReadModel} from "@/models/transporations/readmodels/TransportationReadModel";
+import {TransportationModel} from "@/models/transporations/TransportationModel";
 
 
 @Component({
@@ -72,10 +81,11 @@ import 'vue-resize/dist/vue-resize.css'
 export default class ListTransportations extends Vue {
   private finderVision : boolean = false;
   private modalVision : boolean = false;
-  @Watch("modalVision")
-  dialog(value : boolean){
+  private componentKey : number = 0
+  private items : any[] = []
+  private controller  = new TransportationController()
 
-  }
+  private readTransModel : TransportationReadModel[] = []
   private menuTitle : object =[
     { title: 'Click Me' },
     { title: 'Click Me' },
@@ -87,12 +97,12 @@ export default class ListTransportations extends Vue {
       text: 'Номер а/н',
       align: 'start',
       sortable: false,
-      value: 'name',
+      value: 'number',
     },
-    { text: 'Дата а/н', value: 'dateNum' },
-    { text: 'Дата вылета', value: 'dateRace' },
-    { text: 'Рейс', value: 'race' },
-    { text: 'Общий вес', value: 'kg' },
+    { text: 'Дата а/н', value: 'dateAN' },
+    { text: 'Дата вылета', value: 'dateOfLeave' },
+    { text: 'Рейс', value: 'flightCode' },
+    { text: 'Общий вес', value: 'totalWeight' },
     { text: 'Оплачиваемый вес', value: 'payedkg' },
     { text: 'Кол-во мест', value: 'placecount' },
     { text: 'Обьем', value: 'values' },
@@ -102,118 +112,33 @@ export default class ListTransportations extends Vue {
 
 
   ];
-  private lorem : object = [
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 24,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Василий",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 23,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Василий",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 22,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Пупа",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 21,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Лупа",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 22,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Пупа",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 22,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Пупа",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 22,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Пупа",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 22,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Пупа",
-    },
-    {
-      name: '12345',
-      dateNum:'24.05.2000',
-      dateRace: '5.06.2020',
-      race: 6.0,
-      kg: 22,
-      payedkg: 4.0,
-      placecount: 6,
-      values : 12,
-      moves: 22,
-      agent : "Пупа",
-    },
-  ]
-  mounted(){
 
+  async mounted(){
+  await this.getData()
+  }
+
+  async getData(){
+    let model = await this.controller.GetAllTransportations().then(response=>response.data)
+    this.parseToTable(model)
+  }
+
+  parseToTable(response : TransportationModel[]){
+    let readTransModel : TransportationReadModel[] = []
+    for (let model of response) {
+      for (let modelElement of model.places) {
+        readTransModel.push(new TransportationReadModel(
+            model.id,
+            model.number,
+            model.dateAN,
+            model.dateOfLeave,
+            model.flightCode,
+            modelElement.totalWeight,
+            modelElement.seats
+        ))
+      }
+    }
+    this.items = readTransModel
+    console.log(this.items)
   }
 
   findData(){
@@ -222,6 +147,22 @@ export default class ListTransportations extends Vue {
   modalVisionAction(){
     this.modalVision = !this.modalVision;
   }
+  refresh(){
+    this.modalVision = false
+    this.items = []
+    this.getData()
+  }
+
+  deleteItem(item :any){
+    this.controller.RemoveTransportationFromId(item.id)
+    let findItem = this.items.find(t=>t.id == item.id)
+   let concatIndex =  this.items.indexOf(findItem)
+    this.items.splice(concatIndex, 1)
+    console.log(this.items)
+  }
+
+
+
 }
 </script>
 <style scoped>

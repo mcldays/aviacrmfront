@@ -17,5 +17,6 @@ import GlobalDisplayForm from './components/GlobalForms/GlobalDisplayForm.vue'
     GlobalDisplayForm
   }
 })
+
 export default class App extends Vue {}
 </script>

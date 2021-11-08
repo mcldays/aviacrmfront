@@ -1,6 +1,6 @@
 // @ts-ignore
 import Axios from '/axios_settings';
-import {AgentModel} from "@/models/transporations/AgentModel";
+import {AgentModel} from "@/models/transportations/AgentModel";
 
 export class AgentsController{
     public static async GetAllAgents() {

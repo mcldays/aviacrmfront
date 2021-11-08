@@ -68,8 +68,8 @@ import Finder from './Finder.vue'
 import 'vue-resize/dist/vue-resize.css'
 import {TransportationController} from "@/controllers/TransportationController";
 import {AxiosResponse} from "axios";
-import {TransportationReadModel} from "@/models/transporations/readmodels/TransportationReadModel";
-import {TransportationModel} from "@/models/transporations/TransportationModel";
+import {TransportationReadModel} from "@/models/transportations/readmodels/TransportationReadModel";
+import {TransportationModel} from "@/models/transportations/TransportationModel";
 
 
 @Component({

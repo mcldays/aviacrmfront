@@ -1,7 +1,7 @@
 // @ts-ignore
 import Axios, { AxiosPromise, AxiosResponse } from '/axios_settings';
-import {TransportationModel} from "@/models/transporations/TransportationModel";
-import {TransportationReadModel} from "@/models/transporations/readmodels/TransportationReadModel";
+import {TransportationModel} from "@/models/transportations/TransportationModel";
+import {TransportationReadModel} from "@/models/transportations/readmodels/TransportationReadModel";
 // Axios.defaults.baseURL = 'http://89.108.103.251';
 export class TransportationController {
     public AddNewTransportation(model : TransportationModel) {

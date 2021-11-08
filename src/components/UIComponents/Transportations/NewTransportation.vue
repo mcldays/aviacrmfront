@@ -547,9 +547,9 @@
 <script lang="ts">
 
 import {Component, Model, Prop, Vue} from 'vue-property-decorator'
-import {PlaceModel} from "@/models/transporations/PlaceModel";
+import {PlaceModel} from "@/models/transportations/PlaceModel";
 import {TransportationController} from "@/controllers/TransportationController"
-import {TransportationModel} from "@/models/transporations/TransportationModel";
+import {TransportationModel} from "@/models/transportations/TransportationModel";
 
 
 @Component({

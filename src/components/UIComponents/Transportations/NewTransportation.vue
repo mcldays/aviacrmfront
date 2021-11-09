@@ -21,7 +21,7 @@
           <v-btn
               dark
               text
-              @click="dialog = false"
+              @click="this.AddModel"
           >
             Сохранить
           </v-btn>
@@ -525,7 +525,7 @@
         <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="closeModal"
         >
           Закрыть
         </v-btn>
@@ -546,7 +546,7 @@
 
 <script lang="ts">
 
-import {Component, Model, Prop, Vue} from 'vue-property-decorator'
+import {Component, Model, Prop, Vue, Watch} from 'vue-property-decorator'
 import {PlaceModel} from "@/models/transportations/PlaceModel";
 import {TransportationController} from "@/controllers/TransportationController"
 import {TransportationModel} from "@/models/transportations/TransportationModel";
@@ -558,6 +558,10 @@ import {TransportationModel} from "@/models/transportations/TransportationModel"
   }
 })
 export default class NewTransportation extends Vue {
+
+  @Prop() editModel : TransportationModel
+
+  public editIndex : number = 0
   private transModel = {} as TransportationModel
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
@@ -601,22 +605,45 @@ export default class NewTransportation extends Vue {
       place.totalWeight = place.seats * place.weight
     return place
   }
- AddModel(){
+async AddModel(){
     this.transModel.places = this.places
-   console.log(this.transModel)
+    console.log(this.transModel)
     let controller = new TransportationController()
     this.loading = true
+   if(this.editIndex == 0){
+     controller.AddNewTransportation(this.transModel).then(this.clean)
+   }
+   else{
+     await controller.UpdateTransportation(this.transModel).then(this.clean)
+   }
 
-   controller.AddNewTransportation(this.transModel).then(this.clean)
 
   }
+
+  closeModal(){
+    this.clean()
+    this.$emit("closed")
+  }
+
   clean(){
     this.transModel = new TransportationModel()
     this.place = {} as PlaceModel
     this.places = []
     this.loading = false
+    this.editIndex = 0
     this.$emit("successAdd")
   }
+
+
+  @Watch("editModel", {immediate: true, deep: true})
+  getDataForEdit(){
+    if(Object.keys(this.editModel).length != 0){
+      this.editIndex = -1
+      this.transModel = this.editModel
+    }
+  }
+
+
 }
 
 </script>

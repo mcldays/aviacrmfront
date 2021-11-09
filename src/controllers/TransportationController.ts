@@ -13,7 +13,9 @@ export class TransportationController {
     }
 
     public RemoveTransportationFromId(id : number){
-
         return Axios.get(`api/transportations/remove?id=${id}`)
+    }
+    public async UpdateTransportation(model : TransportationModel){
+       return Axios.post("/api/transportations/update", model)
     }
 }

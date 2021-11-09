@@ -53,7 +53,9 @@
           scrollable
       >
       <NewTransportation
-      @successAdd = "refresh"
+          :edit-model="editModel"
+          @successAdd = "refresh"
+          @closed="refresh"
       >
       </NewTransportation>
       </v-dialog>
@@ -84,7 +86,7 @@ export default class ListTransportations extends Vue {
   private componentKey : number = 0
   private items : any[] = []
   private controller  = new TransportationController()
-
+  private editModel = {} as TransportationModel
   private readTransModel : TransportationReadModel[] = []
   private menuTitle : object =[
     { title: 'Click Me' },
@@ -119,25 +121,27 @@ export default class ListTransportations extends Vue {
 
   async getData(){
     let model = await this.controller.GetAllTransportations().then(response=>response.data)
+    model = this.processRawAgentsData(model)
     this.parseToTable(model)
   }
 
   parseToTable(response : TransportationModel[]){
-    let readTransModel : TransportationReadModel[] = []
-    for (let model of response) {
-      for (let modelElement of model.places) {
-        readTransModel.push(new TransportationReadModel(
-            model.id,
-            model.number,
-            model.dateAN,
-            model.dateOfLeave,
-            model.flightCode,
-            modelElement.totalWeight,
-            modelElement.seats
-        ))
-      }
-    }
-    this.items = readTransModel
+    // let readTransModel : TransportationReadModel[] = []
+    // for (let model of response) {
+    //   for (let modelElement of model.places) {
+    //     readTransModel.push(new TransportationReadModel(
+    //         model.id,
+    //         model.number,
+    //         model.dateAN,
+    //         model.dateOfLeave,
+    //         model.flightCode,
+    //         modelElement.totalWeight,
+    //         modelElement.seats
+    //     ))
+    //   }
+    // }
+    // this.items = readTransModel
+    this.items = response
     console.log(this.items)
   }
 
@@ -159,6 +163,21 @@ export default class ListTransportations extends Vue {
    let concatIndex =  this.items.indexOf(findItem)
     this.items.splice(concatIndex, 1)
     console.log(this.items)
+  }
+
+  editItem(item : TransportationModel){
+    this.editModel = item;
+    this.modalVision = true
+  }
+
+  processRawAgentsData(models : TransportationModel[]){
+    let newObject : TransportationModel[] = []
+    for (let model of models) {
+      model.dateOfLeave = model.dateOfLeave.slice(0,10)
+      model.dateAN= model.dateAN.slice(0,10)
+      newObject.push(model);
+    }
+    return newObject
   }
 
 

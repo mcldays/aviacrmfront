@@ -2,8 +2,8 @@
   <v-app>
     <div id="app" >
       <v-card>
+        <v-card-title>Реквизиты отчетов</v-card-title>
         <v-container>
-          <v-card-title>Реквизиты отчетов</v-card-title>
           <v-row
               style="height: 70px;">
             <v-col>

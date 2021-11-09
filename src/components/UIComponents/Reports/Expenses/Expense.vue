@@ -2,14 +2,15 @@
   <v-app>
     <div id="app">
       <v-card>
-        <v-toolbar dense flat>
-          <v-spacer></v-spacer>
-
-          <v-btn icon
-                 @click="findData">
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
-        </v-toolbar>
+        <v-card-title>Счета
+          <v-toolbar dense flat>
+            <v-spacer></v-spacer>
+            <v-btn icon
+                   @click="findData">
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+          </v-toolbar>
+        </v-card-title>
         <FindExpense
             v-show="this.finderVision"/>
 
@@ -25,13 +26,7 @@
                 class="mr-2"
                 @click="editItem(item)"
             >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-                small
-                @click="deleteItem(item)"
-            >
-              mdi-delete
+              mdi-download
             </v-icon>
           </template>
         </v-data-table>
@@ -64,27 +59,44 @@ export default class ListCarriers extends Vue {
   ]
   private headers : object = [
     {
-      text: 'Имя',
+      text: 'Номер счета',
       align: 'start',
       sortable: false,
-      value: 'name',
+      value: 'number',
     },
-    { text: 'Тип перевозчика', value: 'typeCarrier' },
-    { text: 'Префикс а/н по умолчанию ', value: 'prefix' },
+    { text: 'Создан', value: 'created' },
+    { text: 'Счет от', value: 'dateFrom' },
+    { text: 'Агент', value: 'agent' },
+    { text: 'Период', value: 'period' },
+    { text: 'Подпись', value: 'sign' },
+    { text: 'Валюта', value: 'cur' },
+    { text: 'Рассчитанная сумма', value: 'sum' },
+    { text: 'Коррекция', value: 'correction' },
     { text: '', value: 'actions', sortable: false },
-
 
   ];
   private lorem : object = [
     {
-      name: 'FlyDubai',
-      typeCarrier:'Airline',
-      prefix: '141',
+      number: 'FlyDubai',
+      created: 'FlyDubai',
+      dateFrom: 'FlyDubai',
+      agent: 'FlyDubai',
+      period: 'FlyDubai',
+      sign: 'FlyDubai',
+      cur: 'FlyDubai',
+      sum: 'FlyDubai',
+      correction: 'FlyDubai'
     },
     {
-      name: 'FlyDubai',
-      typeCarrier:'Airline',
-      prefix: '141',
+      number: 'FlyDubai',
+      created: 'FlyDubai',
+      dateFrom: 'FlyDubai',
+      agent: 'FlyDubai',
+      period: 'FlyDubai',
+      sign: 'FlyDubai',
+      cur: 'FlyDubai',
+      sum: 'FlyDubai',
+      correction: 'FlyDubai'
     }
   ]
   findData(){

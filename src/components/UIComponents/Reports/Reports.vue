@@ -18,12 +18,12 @@
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import ReportToBank from "@/components/UIComponents/Reports/ReportToBank.vue";
-import ReportToAk from "@/components/UIComponents/Reports/ReportToAk.vue";
-import ReportToStation from "@/components/UIComponents/Reports/ReportToStation.vue";
-import ReportsToAgent from "@/components/UIComponents/Reports/ReportsToAgent.vue";
-import ReadyReports from "@/components/UIComponents/Reports/ReadyReports.vue";
-import Expense from "@/components/UIComponents/Reports/Expense.vue";
+import ReportToBank from "@/components/UIComponents/Reports/ReportToBank/ReportToBank.vue";
+import ReportToAk from "@/components/UIComponents/Reports/ReportToAk/ReportToAk.vue";
+import ReportToStation from "@/components/UIComponents/Reports/ReportToStation/ReportToStation.vue";
+import ReportsToAgent from "@/components/UIComponents/Reports/ReportsToAgent/ReportsToAgent.vue";
+import ReadyReports from "@/components/UIComponents/Reports/ReadyReports/ReadyReports.vue";
+import Expense from "@/components/UIComponents/Reports/Expenses/Expense.vue";
 import Requisites from "@/components/UIComponents/Reports/Requisites.vue";
 import ListCarriers from "@/components/UIComponents/Carriers/ListCarriers.vue";
 

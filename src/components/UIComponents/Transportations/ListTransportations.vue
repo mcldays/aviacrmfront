@@ -24,6 +24,7 @@
           v-model="readTransModel"
           :key="componentKey"
           :headers="headers"
+          :loading="loading"
           :items="items"
           :items-per-page="5"
           class="elevation-1"
@@ -69,9 +70,9 @@ import NewTransportation from "./NewTransportation.vue";
 import Finder from './Finder.vue'
 import 'vue-resize/dist/vue-resize.css'
 import {TransportationController} from "@/controllers/TransportationController";
-import {AxiosResponse} from "axios";
 import {TransportationReadModel} from "@/models/transportations/readmodels/TransportationReadModel";
 import {TransportationModel} from "@/models/transportations/TransportationModel";
+
 
 
 @Component({
@@ -85,15 +86,11 @@ export default class ListTransportations extends Vue {
   private modalVision : boolean = false;
   private componentKey : number = 0
   private items : any[] = []
+  private loading : boolean = true;
   private controller  = new TransportationController()
   private editModel = {} as TransportationModel
   private readTransModel : TransportationReadModel[] = []
-  private menuTitle : object =[
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me 2' }
-  ]
+
   private headers : object = [
     {
       text: 'Номер а/н',
@@ -109,8 +106,8 @@ export default class ListTransportations extends Vue {
     { text: 'Кол-во мест', value: 'placecount' },
     { text: 'Обьем', value: 'values' },
     { text: 'Направление', value: 'moves' },
-    { text: 'Агент', value: 'agent' },
-    { text: '', value: 'actions', sortable: false },
+    { text: 'Агент', value: 'agent.name' },
+    { text: 'Редактирование', value: 'actions', sortable: false },
 
 
   ];
@@ -120,7 +117,10 @@ export default class ListTransportations extends Vue {
   }
 
   async getData(){
-    let model = await this.controller.GetAllTransportations().then(response=>response.data)
+    let model = await this.controller.GetAllTransportations().then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
     model = this.processRawAgentsData(model)
     this.parseToTable(model)
   }

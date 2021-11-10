@@ -56,8 +56,12 @@
             </v-col>
             <v-col>
               <v-select
-                  label="Агент"
-                  v-model.lazy="transModel.agent"
+                  :label="'Агент'"
+                  :items="agents"
+                  item-text="name"
+                  item-value="id"
+                  :value="transModel.agentId"
+                  @change="transModel.agentId = $event"
               ></v-select>
             </v-col>
             <v-col>
@@ -550,6 +554,8 @@ import {Component, Model, Prop, Vue, Watch} from 'vue-property-decorator'
 import {PlaceModel} from "@/models/transportations/PlaceModel";
 import {TransportationController} from "@/controllers/TransportationController"
 import {TransportationModel} from "@/models/transportations/TransportationModel";
+import {AgentsController} from "@/controllers/AgentsController";
+import {AgentModel} from "@/models/transportations/AgentModel";
 
 
 @Component({
@@ -560,13 +566,14 @@ import {TransportationModel} from "@/models/transportations/TransportationModel"
 export default class NewTransportation extends Vue {
 
   @Prop() editModel : TransportationModel
-
   public editIndex : number = 0
   private transModel = {} as TransportationModel
+  private agentsController = new AgentsController()
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
   private loading : boolean = false;
   private menu3: boolean = false;
+  private agents :  object[] = []
   private place = {} as PlaceModel
   private editedIndex: number = -1
   private places: PlaceModel[] = []
@@ -586,6 +593,17 @@ export default class NewTransportation extends Vue {
     {text: 'Обьемный вес', value: 'totalVolume'},
   ];
 
+  async mounted(){
+     await AgentsController.GetAllAgents().then((t: any)=>{
+      for (let datum of t.data) {
+        this.agents.push({
+          name : datum.name,
+          id : datum.id
+        })
+      }
+    })
+     console.log(this.agents)
+  }
 
   public SaveVolume(){
     let result = this.calculateVolume(this.place)
@@ -614,6 +632,7 @@ async AddModel(){
      controller.AddNewTransportation(this.transModel).then(this.clean)
    }
    else{
+     delete this.transModel.agent
      await controller.UpdateTransportation(this.transModel).then(this.clean)
    }
 

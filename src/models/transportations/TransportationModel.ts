@@ -11,6 +11,7 @@ export  class TransportationModel {
     dateAN : string
     dateOfLeave : string
     agent : AgentModel
+    agentId : number
     airportFromId : AirportModel
     goodsNatureCode : string
     goodsNatureDescription : string

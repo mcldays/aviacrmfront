@@ -107,7 +107,9 @@ export default class ListCarriers extends Vue {
   mounted(){
 
   }
-
+  editItem(){
+    this.modalVision = !this.modalVision
+  }
   addCarrier(){
     this.modalVision = !this.modalVision
   }

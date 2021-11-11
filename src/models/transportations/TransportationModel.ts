@@ -24,6 +24,8 @@ export  class TransportationModel {
     arrivalGeneral : boolean
     emergency : boolean
     places  : PlaceModel[]
+    totalWeight? : number
+    totalSeats? : number
     carrierPrice : CarrierPriceModel
     agentPrice : CarrierPriceModel
 }

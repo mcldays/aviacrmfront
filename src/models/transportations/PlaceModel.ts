@@ -4,7 +4,7 @@ export class PlaceModel{
     length : number;
     width : number;
     height : number;
-    volume? : number;
-    totalWeight? : number;
-    volumeWeight? : number;
+    volume : number;
+    totalWeight : number;
+    volumeWeight : number;
 }

@@ -261,8 +261,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                :value="place.seats"
-                                @change="place.seats = Number($event)"
+                                v-model.number="place.seats"
                                 label="Кол-во мест"
                             ></v-text-field>
                           </v-col>
@@ -273,8 +272,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                :value="place.weight"
-                                @change="place.weight = Number($event)"
+                                v-model.number="place.weight"
                                 label="Вес"
                             ></v-text-field>
                           </v-col>
@@ -285,8 +283,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                :value="place.width"
-                                @change="place.width = Number($event)"
+                                v-model.number="place.width"
                                 label="Длинна"
                             ></v-text-field>
                           </v-col>
@@ -297,8 +294,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                :value="place.volume"
-                                @change="place.volume = Number($event)"
+                                v-model.number="place.volume"
                                 label="Ширина"
                             ></v-text-field>
                           </v-col>
@@ -309,8 +305,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                :value="place.height"
-                                @change="place.height = Number($event)"
+                                v-model.number="place.height"
                                 label="Высота"
                             ></v-text-field>
                           </v-col>
@@ -323,7 +318,7 @@
                       <v-btn
                           color="blue darken-1"
                           text
-                          @click="close"
+                          @click="closeSeats"
                       >
                         Cancel
                       </v-btn>
@@ -338,6 +333,20 @@
                   </v-card>
                 </v-dialog>
               </v-toolbar>
+            </template>
+            <template
+                v-slot:body.append
+            >
+              <tr>
+                <td>{{totalCount.totalSeats}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{totalCount.totalWeight}}</td>
+                <td></td>
+              </tr>
             </template>
           </v-data-table>
         </v-container>
@@ -566,16 +575,19 @@ import {AgentModel} from "@/models/transportations/AgentModel";
 export default class NewTransportation extends Vue {
 
   @Prop() editModel : TransportationModel
+  @Prop() componentKey : number
   public editIndex : number = 0
   private transModel = {} as TransportationModel
-  private agentsController = new AgentsController()
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
   private loading : boolean = false;
   private menu3: boolean = false;
+  private totalCount : any = {
+    totalSeats : 0,
+    totalWeight : 0
+  }
   private agents :  object[] = []
   private place = {} as PlaceModel
-  private editedIndex: number = -1
   private places: PlaceModel[] = []
   private headers: object = [
     {
@@ -608,35 +620,35 @@ export default class NewTransportation extends Vue {
   public SaveVolume(){
     let result = this.calculateVolume(this.place)
     this.places.push(result)
-    this.close()
+    this.totalCount.totalSeats += Number(this.place.seats)
+    this.totalCount.totalWeight += this.place.totalWeight
+    this.closeSeats()
   }
 
-  public close() {
+
+
+  public closeSeats() {
     this.dialogNewPlace = !this.dialogNewPlace
-    this.printDefaultModel()
+    this.place = new PlaceModel()
   }
-  printDefaultModel(){
-   this.place = {} as PlaceModel
-  }
-  calculateVolume(place : PlaceModel){
 
+  calculateVolume(place : PlaceModel){
       place.totalWeight = place.seats * place.weight
-    return place
+       return place
   }
 async AddModel(){
-    this.transModel.places = this.places
-    console.log(this.transModel)
     let controller = new TransportationController()
     this.loading = true
    if(this.editIndex == 0){
+     this.transModel.places = this.places
      controller.AddNewTransportation(this.transModel).then(this.clean)
    }
    else{
      delete this.transModel.agent
+     delete this.transModel.totalWeight
+     delete this.transModel.totalSeats
      await controller.UpdateTransportation(this.transModel).then(this.clean)
    }
-
-
   }
 
   closeModal(){
@@ -646,19 +658,25 @@ async AddModel(){
 
   clean(){
     this.transModel = new TransportationModel()
-    this.place = {} as PlaceModel
     this.places = []
     this.loading = false
     this.editIndex = 0
+    this.totalCount.totalSeats = 0
+    this.totalCount.totalWeight = 0
     this.$emit("successAdd")
   }
 
 
-  @Watch("editModel", {immediate: true, deep: true})
+  @Watch("editModel", {immediate: true})
   getDataForEdit(){
     if(Object.keys(this.editModel).length != 0){
       this.editIndex = -1
       this.transModel = this.editModel
+      this.places = this.editModel.places
+      for (let place of this.places) {
+        this.totalCount.totalSeats +=place.seats
+        this.totalCount.totalWeight += place.totalWeight
+      }
     }
   }
 

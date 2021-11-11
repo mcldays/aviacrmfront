@@ -34,11 +34,11 @@
               <v-tab @click="$router.push('/history')">История</v-tab>
               <v-tab @click="$router.push('/transportations')">Перевозки</v-tab>
               <v-tab @click="$router.push('/reports')">Отчеты</v-tab>
-              <v-tab>География</v-tab>
-              <v-tab>Тарифы</v-tab>
+              <v-tab @click="$router.push('/stations')">География</v-tab>
+              <v-tab @click="$router.push('/tarifs')">Тарифы</v-tab>
               <v-tab @click="$router.push('/carriers')">Перевозчики</v-tab>
               <v-tab @click="$router.push('/agents')">Агенты</v-tab>
-              <v-tab>Курсы конвертации</v-tab>
+              <v-tab @click="$router.push('/ConversionRate')">Курсы конвертации</v-tab>
             </v-tabs>
           </template>
         </v-app-bar>

@@ -1,21 +1,21 @@
 export  class AgentModel{
-    Name : string
-    OfficialName : string
-    Phone : string
-    Director : string
-    Accountant : string
-    LegalAddress  :string
-    FactAddress: string
-    PostAddress : string
-    INN: string
-    KPP: string
-    BIC : string
-    KS : string
-    RS: string
-    BankName : string
-    ContractNumber : string
-    ContractDate : string
-    FileName : string
+    name : string
+    officialName : string
+    phone : string
+    director : string
+    accountant : string
+    legalAddress  :string
+    factAddress: string
+    postAddress : string
+    inn: string
+    kpp: string
+    bic : string
+    ks : string
+    rs: string
+    bankName : string
+    contractNumber : string
+    contractDate : string
+    fileName : string
 }
 
 class Station

@@ -24,6 +24,7 @@
           v-model="readTransModel"
           :key="componentKey"
           :headers="headers"
+          :loading="loading"
           :items="items"
           :items-per-page="5"
           class="elevation-1"
@@ -54,6 +55,7 @@
       >
       <NewTransportation
           :edit-model="editModel"
+          :componentKey="this.newTransKey"
           @successAdd = "refresh"
           @closed="refresh"
       >
@@ -69,9 +71,10 @@ import NewTransportation from "./NewTransportation.vue";
 import Finder from './Finder.vue'
 import 'vue-resize/dist/vue-resize.css'
 import {TransportationController} from "@/controllers/TransportationController";
-import {AxiosResponse} from "axios";
 import {TransportationReadModel} from "@/models/transportations/readmodels/TransportationReadModel";
 import {TransportationModel} from "@/models/transportations/TransportationModel";
+import {PlaceModel} from "@/models/transportations/PlaceModel";
+
 
 
 @Component({
@@ -85,15 +88,12 @@ export default class ListTransportations extends Vue {
   private modalVision : boolean = false;
   private componentKey : number = 0
   private items : any[] = []
+  private newTransKey : number = 0
+  private loading : boolean = true;
   private controller  = new TransportationController()
   private editModel = {} as TransportationModel
   private readTransModel : TransportationReadModel[] = []
-  private menuTitle : object =[
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me 2' }
-  ]
+
   private headers : object = [
     {
       text: 'Номер а/н',
@@ -106,11 +106,11 @@ export default class ListTransportations extends Vue {
     { text: 'Рейс', value: 'flightCode' },
     { text: 'Общий вес', value: 'totalWeight' },
     { text: 'Оплачиваемый вес', value: 'payedkg' },
-    { text: 'Кол-во мест', value: 'placecount' },
+    { text: 'Кол-во мест', value: 'totalSeats' },
     { text: 'Обьем', value: 'values' },
     { text: 'Направление', value: 'moves' },
-    { text: 'Агент', value: 'agent' },
-    { text: '', value: 'actions', sortable: false },
+    { text: 'Агент', value: 'agent.name' },
+    { text: 'Редактирование', value: 'actions', sortable: false },
 
 
   ];
@@ -120,27 +120,15 @@ export default class ListTransportations extends Vue {
   }
 
   async getData(){
-    let model = await this.controller.GetAllTransportations().then(response=>response.data)
-    model = this.processRawAgentsData(model)
+    let model = await this.controller.GetAllTransportations().then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
+    model = this.processData(model)
     this.parseToTable(model)
   }
 
   parseToTable(response : TransportationModel[]){
-    // let readTransModel : TransportationReadModel[] = []
-    // for (let model of response) {
-    //   for (let modelElement of model.places) {
-    //     readTransModel.push(new TransportationReadModel(
-    //         model.id,
-    //         model.number,
-    //         model.dateAN,
-    //         model.dateOfLeave,
-    //         model.flightCode,
-    //         modelElement.totalWeight,
-    //         modelElement.seats
-    //     ))
-    //   }
-    // }
-    // this.items = readTransModel
     this.items = response
     console.log(this.items)
   }
@@ -153,6 +141,7 @@ export default class ListTransportations extends Vue {
   }
   refresh(){
     this.modalVision = false
+    this.newTransKey += 1
     this.items = []
     this.getData()
   }
@@ -170,15 +159,23 @@ export default class ListTransportations extends Vue {
     this.modalVision = true
   }
 
-  processRawAgentsData(models : TransportationModel[]){
+  processData(models : TransportationModel[]){
     let newObject : TransportationModel[] = []
     for (let model of models) {
       model.dateOfLeave = model.dateOfLeave.slice(0,10)
       model.dateAN= model.dateAN.slice(0,10)
+      model.totalSeats = 0
+      model.totalWeight = 0
+      for (let place of model.places) {
+        model.totalSeats += place.seats
+        model.totalWeight += place.totalWeight
+      }
       newObject.push(model);
     }
     return newObject
   }
+
+
 
 
 

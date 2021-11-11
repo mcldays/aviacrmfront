@@ -26,7 +26,7 @@
                   v-bind="attrs"
                   v-on="on"
               >
-                Добавить агента
+                Добавить ответственное лицо
               </v-btn>
             </template>
             <v-card>
@@ -46,33 +46,10 @@
                           sm="6"
                           md="4"
                       >
-                        <v-menu
-                            v-if="field.key==='contractDate'"
-                            v-model="datepicker_displayed"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                v-model="editedItem[field.key]"
-                                :label="field.name"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                              v-model="editedItem[field.key]"
-                              @input="datepicker_displayed = false"
-                          ></v-date-picker>
-                        </v-menu>
+
                         <v-select
-                            v-else-if="field.key==='station'"
-                            :items="stations"
+                            v-if="field.key==='agent'"
+                            :items="agents"
                             item-text="name"
                             item-value="id"
                             v-model="editedItem[field.key]"
@@ -112,7 +89,7 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="text-h5">Вы уверены, что хотите удалить агента?</v-card-title>
+              <v-card-title class="text-h5">Вы уверены, что хотите удалить ответственное лицо?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Отмена</v-btn>
@@ -149,39 +126,22 @@
       </template>
     </v-data-table>
   </v-app>
-
-
 </template>
 
-
-
 <script>
-import {AgentsController} from "@/controllers/AgentsController"
-import {StationsController} from "@/controllers/StationsController"
+import {PersonsController} from "@/controllers/PersonsController";
+import {AgentsController} from "@/controllers/AgentsController";
 import {Field} from "@/models/Field"
 
-
-Object.filter = function( obj, predicate) {
-  let result = {}, key;
-
-  for (key in obj) {
-    if (obj.hasOwnProperty(key) && predicate(obj[key])) {
-      result[key] = obj[key];
-    }
-  }
-
-  return result;
-};
-
-
-
 export default {
-  data () {
-    return {
+  name: "Persons",
+  data(){
+    return{
       headers: [
-        { text: 'Название', value: 'name' },
-        { text: 'Станция', value: 'station' },
-        { text: 'Реквизиты', value: 'requisites' },
+        { text: 'Имя', value: 'name' },
+        { text: 'Агент', value: 'agent' },
+        { text: 'Телефон', value: 'phone' },
+        { text: 'Эл. почта', value: 'email' },
         { text: 'Взаимодействия', value: 'actions', sortable: false },
       ],
       items:[],
@@ -193,28 +153,13 @@ export default {
       editedItem: null,
       defaultItem: null,
       fields: [
-          new Field("name", "Название", "", true, [t=>!!t|| "Название должно бвыть введено"]),
-          new Field("officialName", "Официальное название"),
-          new Field("phone", "Телефон"),
-          new Field("director", "Директор"),
-          new Field("accountant", "Главный бухгалтер"),
-          new Field("legalAddress", "Юридический адрес"),
-          new Field("factAddress", "Фактический адрес"),
-          new Field("postAddress", "Почтовый адрес"),
-          new Field("inn", "ИНН"),
-          new Field("kpp", "КПП"),
-          new Field("bic", "БИК"),
-          new Field("ks", "К/с"),
-          new Field("rs", "Р/с"),
-          new Field("bankName", "Наименование банка"),
-          new Field("contractNumber", "Номер договора"),
-          new Field("contractDate", "Дата договора",
-              (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
-          new Field("fileName", "Имя файла в выгрузке"),
-          new Field("station", "Станция", null),
+        new Field("name", "Имя", "", true, [t=>!!t|| "Имя должно быть введено"]),
+        new Field("agent", "Агент"),
+        new Field("phone", "Телефон"),
+        new Field("email", "Эл. почта"),
       ],
       datepicker_displayed: false,
-      stations: [],
+      agents: [],
       is_valid: false
     }
   },
@@ -225,41 +170,38 @@ export default {
 
       this.loading = true
 
-      StationsController.GetAllStations()
-          .then(response => {
-            this.stations = response.data
-          })
-
       AgentsController.GetAllAgents()
           .then(response =>
           {
-            this.items = this.processRawAgentsData(response.data);
-            this.loading = false;
+            this.agents = response.data;
           });
 
+      PersonsController.GetAllPersons()
+          .then(response => {
+            this.items = this.processRawData(response.data);
+            this.loading = false;
+          })
 
 
     },
 
     toTableView(model){
-      let station = this.stations.find(t=>t.id == model.station)
+      let agent = this.agents.find(t=>t.id == model.agent)
       return {
         id: model.id,
+        agent: agent ? agent.name : undefined,
         name: model.name,
-        station: station ? station.name : undefined,
-        requisites: this.getRequisites(model)
+        phone: model.phone,
+        email: model.email
       }
     },
 
-    getRequisites(model){
-      return [model.director, model.inn, model.kpp].filter(t=>t).join(' ');
-    },
 
-    processRawAgentsData(models){
+
+    processRawData(models){
       return models.map(t=>
       {
         let obj = Object.fromEntries(Object.entries(t).filter(tt=>(tt[0] !== "upsertedDate" && tt[0] !== "modifiedDate")))
-        obj.contractDate = obj.contractDate.substr(0, 10);
         return obj
       })
     },
@@ -277,11 +219,11 @@ export default {
     },
 
     deleteItemConfirm () {
-      AgentsController.RemoveAgent(this.items[this.editedIndex].id)
-        .then(_=>{
-          this.items.splice(this.editedIndex, 1)
-          this.closeDelete()
-        })
+      PersonsController.RemovePerson(this.items[this.editedIndex].id)
+          .then(_=>{
+            this.items.splice(this.editedIndex, 1)
+            this.closeDelete()
+          })
     },
 
     close () {
@@ -304,11 +246,11 @@ export default {
       this.$refs.form.validate();
       if(!this.is_valid) return;
       if (this.editedIndex > -1) {
-        await AgentsController.EditAgent(this.editedItem)
+        await PersonsController.EditPerson(this.editedItem)
         Object.assign(this.items[this.editedIndex], this.editedItem)
 
       } else {
-        await AgentsController.AddAgent(
+        await PersonsController.AddPerson(
             Object.filter(this.editedItem, t=>(t !== "" && t!== null)) // отфильтровываем пустые поля
         )
         this.items.push(this.editedItem)
@@ -319,7 +261,7 @@ export default {
   },
   computed: {
     formTitle () {
-      return (this.editedIndex === -1 ? 'Добавление ' : 'Редактирование ') + "агента"
+      return (this.editedIndex === -1 ? 'Добавление ' : 'Редактирование ') + "ответственного лица"
     },
     tableItems(){
       return this.items.map(t=>this.toTableView(t))
@@ -341,4 +283,6 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

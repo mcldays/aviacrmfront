@@ -4,6 +4,9 @@ import History from "@/components/UIComponents/History/History.vue"
 import Agents from "@/components/UIComponents/Agents/Agents.vue"
 import Carriers from "@/components/UIComponents/Carriers/Carriers.vue"
 import Reports from "@/components/UIComponents/Reports/Reports.vue"
+import ConversionRate from "@/components/UIComponents/ConversionRate/ConversionRate.vue"
+import Stations from "@/components/UIComponents/Stations/Stations.vue"
+import Tarifs from "@/components/UIComponents/Tarifs/Tarifs.vue"
 
 export default new VueRouter({
     routes : [
@@ -28,6 +31,18 @@ export default new VueRouter({
         {
             path:'/Reports',
             component: Reports
+        },
+        {
+            path: '/ConversionRate',
+            component : ConversionRate
+        },
+        {
+            path: '/Stations',
+            component : Stations
+        },
+        {
+            path: '/Tarifs',
+            component : Tarifs
         }
     ]
 })

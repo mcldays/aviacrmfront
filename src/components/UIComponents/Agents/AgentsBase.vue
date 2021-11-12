@@ -4,8 +4,9 @@
       <v-tab @click="component = 'Agents'">Агенты</v-tab>
       <v-tab @click="component = 'Persons'">Ответственные лица</v-tab>
     </v-tabs>
-    <component :is="component"/>
-
+    <keep-alive>
+      <component :is="component"/>
+    </keep-alive>
   </v-app>
 
 </template>

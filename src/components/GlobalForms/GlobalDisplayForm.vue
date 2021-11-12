@@ -20,15 +20,28 @@
             ></v-img>
           </template>
 
-          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
 
           <v-toolbar-title>Aliance Cargo</v-toolbar-title>
 
           <v-spacer></v-spacer>
+          <span class="body-1" style="margin-top: 13px">Михаил Лялин </span>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  icon>
+                <v-icon>mdi-account</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title @click="logout">Выйти</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
 
-          <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
           <template v-slot:extension>
             <v-tabs align-with-title>
               <v-tab @click="$router.push('/history')">История</v-tab>
@@ -70,8 +83,13 @@ import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
   }
 })
 export default class GlobalDisplayForm extends Vue {
+  private menuItems : object[] = [{title : "Залупа"}]
  mounted(){
   let height =  this.$refs.trans;
+ }
+ async logout(){
+   await this.$store.dispatch('logout', ).then(()=>
+       this.$router.push('/aut'))
  }
 }
 </script>

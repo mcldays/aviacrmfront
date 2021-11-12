@@ -16,7 +16,6 @@
     "types": [
       "webpack-env",
       "vuetify",
-      "vue-resize"
     ],
     "paths": {
       "@/*": [

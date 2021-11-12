@@ -28,7 +28,7 @@ export default {
           { text: 'Взаимодействия', value: 'actions', sortable: false },
         ],
         fields: [
-          new Field("name", "Название", "", true, [t=>!!t|| "Название должно бвыть введено"]),
+          new Field("name", "Название", {rules: [t=>!!t|| "Название должно бвыть введено"]}),
           new Field("officialName", "Официальное название"),
           new Field("phone", "Телефон"),
           new Field("director", "Директор"),
@@ -43,11 +43,12 @@ export default {
           new Field("rs", "Р/с"),
           new Field("bankName", "Наименование банка"),
           new Field("contractNumber", "Номер договора"),
-          new Field("contractDate", "Дата договора",
-              (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-          true, [], "datepicker"),
+          new Field("contractDate", "Дата договора", {
+            defaultValue: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            fieldType: "datepicker"
+          }),
           new Field("fileName", "Имя файла в выгрузке"),
-          new Field("station", "Станция", null, false, [], "select", {items: this.getStations, text: "name", value: "id"}),
+          new Field("station", "Станция", {fieldType: "select", fieldParams: {items: this.getStations, text: "name", value: "id"}}),
         ],
         instanceNameRod: "агента",
         instanceNameIm: "агента",

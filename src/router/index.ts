@@ -7,6 +7,7 @@ import Reports from "@/components/UIComponents/Reports/Reports.vue"
 import ConversionRate from "@/components/UIComponents/ConversionRate/ConversionRate.vue"
 import Stations from "@/components/UIComponents/Stations/Stations.vue"
 import Tarifs from "@/components/UIComponents/Tarifs/Tarifs.vue"
+import AdminPanel from "@/components/UIComponents/AdminPanel/AdminPanel.vue"
 
 export default new VueRouter({
     routes : [
@@ -43,6 +44,10 @@ export default new VueRouter({
         {
             path: '/Tarifs',
             component : Tarifs
+        },
+        {
+            path: '/AdminPanel',
+            component : AdminPanel
         }
     ]
 })

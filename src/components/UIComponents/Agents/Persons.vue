@@ -8,7 +8,7 @@
 import {PersonsController} from "@/controllers/PersonsController";
 import {AgentsController} from "@/controllers/AgentsController";
 import {Field} from "@/models/Field"
-import TableComponent from "@/components/UIComponents/Agents/CRUDTableComponent";
+import TableComponent from "@/components/UIComponents/CRUDTableComponent";
 
 let agents = [];
 
@@ -34,8 +34,8 @@ export default {
         instanceNameRod: "ответственного лица",
         instanceNameIm: "ответственное лицо",
         initialize: async (data) =>  {
-          agents = (await AgentsController.GetAllAgents()).data;
-          data.items = (await PersonsController.GetAllPersons()).data
+          agents = (await AgentsController.GetAll()).data;
+          data.items = (await PersonsController.GetAll()).data
         },
         toTableView: (data, model) => {
           let agent = agents.find(t=>t.id === model.agent)
@@ -48,13 +48,13 @@ export default {
           }
         },
         removeInstance: async (data) => {
-          await PersonsController.RemovePerson(data.items[data.editedIndex].id)
+          await PersonsController.Remove(data.items[data.editedIndex].id)
         },
         editInstance: async (data) => {
-          await PersonsController.EditPerson(data.editedItem)
+          await PersonsController.Edit(data.editedItem)
         },
         addInstance: async (data, person) => {
-          let res = await PersonsController.AddPerson(person);
+          let res = await PersonsController.Add(person);
           return res.data;
         }
       },

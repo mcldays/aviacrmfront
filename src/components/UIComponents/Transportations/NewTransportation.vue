@@ -606,7 +606,7 @@ export default class NewTransportation extends Vue {
   ];
 
   async mounted(){
-     await AgentsController.GetAllAgents().then((t: any)=>{
+     await AgentsController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
         this.agents.push({
           name : datum.name,

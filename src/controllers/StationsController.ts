@@ -1,19 +1,22 @@
 // @ts-ignore
 import Axios from '/axios_settings';
-import {AgentModel} from "@/models/transportations/AgentModel";
-import Vue from "vue";
+
 
 
 export class StationsController{
-    public static async GetAllStations() {
+    public static async GetAll() {
        return Axios.get("/api/Stations/GetAll")
     }
 
-    public static async AddStations(model: object) {
+    public static async Add(model: object) {
        return Axios.post("/api/Stations/Add", model)
     }
 
-    public static async EditStations(model : object) {
+    public static async Edit(model : object) {
        return Axios.post("/api/Stations/Update", model)
+    }
+
+    public static async Remove(id : number) {
+        return Axios.get("/api/Stations/Remove?id=" + id)
     }
 }

@@ -58,7 +58,19 @@
                             :item-value="field.fieldParams.value"
                             v-model="editedItem[field.key]"
                             :label="field.name"
+                            :rules="field.rules"
+                            :required="field.required"
                         ></v-select>
+                        <v-checkbox
+                            v-else-if="field.fieldType==='checkbox'"
+                            v-model="editedItem[field.key]"
+                            :label="field.name"
+                        ></v-checkbox>
+                        <v-textarea
+                            v-else-if="field.fieldType==='textarea'"
+                            v-model="editedItem[field.key]"
+                            :label="field.name"
+                        ></v-textarea>
                         <v-menu
                             v-else-if="field.fieldType==='datepicker'"
                             :close-on-content-click="false"
@@ -126,6 +138,22 @@
           </v-dialog>
         </v-toolbar>
       </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip
+            :color="item.status.color"
+            dark
+        >
+          {{item.status.name}}
+        </v-chip>
+      </template>
+      <template v-slot:item.isActive="{ item }">
+        <v-chip
+            :color="item.isActive.color"
+            dark
+        >
+          {{item.isActive.name}}
+        </v-chip>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
             small
@@ -186,26 +214,13 @@ export default {
   },
   methods: {
     async initialize () {
-      // for(let p in this.info){
-      //   this.$set(this.parentData, p, this.info[p])
-      // }
       this.loading = true
-
-
-
-
 
       this.defaultItem = Object.fromEntries(this.parent.fields.map(t=>[t.key, t.defaultValue]))
       this.editedItem = Object.assign({}, this.defaultItem)
 
       this.parent.initialize(this.$data).then(()=>this.loading = false);
-
-
-
-
     },
-
-
 
     editItem (item) {
       this.editedIndex = this.tableItems.findIndex(t=>t.id === item.id)
@@ -282,5 +297,7 @@ export default {
 </script>
 
 <style scoped>
-
+.bck_lightGreen{
+  background-color: lightgreen;
+}
 </style>

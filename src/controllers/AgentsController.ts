@@ -3,19 +3,19 @@ import Axios from '/axios_settings';
 import {AgentModel} from "@/models/transportations/AgentModel";
 
 export class AgentsController{
-    public static async GetAllAgents() {
+    public static async GetAll() {
        return Axios.get("/api/Agents/GetAll")
     }
 
-    public static async AddAgent(model : AgentModel) {
+    public static async Add(model : AgentModel) {
        return Axios.post("/api/Agents/Add", model)
     }
 
-    public static async EditAgent(model : AgentModel) {
+    public static async Edit(model : AgentModel) {
        return Axios.post("/api/Agents/Update", model)
     }
 
-    public static async RemoveAgent(id : number) {
+    public static async Remove(id : number) {
        return Axios.get("/api/Agents/Remove?id=" + id)
     }
 }

@@ -5,7 +5,7 @@ import Agents from "@/components/UIComponents/Agents/AgentsBase.vue"
 import Carriers from "@/components/UIComponents/Carriers/Carriers.vue"
 import Reports from "@/components/UIComponents/Reports/Reports.vue"
 import ConversionRate from "@/components/UIComponents/ConversionRate/ConversionRate.vue"
-import Stations from "@/components/UIComponents/Stations/Stations.vue"
+import Stations from "@/components/UIComponents/Stations/StationsNew.vue"
 import Tarifs from "@/components/UIComponents/Tarifs/Tarifs.vue"
 
 export default new VueRouter({

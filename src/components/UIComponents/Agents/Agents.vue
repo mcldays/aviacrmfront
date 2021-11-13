@@ -10,8 +10,7 @@
 import {AgentsController} from "@/controllers/AgentsController"
 import {StationsController} from "@/controllers/StationsController"
 import {Field} from "@/models/Field"
-import {PersonsController} from "@/controllers/PersonsController";
-import TableComponent from "@/components/UIComponents/Agents/CRUDTableComponent";
+import TableComponent from "@/components/UIComponents/CRUDTableComponent";
 
 let stations = [];
 
@@ -44,17 +43,16 @@ export default {
           new Field("bankName", "Наименование банка"),
           new Field("contractNumber", "Номер договора"),
           new Field("contractDate", "Дата договора", {
-            defaultValue: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             fieldType: "datepicker"
           }),
           new Field("fileName", "Имя файла в выгрузке"),
-          new Field("station", "Станция", {fieldType: "select", fieldParams: {items: this.getStations, text: "name", value: "id"}}),
+          new Field("station", "Станция", {fieldType: "select", fieldParams: {items: this.getStations, text: "name", value: "id"}, rules: [t=>!!t|| "Станция должна быть выбрана"]}),
         ],
         instanceNameRod: "агента",
         instanceNameIm: "агента",
         initialize: async (data) =>  {
-          stations = (await StationsController.GetAllStations()).data;
-          data.items = (await AgentsController.GetAllAgents()).data;
+          stations = (await StationsController.GetAll()).data;
+          data.items = (await AgentsController.GetAll()).data;
           this.processRawAgentsData(data.items);
         },
         toTableView: (data, model) => {
@@ -67,13 +65,13 @@ export default {
           }
         },
         removeInstance: async (data) => {
-          await AgentsController.RemoveAgent(data.items[data.editedIndex].id)
+          await AgentsController.Remove(data.items[data.editedIndex].id)
         },
         editInstance: async (data) => {
-          await AgentsController.EditAgent(data.editedItem)
+          await AgentsController.Edit(data.editedItem)
         },
         addInstance: async (data, agent) => {
-          let res = await AgentsController.AddAgent(agent);
+          let res = await AgentsController.Add(agent);
           return res.data;
         }
       },
@@ -84,10 +82,10 @@ export default {
       return stations;
     },
     getRequisites(model){
-      return [model.director, model.inn, model.kpp].filter(t=>t).join(' ');
+      return [model.director, model.inn, model.kpp].filter(t=>t).join(', ');
     },
     processRawAgentsData: function (models) {
-      models.forEach(t => t.contractDate = t.contractDate.substr(0, 10))
+      models.forEach(t => {if(t.contractDate ) {t.contractDate = t.contractDate.substr(0, 10)}})
     },
   },
 }

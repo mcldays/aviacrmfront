@@ -15,10 +15,10 @@ import Users from "@/components/UIComponents/AdminPanel/Users.vue";
 export default {
   components: {
     Users,
-    data() {
-      return {
-        component: 'ReportToBank'
-      }
+  },
+  data() {
+    return {
+      component: 'ReportToBank'
     }
   }
 }

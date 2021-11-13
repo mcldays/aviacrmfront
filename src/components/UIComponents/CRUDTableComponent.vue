@@ -94,11 +94,12 @@
                           ></v-date-picker>
                         </v-menu>
                         <v-text-field
-                            v-else
+                            v-else-if="field.isVisible"
                             v-model="editedItem[field.key]"
                             :label="field.name"
                             :rules="field.rules"
                             :required="field.required"
+                            :type="field.isNumber ? 'number' : ''"
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -125,7 +126,7 @@
               </v-form>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-dialog v-model="dialogDelete" max-width="600px">
             <v-card>
               <v-card-title class="text-h5">{{"Вы уверены, что хотите удалить " + parent.instanceNameIm + "?"}}</v-card-title>
               <v-card-actions>
@@ -136,6 +137,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
         </v-toolbar>
       </template>
       <template v-slot:item.status="{ item }">
@@ -167,6 +169,15 @@
             @click="deleteItem(item)"
         >
           mdi-delete
+        </v-icon>
+      </template>
+      <template v-slot:item.addit="{ item }">
+        <v-icon
+            small
+            class="mr-2"
+            @click="parent.additCallback(item)"
+        >
+          mdi-cash-multiple
         </v-icon>
       </template>
 

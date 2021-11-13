@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <v-data-table
         :headers="parent.headers"
         :items="tableItems"
@@ -171,6 +171,14 @@
           mdi-delete
         </v-icon>
       </template>
+      <template v-slot:item.actions_remove="{ item }">
+        <v-icon
+            small
+            @click="deleteItem(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
       <template v-slot:item.addit="{ item }">
         <v-icon
             small
@@ -190,7 +198,7 @@
         </v-btn>
       </template>
     </v-data-table>
-  </v-app>
+  </div>
 </template>
 
 <script>

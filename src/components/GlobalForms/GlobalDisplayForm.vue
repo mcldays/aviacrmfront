@@ -31,15 +31,14 @@
           </v-btn>
           <template v-slot:extension>
             <v-tabs align-with-title>
-              <v-tab @click="$router.push('/history')">История</v-tab>
-              <v-tab @click="$router.push('/transportations')">Перевозки</v-tab>
-              <v-tab @click="$router.push('/reports')">Отчеты</v-tab>
-              <v-tab @click="$router.push('/stations')">География</v-tab>
-              <v-tab @click="$router.push('/tarifs')">Тарифы</v-tab>
-              <v-tab @click="$router.push('/carriers')">Перевозчики</v-tab>
-              <v-tab @click="$router.push('/agents')">Агенты</v-tab>
-              <v-tab @click="$router.push('/ConversionRate')">Курсы конвертации</v-tab>
-              <v-tab @click="$router.push('/adminPanel')">Odmen</v-tab>
+              <v-tab @click="navigate('/history')">История</v-tab>
+              <v-tab @click="navigate('/transportations')">Перевозки</v-tab>
+              <v-tab @click="navigate('/reports')">Отчеты</v-tab>
+              <v-tab @click="navigate('/stations')">География</v-tab>
+              <v-tab @click="navigate('/carriers')">Перевозчики</v-tab>
+              <v-tab @click="navigate('/agents')">Агенты</v-tab>
+              <v-tab @click="navigate('/ConversionRate')">Курсы конвертации</v-tab>
+              <v-tab @click="navigate('/adminPanel')">Odmen</v-tab>
             </v-tabs>
           </template>
         </v-app-bar>
@@ -65,6 +64,7 @@
 
 import { Vue, Component} from "vue-property-decorator";
 import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
+import {h} from "@vue/composition-api";
 @Component({
   components:{
     AviaToolbar,
@@ -72,8 +72,13 @@ import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
 })
 export default class GlobalDisplayForm extends Vue {
  mounted(){
-  let height =  this.$refs.trans;
+  let height =  this.$refs.trans
  }
+  navigate (href : string): void {
+    let current = this.$router.currentRoute;
+    if(current.fullPath !== href)
+      this.$router.push(href);
+  }
 }
 </script>
 

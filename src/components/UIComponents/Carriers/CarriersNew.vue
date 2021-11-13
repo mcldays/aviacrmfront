@@ -19,7 +19,7 @@
             <v-btn
                 text
                 @click="dialog.value = false"
-            >Close</v-btn>
+            >Закрыть</v-btn>
           </v-card-actions>
         </v-card>
       </template>

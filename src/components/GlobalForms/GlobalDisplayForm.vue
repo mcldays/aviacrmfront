@@ -39,6 +39,7 @@
               <v-tab @click="$router.push('/carriers')">Перевозчики</v-tab>
               <v-tab @click="$router.push('/agents')">Агенты</v-tab>
               <v-tab @click="$router.push('/ConversionRate')">Курсы конвертации</v-tab>
+              <v-tab @click="$router.push('/adminPanel')">Odmen</v-tab>
             </v-tabs>
           </template>
         </v-app-bar>

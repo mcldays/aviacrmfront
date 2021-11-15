@@ -42,7 +42,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import 'vue-resize/dist/vue-resize.css'
-import FindReport from "@/components/UIComponents/Reports/ReportToAk/FindReport.vue";
+import FindReport from "@/components/UIComponents/Reports/ReportToBank/FindReport.vue";
 
 @Component({
   components:{

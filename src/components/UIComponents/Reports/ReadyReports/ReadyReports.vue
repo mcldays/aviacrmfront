@@ -182,7 +182,12 @@ export default class ListCarriers extends Vue {
   data() {
     return {
       menu2: false,
+      date2:''
     }
+  }
+  deleteItem(item: any)
+  {
+
   }
 }
 

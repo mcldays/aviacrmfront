@@ -18,7 +18,7 @@ export default {
   },
   data() {
     return {
-      component: 'ReportToBank'
+      component: 'Users'
     }
   }
 }

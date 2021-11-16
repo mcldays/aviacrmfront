@@ -119,7 +119,7 @@ export default {
           return {
             id: model.id,
             name: model.name,
-            value: model.value,
+            value: model.value.toFixed(2),
             method: methods.find(t=>t.id === model.method).name,
           }
         },

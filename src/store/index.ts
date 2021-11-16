@@ -30,38 +30,33 @@ const mutations = <MutationTree<State>><unknown>{
     logout(state : any){
         state.status = ''
         state.token = ''
-        localStorage.setItem('token', '')
     },
 };
 
 const actions = <ActionTree<State, any>>{
     login(store, user){
-        let token : string = ""
         return new Promise((resolve, reject) => {
             this.commit('auth_request')
             AutController.Autorization(user.login, user.password)
                 .then(resp => {
                     const token = resp.data.token
-                    const user = resp.data.user
-                    localStorage.setItem('token', token)
+                    const user = resp.data.role
+                    window.localStorage.setItem('token', token)
                     Axios.defaults.headers.common['Authorization'] = "Bearer " +  token
                     this.commit('auth_success', token, user)
                     resolve(resp)
                 })
                 .catch(err => {
                     this.commit('auth_error')
-                    localStorage.removeItem('token')
+                    window.localStorage.removeItem('token')
                     reject(err)
                 })
         })
-        localStorage.setItem('token', token)
-        Axios.defaults.headers.common['Bearer'] = token
-        this.commit('auth_success', token, user)
     },
     logout(){
         return new Promise((resolve, reject) => {
             this.commit('logout')
-            localStorage.removeItem('token')
+            window.localStorage.removeItem('token')
             delete Axios.defaults.headers.common['Authorization']
             resolve()
         })

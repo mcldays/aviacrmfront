@@ -31,6 +31,13 @@
 
 </v-row>
 </div>
+    <v-snackbar
+        v-model="snackbar"
+        :timeout="2000"
+        right
+    >
+      Неверное имя пользователя или пароль
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -45,13 +52,16 @@ import {Component, Vue} from "vue-property-decorator";
 export default class Authorization extends Vue {
   private login : string = ""
   private password : string = ""
+  private snackbar : boolean = false;
 
   async authorization(){
     let login = this.login
     let password = this.password
-     await this.$store.dispatch('login', { login, password }).then(()=>
+    await this.$store.dispatch('login', { login, password }).then(()=>
          this.$router.push('/Transportations')
-     )
+     ).catch(()=>{
+       this.snackbar =true
+    })
   }
 }
 

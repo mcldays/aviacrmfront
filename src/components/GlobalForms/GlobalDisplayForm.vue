@@ -25,7 +25,7 @@
           <v-toolbar-title>Aliance Cargo</v-toolbar-title>
 
           <v-spacer></v-spacer>
-          <span class="body-1" style="margin-top: 13px">Михаил Лялин </span>
+          <span class="body-1" style="margin-top: 13px"></span>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -77,6 +77,7 @@
 
 import { Vue, Component} from "vue-property-decorator";
 import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
+import store from "@/store/index"
 @Component({
   components:{
     AviaToolbar,

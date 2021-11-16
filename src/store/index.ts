@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { GetterTree, MutationTree, ActionTree } from "vuex"
-import axios from 'axios'
+import Axios from '@/../axios_settings';
 import {AutController} from "@/controllers/AutController";
 
 
@@ -15,6 +15,7 @@ class State {
 
 const getters = <GetterTree<State, any>>{
     isLoggedIn: state => !!state.token,
+    getToken : state => state.token
 };
 
 const mutations = <MutationTree<State>><unknown>{
@@ -29,6 +30,7 @@ const mutations = <MutationTree<State>><unknown>{
     logout(state : any){
         state.status = ''
         state.token = ''
+        localStorage.setItem('token', '')
     },
 };
 
@@ -42,7 +44,7 @@ const actions = <ActionTree<State, any>>{
                     const token = resp.data.token
                     const user = resp.data.user
                     localStorage.setItem('token', token)
-                    axios.defaults.headers.common['Authorization'] = token
+                    Axios.defaults.headers.common['Bearer'] = token
                     this.commit('auth_success', token, user)
                     resolve(resp)
                 })
@@ -53,14 +55,14 @@ const actions = <ActionTree<State, any>>{
                 })
         })
         localStorage.setItem('token', token)
-        axios.defaults.headers.common['Authorization'] = token
+        Axios.defaults.headers.common['Bearer'] = token
         this.commit('auth_success', token, user)
     },
     logout(){
         return new Promise((resolve, reject) => {
             this.commit('logout')
             localStorage.removeItem('token')
-            delete axios.defaults.headers.common['Authorization']
+            delete Axios.defaults.headers.common['Bearer']
             resolve()
         })
     }

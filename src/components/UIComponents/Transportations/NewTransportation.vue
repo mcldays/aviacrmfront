@@ -632,6 +632,7 @@ export default class NewTransportation extends Vue {
     this.place = new PlaceModel()
   }
 
+
   calculateVolume(place : PlaceModel){
       place.totalWeight = place.seats * place.weight
        return place

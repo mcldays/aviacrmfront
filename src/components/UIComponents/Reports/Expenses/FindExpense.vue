@@ -107,7 +107,6 @@ export default class FindReport extends Vue {
         })
       }
     })
-    console.log(this.carriers)
   }
   findExpenses()
   {

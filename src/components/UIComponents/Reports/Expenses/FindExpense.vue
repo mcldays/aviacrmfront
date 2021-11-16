@@ -53,8 +53,10 @@
       </v-col>
       <v-col  >
         <v-select
-            label="Агент"
-            :items="items"
+            :label="'Агент'"
+            :items="agents"
+            item-text="name"
+            item-value="id"
         ></v-select>
       </v-col>
     </v-row>
@@ -73,17 +75,44 @@
   </div>
 </template>
 
-<script>
-import {Vue} from "vue-property-decorator";
+<script lang="ts">
 
-export default {
-  name: "FindExpense",
-  data() {
-    return {
-      menu2: false,
-      menu1: false
+import {Component, Model, Prop, Vue, Watch} from 'vue-property-decorator'
+import {AgentsController} from "@/controllers/AgentsController";
+@Component({
+  components:{
+
+  }
+})
+export default class FindReport extends Vue {
+
+  private menu1: boolean = false;
+  private menu2: boolean = false;
+
+  private agents :  object[] = []
+  data()
+  {
+    return{
+      date1: '',
+      date2: '',
+      date3: ''
     }
-  },
+  }
+  async mounted(){
+    await AgentsController.GetAll().then((t: any)=>{
+      for (let datum of t.data) {
+        this.agents.push({
+          name : datum.name,
+          id : datum.id
+        })
+      }
+    })
+    console.log(this.carriers)
+  }
+  findExpenses()
+  {
+
+  }
 }
 </script>
 

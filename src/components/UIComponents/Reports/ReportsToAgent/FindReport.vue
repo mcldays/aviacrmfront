@@ -84,12 +84,16 @@
       </v-col>
       <v-col  >
         <v-select
-            label="Агент"
-            :items="items"
+            :label="'Агент'"
+            :items="agents"
+            item-text="name"
+            item-value="id"
         ></v-select>
         <v-select
-            label="Перевозчик"
-            :items="items"
+            :label="'Перевозчик'"
+            :items="carriers"
+            item-text="name"
+            item-value="id"
         ></v-select>
       </v-col>
     </v-row>
@@ -118,18 +122,56 @@
   </div>
 </template>
 
-<script>
-import {Vue} from "vue-property-decorator";
+<script lang="ts">
 
-export default {
-  name: "FindReport",
-  data() {
-    return {
-      menu1: false,
-      menu2: false,
-      menu3: false
+import {Component, Model, Prop, Vue, Watch} from 'vue-property-decorator'
+import {CarriersController} from "@/controllers/CarriersController";
+import {AgentsController} from "@/controllers/AgentsController";
+@Component({
+  components:{
+
+  }
+})
+export default class FindReport extends Vue {
+
+  private menu1: boolean = false;
+  private menu2: boolean = false;
+  private menu3: boolean = false;
+
+  private carriers :  object[] = []
+  private agents :  object[] = []
+  private items :  object[] = []
+  data()
+  {
+    return{
+      date1: '',
+      date2: '',
+      date3: ''
     }
-  },
+  }
+  async mounted(){
+    await CarriersController.GetAll().then((t: any)=>{
+      for (let datum of t.data) {
+        this.carriers.push({
+          name : datum.name,
+          id : datum.id
+        })
+      }
+    })
+    await AgentsController.GetAll().then((t: any)=>{
+      for (let datum of t.data) {
+        this.agents.push({
+          name : datum.name,
+          id : datum.id
+        })
+      }
+    })
+    console.log(this.carriers)
+  }
+  findExpenses()
+  {
+
+  }
 }
 </script>
 

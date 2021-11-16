@@ -24,7 +24,7 @@
             <v-icon
                 small
                 class="mr-2"
-                @click="editItem(item)"
+                @click="download(item)"
             >
               mdi-download
             </v-icon>
@@ -101,6 +101,8 @@ export default class ListCarriers extends Vue {
   ]
   findData(){
     this.finderVision = !this.finderVision;
+  }
+  download(item: any){
   }
 }
 

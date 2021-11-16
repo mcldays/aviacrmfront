@@ -76,17 +76,26 @@
   </v-app>
 </template>
 
-<script>
-import {Vue} from "vue-property-decorator";
+<script lang="ts">
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import 'vue-resize/dist/vue-resize.css'
+import FindReport from "@/components/UIComponents/Reports/ReportToBank/FindReport.vue";
 
-export default {
-  name: "Requisites",
-    Save(){
+@Component({
+  components:{
+    FindReport
+  }
+})
+export default class ListCarriers extends Vue {
+  Save()
+  {
 
-    },
-    Cancel(){
+  }
+  Cancel()
+  {
 
-    }
+  }
+
 }
 
 </script>

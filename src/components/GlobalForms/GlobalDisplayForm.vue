@@ -20,15 +20,28 @@
             ></v-img>
           </template>
 
-          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
 
           <v-toolbar-title>Aliance Cargo</v-toolbar-title>
 
           <v-spacer></v-spacer>
+          <span class="body-1" style="margin-top: 13px">Михаил Лялин </span>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  icon>
+                <v-icon>mdi-account</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title @click="logout">Выйти</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
 
-          <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
           <template v-slot:extension>
             <v-tabs align-with-title>
               <v-tab @click="navigate('/history')">История</v-tab>
@@ -64,15 +77,16 @@
 
 import { Vue, Component} from "vue-property-decorator";
 import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
-import {h} from "@vue/composition-api";
 @Component({
   components:{
     AviaToolbar,
   }
 })
 export default class GlobalDisplayForm extends Vue {
- mounted(){
-  let height =  this.$refs.trans
+
+ async logout(){
+   await this.$store.dispatch('logout', ).then(()=>
+       this.$router.push('/aut'))
  }
   navigate (href : string): void {
     let current = this.$router.currentRoute;

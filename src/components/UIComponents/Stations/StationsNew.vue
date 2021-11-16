@@ -39,7 +39,7 @@ export default {
         fields: [
           new Field("name", "Название", {rules: [t=>!!t|| "Название должно быть введено"]}),
           new Field("country", "Страна"),
-          new Field("status", "Статус", {fieldType: "select", fieldParams: {items: ()=>statuses, text: "name", value: "id"}, rules: [t=>!!t|| "Статус должен быть выбран"]}),
+          new Field("status", "Статус", {fieldType: "select", fieldParams: {items: ()=>statuses, text: "name", value: "id"}, rules: [t=>t !== null|| "Статус должен быть выбран"]}),
           new Field("flightCode", "Default flight code"),
           new Field("isDestination", "Аэропорт назначения", {fieldType: "checkbox"}),
           new Field("isDeparture", "Аэропорт вылета", {fieldType: "checkbox"}),

@@ -77,7 +77,6 @@
 
 import { Vue, Component} from "vue-property-decorator";
 import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
-import {h} from "@vue/composition-api";
 @Component({
   components:{
     AviaToolbar,

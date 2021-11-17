@@ -81,6 +81,11 @@ import {PlaceModel} from "@/models/transportations/PlaceModel";
   components:{
     Finder,
     NewTransportation
+  },
+  filters:{
+    moveFilter(){
+      return "сработало"
+    }
   }
 })
 export default class ListTransportations extends Vue {
@@ -108,7 +113,7 @@ export default class ListTransportations extends Vue {
     { text: 'Оплачиваемый вес', value: 'payedkg' },
     { text: 'Кол-во мест', value: 'totalSeats' },
     { text: 'Обьем', value: 'values' },
-    { text: 'Направление', value: 'moves' },
+    { text: 'Направление', value: 'fromTo' },
     { text: 'Агент', value: 'agent.name' },
     { text: 'Редактирование', value: 'actions', sortable: false },
 
@@ -118,6 +123,9 @@ export default class ListTransportations extends Vue {
   async mounted(){
   await this.getData()
   }
+
+
+
 
   async getData(){
     let model = await this.controller.GetAllTransportations().then((t : any)=>{
@@ -166,6 +174,7 @@ export default class ListTransportations extends Vue {
       model.dateAN= model.dateAN.slice(0,10)
       model.totalSeats = 0
       model.totalWeight = 0
+      model.fromTo = model.airportFrom.name + " - " + model.airportTo.name
       for (let place of model.places) {
         model.totalSeats += place.seats
         model.totalWeight += place.totalWeight

@@ -7,17 +7,21 @@ import {CarrierPriceModel} from "./CarrierPriceModel";
 export  class TransportationModel {
     id:  number
     carrier : CarrierModel
+    carrierId? : number
     number : number
     dateAN : string
     dateOfLeave : string
     agent : AgentModel
     agentId : number
-    airportFromId : AirportModel
+    airportFromId : number
+    airportFrom : any
     goodsNatureCode : string
     goodsNatureDescription : string
-    airportToId : AirportModel
-    agentsCommission : string
-    fzPrice : string
+    airportToId : number
+    airportTo : any
+    agentsCommission : number
+    fzPrice : number
+    fromTo : string
     fio : string
     email : string
     flightCode : string
@@ -29,3 +33,5 @@ export  class TransportationModel {
     carrierPrice : CarrierPriceModel
     agentPrice : CarrierPriceModel
 }
+
+

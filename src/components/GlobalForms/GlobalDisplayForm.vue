@@ -90,7 +90,7 @@ import store from "@/store/index"
         { id: 4, name: "Перевозчики", href: '/carriers' },
         { id: 5, name: "Агенты", href: '/agents' },
         { id: 6, name: "Курсы конвертации", href: '/ConversionRate' },
-        { id: 7, name: "Админ панель", href: '/adminPanel' },
+
       ],
     };
   },
@@ -100,6 +100,13 @@ import store from "@/store/index"
       let tab = this.$data.tabs.find((t : any)=>t.href.toLowerCase() == current.fullPath.toLowerCase())
       if(tab) return tab.id
       return 1
+    }
+  },
+  created() {
+    var role = window.localStorage.getItem("role");
+    if(role == "Admin"){
+      this.$data.tabs.unshift()
+      this.$data.tabs.push({ id: 7, name: "Админ панель", href: '/adminPanel' })
     }
   }
 })

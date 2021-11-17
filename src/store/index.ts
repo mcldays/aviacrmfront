@@ -41,6 +41,7 @@ const actions = <ActionTree<State, any>>{
                 .then(resp => {
                     const token = resp.data.token
                     const user = resp.data.role
+                    window.localStorage.setItem('role', resp.data.role)
                     window.localStorage.setItem('token', token)
                     Axios.defaults.headers.common['Authorization'] = "Bearer " +  token
                     this.commit('auth_success', token, user)

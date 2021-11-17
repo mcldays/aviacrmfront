@@ -10,7 +10,6 @@
         }"
         :loading="loading"
         class="elevation-1"
-
         loading-text="Загрузка... Пожалуйста подождите"
         :search="search"
         :custom-filter="filterOnlyCapsText"
@@ -114,7 +113,7 @@
             ></v-select>
           </v-col>
           <v-col class="col"
-            style="flex-grow: initial;"
+            style="display: flex; justify-content: center;"
           >
             <v-btn
                 style="width: 150px;"

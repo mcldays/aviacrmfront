@@ -51,7 +51,10 @@
             <v-col>
               <v-select
                   label="Перевозчик"
-                  v-bind:value="transModel.carrier"
+                  :items="carriers"
+                  item-text="name"
+                  item-value="id"
+                  v-model="transModel.carrierId"
               ></v-select>
             </v-col>
             <v-col>
@@ -60,14 +63,16 @@
                   :items="agents"
                   item-text="name"
                   item-value="id"
-                  :value="transModel.agentId"
-                  @change="transModel.agentId = $event"
+                  v-model="transModel.agentId"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="ФИО отв"
                   v-model.lazy="transModel.fio"
+                  :items="persons"
+                  item-text="name"
+                  item-value="name"
               ></v-select>
             </v-col>
             </v-row>
@@ -122,11 +127,17 @@
               <v-select
                   label="Аэропорт вылета"
                   v-model.lazy="transModel.airportFromId"
+                  :items="airportFrom"
+                  item-text="name"
+                  item-value="id"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                   label="Аэропорт назначения"
+                  :items="airportTo"
+                  item-text="name"
+                  item-value="id"
                   v-model.lazy="transModel.airportToId"
               ></v-select>
             </v-col>
@@ -179,8 +190,7 @@
               <v-text-field
                   label="Агентское вознаграждение"
                   required
-                  :value="transModel.agentsCommission"
-                  @change="transModel.agentsCommission = $event"
+                  v-model.number="transModel.agentsCommission"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -190,8 +200,7 @@
               <v-text-field
                   label="FZ price"
                   required
-                  :value="transModel.fzPrice"
-                  @change="transModel.fzPrice = $event"
+                  v-model.number="transModel.fzPrice"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -565,6 +574,9 @@ import {TransportationController} from "@/controllers/TransportationController"
 import {TransportationModel} from "@/models/transportations/TransportationModel";
 import {AgentsController} from "@/controllers/AgentsController";
 import {AgentModel} from "@/models/transportations/AgentModel";
+import {CarriersController} from "@/controllers/CarriersController";
+import {PersonsController} from "@/controllers/PersonsController";
+import {StationsController} from "@/controllers/StationsController";
 
 
 @Component({
@@ -587,6 +599,10 @@ export default class NewTransportation extends Vue {
     totalWeight : 0
   }
   private agents :  object[] = []
+  private carriers : object[] = []
+  private persons : object[]= []
+  private airportFrom : object[] = []
+  private airportTo : object[] = []
   private place = {} as PlaceModel
   private places: PlaceModel[] = []
   private headers: object = [
@@ -606,15 +622,53 @@ export default class NewTransportation extends Vue {
   ];
 
   async mounted(){
-     await AgentsController.GetAll().then((t: any)=>{
-      for (let datum of t.data) {
-        this.agents.push({
-          name : datum.name,
-          id : datum.id
+    await AgentsController.GetAll().then((t: any)=>{
+      this.agents = this.prepareDataForSelect(t.data)
+    })
+    await CarriersController.GetAll().then((t:any)=>{
+      this.carriers = this.prepareDataForSelect(t.data)
+    })
+    await PersonsController.GetAll().then((t:any)=>{
+      this.persons = this.prepareDataForSelect(t.data)
+    })
+    await StationsController.GetAll().then((t:any)=>{
+      let models = this.prepareDataFromAirports(t.data)
+      this.airportFrom = models[0]
+      this.airportTo = models[1]
+    })
+  }
+
+  prepareDataFromAirports(model : any[]) : [object[], object[]]{
+    let airportsTo : any[] = []
+    let airportsFrom : any[] = []
+    for (let modElement of model) {
+      if(modElement.isDeparture){
+          airportsFrom.push({
+            name: modElement.name,
+            id : modElement.id
+          })
+      }
+      else{
+        airportsTo.push({
+          name: modElement.name,
+          id : modElement.id
         })
       }
-    })
-     console.log(this.agents)
+    }
+    return [airportsFrom, airportsTo]
+
+  }
+
+
+  prepareDataForSelect(model:any[]){
+    let pushModel : any[] = []
+    for (let modelElement of model) {
+      pushModel.push({
+        name: modelElement.name,
+        id : modelElement.id
+      })
+    }
+    return pushModel
   }
 
   public SaveVolume(){
@@ -645,11 +699,18 @@ async AddModel(){
      controller.AddNewTransportation(this.transModel).then(this.clean)
    }
    else{
-     delete this.transModel.agent
-     delete this.transModel.totalWeight
-     delete this.transModel.totalSeats
+     this.cleanJson()
      await controller.UpdateTransportation(this.transModel).then(this.clean)
    }
+  }
+  cleanJson(){
+    delete this.transModel.agent
+    delete this.transModel.fromTo
+    delete this.transModel.carrier
+    delete this.transModel.totalWeight
+    delete this.transModel.totalSeats
+    delete this.transModel.airportFrom
+    delete this.transModel.airportTo
   }
 
   closeModal(){

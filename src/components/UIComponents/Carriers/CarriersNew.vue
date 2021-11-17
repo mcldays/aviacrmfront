@@ -116,6 +116,8 @@ export default {
           data.items = (await FeesController.GetByCarrierId(this.carrierId)).data;
         },
         toTableView: (data, model) => {
+          if(typeof model.value === "string")
+            model.value = parseFloat(model.value);
           return {
             id: model.id,
             name: model.name,

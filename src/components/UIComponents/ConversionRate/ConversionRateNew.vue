@@ -23,7 +23,7 @@ export default {
         fields: [
           new Field("date", "Дата", {
             fieldType: "datepicker",
-            defaultValue: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+            defaultValue: new Date().toISOString().substr(0, 10)
           }),
           new Field("value", "Значение", {isNumber: true, rules: [t=>{
               let floatVal = parseFloat(t);

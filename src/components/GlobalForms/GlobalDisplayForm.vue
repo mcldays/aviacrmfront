@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <v-card class="overflow-hidden" style="height: 100%" flat>
+      <v-card class="overflow-hidden" style="height: 100%; border-radius: 0;" flat>
         <v-app-bar
             app
             absolute
@@ -43,15 +43,13 @@
           </v-menu>
 
           <template v-slot:extension>
-            <v-tabs align-with-title>
-              <v-tab @click="navigate('/history')">История</v-tab>
-              <v-tab @click="navigate('/transportations')">Перевозки</v-tab>
-              <v-tab @click="navigate('/reports')">Отчеты</v-tab>
-              <v-tab @click="navigate('/stations')">География</v-tab>
-              <v-tab @click="navigate('/carriers')">Перевозчики</v-tab>
-              <v-tab @click="navigate('/agents')">Агенты</v-tab>
-              <v-tab @click="navigate('/ConversionRate')">Курсы конвертации</v-tab>
-              <v-tab @click="navigate('/adminPanel')">Odmen</v-tab>
+            <v-tabs align-with-title :value="activeTab">
+              <v-tab
+                  v-for="tab in tabs"
+                  :key="tab.id"
+                  @click="navigate(tab.href)">
+                {{tab.name}}
+              </v-tab>
             </v-tabs>
           </template>
         </v-app-bar>
@@ -81,6 +79,28 @@ import store from "@/store/index"
 @Component({
   components:{
     AviaToolbar,
+  },
+  data() {
+    return {
+      tabs: [
+        { id: 0, name: "История", href: '/history' },
+        { id: 1, name: "Перевозки", href: '/transportations' },
+        { id: 2, name: "Отчеты", href: '/reports' },
+        { id: 3, name: "География", href: '/stations' },
+        { id: 4, name: "Перевозчики", href: '/carriers' },
+        { id: 5, name: "Агенты", href: '/agents' },
+        { id: 6, name: "Курсы конвертации", href: '/ConversionRate' },
+        { id: 7, name: "Админ панель", href: '/adminPanel' },
+      ],
+    };
+  },
+  computed: {
+    activeTab(){
+      let current = this.$router.currentRoute;
+      let tab = this.$data.tabs.find((t : any)=>t.href.toLowerCase() == current.fullPath.toLowerCase())
+      if(tab) return tab.id
+      return 1
+    }
   }
 })
 export default class GlobalDisplayForm extends Vue {

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router'
 import Transportations from "@/components/UIComponents/Transportations/Transportations.vue"
-import History from "@/components/UIComponents/History/History.vue"
+import History from "@/components/UIComponents/History/HistoryNew.vue"
 import Agents from "@/components/UIComponents/Agents/AgentsBase.vue"
 import Carriers from "@/components/UIComponents/Carriers/CarriersNew.vue"
 import Reports from "@/components/UIComponents/Reports/Reports.vue"

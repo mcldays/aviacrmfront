@@ -13,6 +13,12 @@ import AdminPanel from "@/components/UIComponents/AdminPanel/AdminPanel.vue"
 export default new VueRouter({
     routes: [
         {
+          path: '/',
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
             path: '/aut',
             components: {
                 aut: Autorization

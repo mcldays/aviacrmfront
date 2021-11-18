@@ -1,7 +1,11 @@
 <template>
   <div>
   <v-app>
-    <v-form>
+    <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+    >
     <v-card>
       <v-toolbar
           flat
@@ -11,7 +15,7 @@
         <v-btn
             icon
             dark
-            @click="dialog = false"
+            @click="closeModal"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -37,6 +41,7 @@
                 icon
                 v-bind="attrs"
                 v-on="on"
+                @click="closeModal"
             >
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
@@ -54,6 +59,8 @@
                   :items="carriers"
                   item-text="name"
                   item-value="id"
+                  required
+                  :rules="emptyRule"
                   v-model="transModel.carrierId"
               ></v-select>
             </v-col>
@@ -63,6 +70,9 @@
                   :items="agents"
                   item-text="name"
                   item-value="id"
+                  aria-required="true"
+                  required
+                  :rules="emptyRule"
                   v-model="transModel.agentId"
               ></v-select>
             </v-col>
@@ -72,6 +82,8 @@
                   v-model.lazy="transModel.fio"
                   :items="persons"
                   item-text="name"
+                  required
+                  :rules="emptyRule"
                   item-value="name"
               ></v-select>
             </v-col>
@@ -83,6 +95,8 @@
                   label="Номер А/Н"
                   required
                   :value="transModel.number"
+                  required
+                  :rules="emptyRule"
                   @change="transModel.number = $event"
               ></v-text-field>
             </v-col>
@@ -101,6 +115,8 @@
                       :value="transModel.dateAN"
                       prepend-icon="mdi-calendar"
                       readonly
+                      required
+                      :rules="emptyRule"
                       v-bind="attrs"
                       v-on="on"
                   ></v-text-field>
@@ -116,6 +132,7 @@
               <v-text-field
                   label="Email отв"
                   required
+                  :rules="emailRules"
                   :value="transModel.email"
                   @change="transModel.email = $event"
               ></v-text-field>
@@ -128,6 +145,8 @@
                   label="Аэропорт вылета"
                   v-model.lazy="transModel.airportFromId"
                   :items="airportFrom"
+                  required
+                  :rules="emptyRule"
                   item-text="name"
                   item-value="id"
               ></v-select>
@@ -138,6 +157,8 @@
                   :items="airportTo"
                   item-text="name"
                   item-value="id"
+                  required
+                  :rules="emptyRule"
                   v-model.lazy="transModel.airportToId"
               ></v-select>
             </v-col>
@@ -145,6 +166,7 @@
               <v-text-field
                   label="Flight code"
                   required
+                  :rules="emptyRule"
                   :value="transModel.flightCode"
                   @change="transModel.flightCode = $event"
               ></v-text-field>
@@ -167,6 +189,8 @@
                       label="Дата вылета"
                       prepend-icon="mdi-calendar"
                       readonly
+                      required
+                      :rules="emptyRule"
                       v-bind="attrs"
                       v-on="on"
                   ></v-text-field>
@@ -182,6 +206,7 @@
               <v-text-field
                   label="Goods Natures Code"
                   required
+                  :rules="emptyRule"
                   :value="transModel.goodsNatureCode"
                   @change="transModel.goodsNatureCode = $event"
               ></v-text-field>
@@ -190,6 +215,7 @@
               <v-text-field
                   label="Агентское вознаграждение"
                   required
+                  :rules="emptyRule"
                   v-model.number="transModel.agentsCommission"
               ></v-text-field>
             </v-col>
@@ -199,7 +225,6 @@
             <v-col>
               <v-text-field
                   label="FZ price"
-                  required
                   v-model.number="transModel.fzPrice"
               ></v-text-field>
             </v-col>
@@ -352,9 +377,9 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
+                <td>{{totalCount.volumeWeight}}</td>
                 <td>{{totalCount.totalWeight}}</td>
-                <td></td>
+                <td>{{totalCount.totalVolume}}</td>
               </tr>
             </template>
           </v-data-table>
@@ -555,7 +580,7 @@
             :loading="this.loading"
             color="blue darken-1"
             text
-            @click="this.AddModel"
+            @click="this.validate"
         >
           Сохранить
         </v-btn>
@@ -582,7 +607,7 @@ import {StationsController} from "@/controllers/StationsController";
 @Component({
   components:{
 
-  }
+  },
 })
 export default class NewTransportation extends Vue {
 
@@ -594,9 +619,13 @@ export default class NewTransportation extends Vue {
   private menu2: boolean = false;
   private loading : boolean = false;
   private menu3: boolean = false;
+  private valid : boolean = true
   private totalCount : any = {
     totalSeats : 0,
-    totalWeight : 0
+    totalWeight : 0,
+    totalVolume : 0,
+    volumeWeight : 0
+
   }
   private agents :  object[] = []
   private carriers : object[] = []
@@ -620,6 +649,18 @@ export default class NewTransportation extends Vue {
     {text: 'Общий вес', value: 'totalWeight'},
     {text: 'Обьемный вес', value: 'volumeWeight'},
   ];
+
+  emailRules = [
+    (v:any) => !!v || 'Поле Email должно быть заполнено',
+    (v:any) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Неверный формат Email',
+  ]
+  emptyRule = [
+    (v:any) => !!v || 'Поле должно быть заполнено',
+  ]
+  created(){
+    this.valid = true
+  }
+
 
   async mounted(){
     await AgentsController.GetAll().then((t: any)=>{
@@ -676,6 +717,8 @@ export default class NewTransportation extends Vue {
     this.places.push(result)
     this.totalCount.totalSeats += Number(this.place.seats)
     this.totalCount.totalWeight += this.place.totalWeight
+    this.totalCount.totalVolume +=this.place.volumeWeight
+    this.totalCount.volumeWeight +=this.place.volume
     this.closeSeats()
   }
 
@@ -689,10 +732,18 @@ export default class NewTransportation extends Vue {
 
   calculateVolume(place : PlaceModel){
       place.totalWeight = place.seats * place.weight
-      place.volume = ((place.length * 0.01) * (place.height* 0.01)
-          * (place.weight * 0.01))
-      place.volumeWeight = (place.volume) / 6000
+      place.volume = Number(((place.length * 0.01) * (place.height* 0.01)
+          * (place.weight * 0.01)).toFixed(3))
+      place.volumeWeight = Number(((place.volume) / 6000).toFixed(3))
        return place
+  }
+  validate () {
+    if((this.$refs.form as Vue & { validate: () => boolean }).validate()){
+      this.AddModel()
+    }
+  }
+  resetValidation(){
+    (this.$refs.form as Vue & {resetValidation : () => void}).resetValidation()
   }
 async AddModel(){
     let controller = new TransportationController()
@@ -710,6 +761,7 @@ async AddModel(){
     delete this.transModel.agent
     delete this.transModel.fromTo
     delete this.transModel.carrier
+    delete this.transModel.totalValue
     delete this.transModel.totalWeight
     delete this.transModel.totalSeats
     delete this.transModel.airportFrom
@@ -717,18 +769,23 @@ async AddModel(){
   }
 
   closeModal(){
-    this.clean()
     this.$emit("closed")
+    this.clean()
+    this.resetValidation()
   }
 
   clean(){
     this.transModel = new TransportationModel()
     this.places = []
     this.loading = false
+    this.valid = false
     this.editIndex = 0
     this.totalCount.totalSeats = 0
     this.totalCount.totalWeight = 0
+    this.totalCount.volumeWeight = 0
+    this.totalCount.totalVolume = 0
     this.$emit("successAdd")
+
   }
 
 
@@ -741,6 +798,8 @@ async AddModel(){
       for (let place of this.places) {
         this.totalCount.totalSeats +=place.seats
         this.totalCount.totalWeight += place.totalWeight
+        this.totalCount.totalVolume +=place.volumeWeight
+        this.totalCount.volumeWeight +=place.volume
       }
     }
   }

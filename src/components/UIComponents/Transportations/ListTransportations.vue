@@ -112,7 +112,7 @@ export default class ListTransportations extends Vue {
     { text: 'Общий вес', value: 'totalWeight' },
     { text: 'Оплачиваемый вес', value: 'payedkg' },
     { text: 'Кол-во мест', value: 'totalSeats' },
-    { text: 'Обьем', value: 'values' },
+    { text: 'Обьем', value: 'totalValue' },
     { text: 'Направление', value: 'fromTo' },
     { text: 'Агент', value: 'agent.name' },
     { text: 'Редактирование', value: 'actions', sortable: false },
@@ -174,10 +174,12 @@ export default class ListTransportations extends Vue {
       model.dateAN= model.dateAN.slice(0,10)
       model.totalSeats = 0
       model.totalWeight = 0
+      model.totalValue = 0
       model.fromTo = model.airportFrom.name + " - " + model.airportTo.name
       for (let place of model.places) {
         model.totalSeats += place.seats
         model.totalWeight += place.totalWeight
+        model.totalValue+= place.volume
       }
       newObject.push(model);
     }

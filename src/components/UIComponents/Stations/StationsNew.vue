@@ -68,7 +68,7 @@ export default {
         editInstance: async (data) => {
           await StationsController.Edit(data.editedItem)
         },
-        addInstance: async (data, agent) => {
+        addInstance: async (data, agent, editedItem) => {
           let res = await StationsController.Add(agent);
           return res.data;
         },

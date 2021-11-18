@@ -9,6 +9,8 @@
         }"
         :loading="loading"
         class="elevation-1"
+        :sort-by="parent.sortBy ? parent.sortBy : []"
+        :sort-desc="parent.sortDesc ? parent.sortDesc : []"
 
         loading-text="Загрузка... Пожалуйста подождите"
     >
@@ -283,8 +285,8 @@ export default {
         if(res === false) return;
         Object.assign(this.items[this.editedIndex], this.editedItem)
       } else {
-        // let person = Object.filter(this.editedItem, t=>(t !== "" && t!== null)); // отфильтровываем пустые поля
-        let res = await this.parent.addInstance(this.$data, this.editedItem);
+        let dataForSend = Object.filter(this.editedItem, t=>(t !== "" && t!== null)); // отфильтровываем пустые поля
+        let res = await this.parent.addInstance(this.$data, dataForSend, this.editedItem);
         if(res === -1) return;
         this.editedItem.id = res;
 

@@ -82,7 +82,7 @@ export default {
         editInstance: async (data) => {
           await CarriersController.Edit(data.editedItem)
         },
-        addInstance: async (data, agent) => {
+        addInstance: async (data, agent, editedItem) => {
           let res = await CarriersController.Add(agent);
           return res.data;
         },
@@ -136,7 +136,7 @@ export default {
           this.prepairData(data.editedItem, this.carrierId);
           await FeesController.Edit(data.editedItem)
         },
-        addInstance: async (data, agent) => {
+        addInstance: async (data, agent, editedItem) => {
           this.prepairData(agent,this.carrierId);
           let res = await FeesController.Add(agent);
           return res.data;

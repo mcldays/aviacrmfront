@@ -30,6 +30,9 @@ export  class TransportationModel {
     places  : PlaceModel[]
     totalWeight? : number
     totalSeats? : number
+    totalVolume? : number
+    position? : number
+    totalRub? : number
     carrierPrice : CarrierPriceModel
     agentPrice : CarrierPriceModel
 }

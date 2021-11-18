@@ -12,15 +12,111 @@
               </v-btn>
             </v-toolbar>
           </v-card-title>
-        <FindReport
-            v-show="this.finderVision"/>
-        <span style="font-weight: bold; margin-left: 5px;">
-          Курс валюты:
-        </span>
+        <div v-show="this.finderVision" style="display: flex">
+          <v-row class="vrowStyle ma-0 pa-0 ">
+            <v-col  >
+              <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                      v-model="date1"
+                      label="С"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="date1"
+                    @input="menu1 = false"
+                ></v-date-picker>
+              </v-menu>
+              <v-btn
+                  @click="getData()"
+                  block
+                  elevation="2"
+              >
+                Найти
+              </v-btn>
+            </v-col>
+            <v-col  >
+              <v-menu
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                      v-model="date2"
+                      label="По"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="date2"
+                    @input="menu2 = false"
+                ></v-date-picker>
+              </v-menu>
+              <v-select
+                  label="Тип даты"
+                  item-text="name"
+                  item-value="id"
+                  :items="datetype"
+                  :value="dateType"
+                  @change="dateType= $event"
+              ></v-select>
+            </v-col>
+            <v-col  >
+              <v-select
+                  :label="'Аэропорт отправления'"
+                  :items="stations"
+                  item-text="name"
+                  item-value="id"
+                  :value="transModel.airportFromId"
+                  @change="transModel.airportFromId= $event"
+              >
+                ></v-select>
+
+            </v-col>
+          </v-row>
+
+          <v-row class="vrowStyle" style="margin: auto;">
+            <v-col>
+              <v-btn
+                  block
+                  elevation="2"
+                  color="green"
+              >
+                Утвердить отчет
+              </v-btn>
+              <v-btn
+                  style="margin-top: 10px"
+                  block
+                  elevation="2"
+                  color="blue"
+              >
+                Экспорт
+              </v-btn>
+            </v-col>
+          </v-row>
+        </div>
 
         <v-data-table
             :headers="headers"
-            :items="lorem"
+            :items="items"
             :items-per-page="5"
             class="elevation-1"
         >
@@ -42,11 +138,12 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import 'vue-resize/dist/vue-resize.css'
-import FindReport from "@/components/UIComponents/Reports/ReportToAk/FindReport.vue";
-
+import {CarriersController} from "@/controllers/CarriersController";
+import {StationsController} from "@/controllers/StationsController";
+import {TransportationModel} from "@/models/transportations/TransportationModel";
+import {TransportationController} from "@/controllers/TransportationController";
 @Component({
   components:{
-    FindReport
   }
 })
 export default class ListCarriers extends Vue {
@@ -54,78 +151,142 @@ export default class ListCarriers extends Vue {
     console.log("Changed!")
   }
   private finderVision : boolean = true;
-  private modalVision : boolean = false;
-  private menuTitle : object =[
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me 2' }
+  private datetype : object = [
+    {
+      name : 'Дата а/н',
+      id : 0
+    },
+    {
+      name : 'Фактическая дата вылета',
+      id : 1
+    }
   ]
-
   private headers : object = [
     {
       text: '№',
       align: 'start',
       sortable: false,
-      value: 'number',
+      value: 'position',
     },
-    { text: 'Номер а/н', value: 'numAN' },
+    { text: 'Номер а/н', value: 'number' },
     { text: 'Дата выпуска а/н', value: 'dateAN' },
-    { text: 'Фактическая дата вылета', value: 'dateFrom' },
-    { text: 'Аэропорт отправления', value: 'from' },
-    { text: 'Аэропорт назначения', value: 'to' },
-    { text: 'Характер груза', value: 'character' },
-    { text: 'Кол-во мест', value: 'placeCount' },
-    { text: 'Фактический вес (кг)', value: 'factWeight' },
-    { text: 'Оплачиваемый вес (кг)', value: 'payWeight' },
-    { text: 'Тариф (USD)', value: 'tarif' },
-    { text: 'Сумма авиафрахта (USD)', value: 'sumAvia' },
+    { text: 'Фактическая дата вылета', value: 'dateOfLeave' },
+    { text: 'Аэропорт отправления', value: 'airportFrom.name' },
+    { text: 'Аэропорт назначения', value: 'airportTo.name' },
+    { text: 'Характер груза', value: 'goodsNatureCode' },
+    { text: 'Кол-во мест', value: 'totalSeats' },
+    { text: 'Фактический вес (кг)', value: 'totalWeight' },
+    { text: 'Оплачиваемый вес (кг)', value: 'carrierPrice.PayedWeight' },
+    { text: 'Тариф (USD)', value: 'carrierPrice.PriceKg' },
+    { text: 'Сумма авиафрахта (USD)', value: 'fzPrice' },
     { text: 'Агент. Вознаграждение\n' +
-          '(10) x 5%', value: 'agentPremia' },
-    { text: 'Сборы (USD)', value: 'fees' },
-    { text: 'Итого (USD)', value: 'totalUsd' },
+          '(10) x 5%', value: 'agentsCommission' },
+    { text: 'Сборы (USD)', value: 'carrierPrice.Fees' },
+    { text: 'Итого (USD)', value: 'carrierPrice.TotalPrice' },
   ];
-  private lorem : object = [
-    {
-      number: 'FlyDubai',
-      numAN: 'FlyDubai',
-      dateAN: 'FlyDubai',
-      dateFrom: 'FlyDubai',
-      from: 'FlyDubai',
-      to: 'FlyDubai',
-      character: 'FlyDubai',
-      placeCount: 'FlyDubai',
-      factWeight: 'FlyDubai',
-      payWeight: 'FlyDubai',
-      tarif: 'FlyDubai',
-      sumAvia: 'FlyDubai',
-      agentPremia: 'FlyDubai',
-      fees: 'FlyDubai',
-      totalUsd: 'FlyDubai',
-    },
-    {
-      number: 'FlyDubai',
-      numAN: 'FlyDubai',
-      dateAN: 'FlyDubai',
-      dateFrom: 'FlyDubai',
-      from: 'FlyDubai',
-      to: 'FlyDubai',
-      character: 'FlyDubai',
-      placeCount: 'FlyDubai',
-      factWeight: 'FlyDubai',
-      payWeight: 'FlyDubai',
-      tarif: 'FlyDubai',
-      sumAvia: 'FlyDubai',
-      agentPremia: 'FlyDubai',
-      fees: 'FlyDubai',
-      totalUsd: 'FlyDubai',
-    },
-  ]
+  private items : object = []
+
   findData(){
     this.finderVision = !this.finderVision;
   }
-}
+  rules()
+  {
+    if(this.rule(this.date1))
+      return false;
+    if(this.rule(this.date2))
+      return false;
+    if(this.rule(this.dateType))
+      return false;
+    if(this.rule(this.transModel.airportFromId))
+      return false;
+    return true
+  }
+  rule(p : any)
+  {
+    if(p!=null)
+      return false
+    else
+      alert("dd")
+    return true
+  }
+  private menu1: boolean = false;
+  private menu2: boolean = false;
+  private stations :  object[] = []
+  private dateType : number
+  private date1 : string
+  private date2 : string
+  private controller  = new TransportationController()
+  private loading : boolean = false;
+  private transModel = new TransportationModel();
+  data()
+  {
+    return{
+      date1: '',
+      date2: ''
+    }
+  }
+  async mounted(){
+    await StationsController.GetAll().then((t: any)=>{
+      for (let datum of t.data) {
+        this.stations.push({
+          name : datum.name,
+          id : datum.id
+        })
+      }
+    })
+  }
+  async getData(){
+    if(!this.rules())
+      return
+    loading: false;
+    let model = await this.controller.GetAllTransportations().then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
+    model = this.processData(model)
+    this.parseToTable(model)
+  }
 
+  processData(models : TransportationModel[]){
+    let newObject : TransportationModel[] = []
+    let i = 0;
+    for (let model of models) {
+      if (this.filter(model))
+        continue
+      i++;
+      try{
+        model.position = i
+      }
+      catch (Ex){}
+      model.totalWeight = 0
+      for (let place of model.places) {
+        model.totalWeight += place.totalWeight
+      }
+      model.totalSeats= 0
+      for (let place of model.places) {
+        model.totalSeats += place.seats
+      }
+      newObject.push(model);
+    }
+    return newObject
+  }
+  filter(model : any)
+  {
+    if(model.airportFromId != this.transModel.airportFromId)
+      return true
+    let d = new Date(this.dateType==0 ? model.dateAN : model.dateOfLeave);
+    let d1 = new Date(this.date1);
+    d1.setDate(d1.getDate() - 1);
+    let d2 = new Date(this.date2);
+    if(!(d >= d1 && d <= d2))
+      return true
+    return false
+  }
+  parseToTable(response : TransportationModel[]){
+    this.items = response
+    console.log(this.items)
+  }
+}
 </script>
 
 <style scoped>

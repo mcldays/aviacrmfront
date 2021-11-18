@@ -305,6 +305,7 @@ export default {
   }
   .col{
     min-width: 150px;
+    margin: 0 20px;
   }
 
 </style>

@@ -25,8 +25,8 @@
           <v-toolbar-title>Aliance Cargo</v-toolbar-title>
 
           <v-spacer></v-spacer>
-          <span class="body-1" style="margin-top: 13px"></span>
-          <v-menu offset-y>
+<!--          <span class="body-1" style="margin-top: 13px; margin-right: 13px;"></span>-->
+          <v-menu offset-y nudge-left="30">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                   v-bind="attrs"
@@ -36,8 +36,8 @@
               </v-btn>
             </template>
             <v-list>
-              <v-list-item>
-                <v-list-item-title @click="logout">Выйти</v-list-item-title>
+              <v-list-item style="cursor: pointer;" @click="logout">
+                <v-list-item-title>Выйти</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -105,7 +105,6 @@ import store from "@/store/index"
   created() {
     var role = window.localStorage.getItem("role");
     if(role == "Admin"){
-      this.$data.tabs.unshift()
       this.$data.tabs.push({ id: 7, name: "Админ панель", href: '/adminPanel' })
     }
   }

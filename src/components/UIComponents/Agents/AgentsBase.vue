@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <v-tabs>
       <v-tab @click="component = 'Agents'">Агенты</v-tab>
       <v-tab @click="component = 'Persons'">Ответственные лица</v-tab>
@@ -7,7 +7,7 @@
     <keep-alive>
       <component :is="component"/>
     </keep-alive>
-  </v-app>
+  </div>
 
 </template>
 

@@ -1,7 +1,7 @@
 <template>
-  <v-app>
+  <div>
     <ListTransportations/>
-  </v-app>
+  </div>
 </template>
 
 <script lang="ts">

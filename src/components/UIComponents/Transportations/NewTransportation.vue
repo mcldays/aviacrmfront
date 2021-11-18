@@ -1,6 +1,6 @@
 <template>
   <div>
-  <v-app>
+  <div>
     <v-form>
     <v-card>
       <v-toolbar
@@ -562,7 +562,7 @@
       </v-card-actions>
     </v-card>
     </v-form>
-  </v-app>
+  </div>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <div id="app">
       <v-card>
         <v-toolbar dense flat>
@@ -62,7 +62,7 @@
       </NewTransportation>
       </v-dialog>
     </div>
-  </v-app>
+  </div>
 </template>
 
 <script lang="ts">

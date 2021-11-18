@@ -23,6 +23,7 @@
         block
         elevation="3"
         @click="authorization"
+        type="submit"
     >
       Войти
     </v-btn>

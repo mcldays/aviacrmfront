@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <TableComponent :parent="info"></TableComponent>
     <v-dialog
         transition="dialog-bottom-transition"
@@ -24,7 +24,7 @@
         </v-card>
       </template>
     </v-dialog>
-  </v-app>
+  </div>
 </template>
 
 <script>
@@ -90,6 +90,7 @@ export default {
           if(this.$refs.innerTable)
             await this.feesInfo.initialize(this.$refs.innerTable.$data)
         },
+        additIco: "mdi-cash-multiple"
       },
       feesDialog: false,
       carrierId: null,

@@ -185,7 +185,7 @@
             class="mr-2"
             @click="parent.additCallback(item)"
         >
-          mdi-cash-multiple
+          {{parent.additIco}}
         </v-icon>
       </template>
 
@@ -279,11 +279,14 @@ export default {
       this.$refs.form.validate();
       if(!this.is_valid) return;
       if (this.editedIndex > -1) {
-        await this.parent.editInstance(this.$data);
+        let res = await this.parent.editInstance(this.$data);
+        if(res === false) return;
         Object.assign(this.items[this.editedIndex], this.editedItem)
       } else {
         let person = Object.filter(this.editedItem, t=>(t !== "" && t!== null)); // отфильтровываем пустые поля
-        this.editedItem.id = await this.parent.addInstance(this.$data, person);
+        let res = await this.parent.addInstance(this.$data, person);
+        if(res === -1) return;
+        this.editedItem.id = res;
 
         this.items.push(this.editedItem)
 

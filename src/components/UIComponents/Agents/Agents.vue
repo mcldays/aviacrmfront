@@ -1,7 +1,7 @@
 <template>
-  <v-app>
+  <div>
     <TableComponent :parent="info"></TableComponent>
-  </v-app>
+  </div>
 </template>
 
 

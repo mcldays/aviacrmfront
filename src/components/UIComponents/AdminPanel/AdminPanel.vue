@@ -1,12 +1,12 @@
 <template>
-  <v-app>
+  <div>
     <v-tabs style="left: 0;">
-      <v-tab @click="component = 'Users'" style="font-size: 10px">Пользователи</v-tab>
+      <v-tab @click="component = 'Users'" style="font-size: 12px">Пользователи</v-tab>
       </v-tabs>
     <keep-alive>
       <component :is="component"/>
     </keep-alive>
-  </v-app>
+  </div>
 </template>
 
 <script>

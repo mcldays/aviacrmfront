@@ -22,10 +22,11 @@ import store from "@/store";
 
 export default class App extends Vue {
   created(){
-    Vue.prototype.$http.interceptors.response.use(undefined, function (err : any){
-      return new Promise(function (resolve, reject) {
-        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-          store.dispatch("logout")
+    Vue.prototype.$http.interceptors.response.use(undefined, (err : any) => {
+      return new Promise( (resolve, reject) => {
+        if (err.response.status === 401 && err.config && !err.config.__isRetryRequest) {
+          store.dispatch("logout");
+          this.$router.push("/aut")
         }
         throw err;
       });

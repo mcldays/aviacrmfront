@@ -771,10 +771,10 @@ async AddModel(){
   closeModal(){
     this.$emit("closed")
     this.clean()
-    this.resetValidation()
   }
 
   clean(){
+    this.resetValidation()
     this.transModel = new TransportationModel()
     this.places = []
     this.loading = false

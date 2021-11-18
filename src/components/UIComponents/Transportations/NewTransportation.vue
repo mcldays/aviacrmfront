@@ -49,7 +49,7 @@
         </v-menu>
       </v-toolbar>
       <v-card-text>
-        <v-container>
+        <v-container style="padding: 20px 80px 0 80px ">
           <v-card-title class="pa-1">Общая информация</v-card-title>
           <v-row
               style="height: 70px;">

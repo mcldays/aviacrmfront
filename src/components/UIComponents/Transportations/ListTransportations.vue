@@ -48,11 +48,12 @@
       </v-card>
       <v-dialog
           v-bind:value="this.modalVision"
-          fullscreen
-          hide-overlay
+          persistent
           transition="dialog-bottom-transition"
+          max-width="1500px"
           scrollable
       >
+        <keep-alive>
       <NewTransportation
           :edit-model="editModel"
           :componentKey="this.newTransKey"
@@ -60,6 +61,7 @@
           @closed="refresh"
       >
       </NewTransportation>
+        </keep-alive>
       </v-dialog>
     </div>
   </v-app>
@@ -82,11 +84,6 @@ import {PlaceModel} from "@/models/transportations/PlaceModel";
     Finder,
     NewTransportation
   },
-  filters:{
-    moveFilter(){
-      return "сработало"
-    }
-  }
 })
 export default class ListTransportations extends Vue {
   private finderVision : boolean = false;

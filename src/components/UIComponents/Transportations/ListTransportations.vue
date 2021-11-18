@@ -48,11 +48,12 @@
       </v-card>
       <v-dialog
           v-bind:value="this.modalVision"
-          fullscreen
-          hide-overlay
+          persistent
           transition="dialog-bottom-transition"
+          max-width="1500px"
           scrollable
       >
+        <keep-alive>
       <NewTransportation
           :edit-model="editModel"
           :componentKey="this.newTransKey"
@@ -60,6 +61,7 @@
           @closed="refresh"
       >
       </NewTransportation>
+        </keep-alive>
       </v-dialog>
     </div>
   </div>
@@ -82,11 +84,6 @@ import {PlaceModel} from "@/models/transportations/PlaceModel";
     Finder,
     NewTransportation
   },
-  filters:{
-    moveFilter(){
-      return "сработало"
-    }
-  }
 })
 export default class ListTransportations extends Vue {
   private finderVision : boolean = false;
@@ -112,7 +109,7 @@ export default class ListTransportations extends Vue {
     { text: 'Общий вес', value: 'totalWeight' },
     { text: 'Оплачиваемый вес', value: 'payedkg' },
     { text: 'Кол-во мест', value: 'totalSeats' },
-    { text: 'Обьем', value: 'values' },
+    { text: 'Обьем', value: 'totalValue' },
     { text: 'Направление', value: 'fromTo' },
     { text: 'Агент', value: 'agent.name' },
     { text: 'Редактирование', value: 'actions', sortable: false },
@@ -174,10 +171,12 @@ export default class ListTransportations extends Vue {
       model.dateAN= model.dateAN.slice(0,10)
       model.totalSeats = 0
       model.totalWeight = 0
+      model.totalValue = 0
       model.fromTo = model.airportFrom.name + " - " + model.airportTo.name
       for (let place of model.places) {
         model.totalSeats += place.seats
         model.totalWeight += place.totalWeight
+        model.totalValue+= place.volume
       }
       newObject.push(model);
     }

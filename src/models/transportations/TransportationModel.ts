@@ -9,6 +9,7 @@ export  class TransportationModel {
     carrier : CarrierModel
     carrierId? : number
     number : number
+    totalValue : number
     dateAN : string
     dateOfLeave : string
     agent : AgentModel
@@ -30,6 +31,9 @@ export  class TransportationModel {
     places  : PlaceModel[]
     totalWeight? : number
     totalSeats? : number
+    totalVolume? : number
+    position? : number
+    totalRub? : number
     carrierPrice : CarrierPriceModel
     agentPrice : CarrierPriceModel
 }

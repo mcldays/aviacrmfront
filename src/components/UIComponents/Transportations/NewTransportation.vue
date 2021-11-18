@@ -292,7 +292,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                v-model.number="place.width"
+                                v-model.number="place.length"
                                 label="Длинна"
                             ></v-text-field>
                           </v-col>
@@ -303,7 +303,7 @@
                           >
                             <v-text-field
                                 type="number"
-                                v-model.number="place.volume"
+                                v-model.number="place.width"
                                 label="Ширина"
                             ></v-text-field>
                           </v-col>
@@ -613,12 +613,12 @@ export default class NewTransportation extends Vue {
       value: 'seats',
     },
     {text: 'Вес к.г', value: 'weight'},
-    {text: 'Ширина, см', value: 'volume'},
-    {text: 'Длинна, см', value: 'width'},
+    {text: 'Ширина, см', value: 'width'},
+    {text: 'Длинна, см', value: 'length'},
     {text: 'Высота, см', value: 'height'},
-    {text: 'Обьем', value: 'volumeTotal'},
+    {text: 'Обьем', value: 'volume'},
     {text: 'Общий вес', value: 'totalWeight'},
-    {text: 'Обьемный вес', value: 'totalVolume'},
+    {text: 'Обьемный вес', value: 'volumeWeight'},
   ];
 
   async mounted(){
@@ -689,6 +689,9 @@ export default class NewTransportation extends Vue {
 
   calculateVolume(place : PlaceModel){
       place.totalWeight = place.seats * place.weight
+      place.volume = ((place.length * 0.01) * (place.height* 0.01)
+          * (place.weight * 0.01))
+      place.volumeWeight = (place.volume) / 6000
        return place
   }
 async AddModel(){

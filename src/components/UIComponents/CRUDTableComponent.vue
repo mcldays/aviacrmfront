@@ -13,25 +13,25 @@
         loading-text="Загрузка... Пожалуйста подождите"
     >
 
-      <template v-slot:top>
+      <template v-slot:footer.prepend>
         <v-toolbar
             flat
         >
-          <v-spacer></v-spacer>
           <v-dialog
               v-model="dialog"
               max-width="1000px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                  outlined
                   color="primary"
-                  dark
-                  class="mb-2"
+                  class="mb-2 btn"
                   v-bind="attrs"
                   v-on="on"
               >
                 {{"Добавить " + parent.instanceNameIm}}
               </v-btn>
+              <v-spacer/>
             </template>
             <v-card>
               <v-form
@@ -319,7 +319,14 @@ export default {
 </script>
 
 <style scoped>
-.bck_lightGreen{
-  background-color: lightgreen;
-}
+  .bck_lightGreen{
+    background-color: lightgreen;
+  }
+  .btn{
+    margin-bottom: 0px !important;
+    color: #3e4c83!important;
+    padding: 0 35px;
+    font-size: 11px;
+  }
+
 </style>

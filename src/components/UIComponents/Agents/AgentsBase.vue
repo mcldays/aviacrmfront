@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-tabs>
-      <v-tab @click="component = 'Agents'">Агенты</v-tab>
-      <v-tab @click="component = 'Persons'">Ответственные лица</v-tab>
+      <v-tab style="font-size: 11px" @click="component = 'Agents'">Агенты</v-tab>
+      <v-tab style="font-size: 11px" @click="component = 'Persons'">Ответственные лица</v-tab>
     </v-tabs>
     <keep-alive>
       <component :is="component"/>

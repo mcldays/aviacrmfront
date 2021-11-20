@@ -22,7 +22,7 @@
 
 
 
-          <v-toolbar-title>Aliance Cargo</v-toolbar-title>
+          <v-toolbar-title>RM Cargo Group</v-toolbar-title>
 
           <v-spacer></v-spacer>
 <!--          <span class="body-1" style="margin-top: 13px; margin-right: 13px;"></span>-->

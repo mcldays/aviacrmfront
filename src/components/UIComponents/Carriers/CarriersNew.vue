@@ -50,6 +50,7 @@ export default {
       info: {
         headers: [
           { text: 'Название', value: 'name' },
+          { text: 'Название на русском', value: 'rusName' },
           { text: 'Тип перевозчика', value: 'type' },
           { text: 'Префикс а/н по умолчанию', value: 'prefix' },
           { text: 'Сборы', value: 'addit' },
@@ -57,6 +58,7 @@ export default {
         ],
         fields: [
           new Field("name", "Название", {rules: [t=>!!t|| "Название должно быть введено"]}),
+          new Field("rusName", "Название на русском", {rules: [t=>!!t|| "Название должно быть введено"]}),
           new Field("type", "Тип перевозчика", {defaultValue: 0, fieldType: "select", fieldParams: {items: ()=>types, text: "name", value: "id"}}),
           new Field("prefix", "Префикс а/н по умолчанию"),
         ],
@@ -69,6 +71,7 @@ export default {
           return {
             id: model.id,
             name: model.name,
+            rusName: model.rusName,
             type: types.find(t=>t.id === model.type).name,
             prefix: model.prefix,
           }

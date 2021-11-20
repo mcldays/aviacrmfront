@@ -4,10 +4,10 @@
 <v-row class="vrowStyle ma-0 pa-0 ">
   <v-col  >
     <v-card-title style="padding: 0 0">Авторизация</v-card-title>
-  <v-form>
+  <v-form @submit.prevent="authorization">
     <v-text-field
         hide-details
-        label="Email"
+        label="Логин"
         solo
         v-model="login"
     ></v-text-field>
@@ -22,7 +22,6 @@
     <v-btn
         block
         elevation="3"
-        @click="authorization"
         type="submit"
     >
       Войти

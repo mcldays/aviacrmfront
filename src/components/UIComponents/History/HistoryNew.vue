@@ -11,8 +11,6 @@
         :loading="loading"
         class="elevation-1"
         loading-text="Загрузка... Пожалуйста подождите"
-        :search="search"
-        :custom-filter="filterOnlyCapsText"
     >
       <template v-slot:top>
         <v-row>
@@ -187,14 +185,11 @@
 import {HistoryController} from "@/controllers/HistoryController";
 import {UsersController} from "@/controllers/UsersController";
 
-var today = new Date().toISOString().substr(0, 10);
-var yesterday = new Date(new Date() - 24*60*60*1000).toISOString().substr(0, 10);
 
 export default {
   name: "HistoryNew",
   data () {
     return {
-      search: '',
       loading: true,
       items: [],
       headers: [
@@ -235,12 +230,6 @@ export default {
 
   },
   methods: {
-    filterOnlyCapsText (value, search, item) {
-      return value != null &&
-          search != null &&
-          typeof value === 'string' &&
-          value.toString().toLocaleUpperCase().indexOf(search) !== -1
-    },
     async initialize(){
       let names = (await UsersController.GetNames()).data;
       names.unshift({id: -1, fio: "Все"});

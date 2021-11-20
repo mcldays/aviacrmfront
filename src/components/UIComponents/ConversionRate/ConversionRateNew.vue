@@ -49,8 +49,9 @@ export default {
           await ConversionRateController.Remove(data.items[data.editedIndex].id)
         },
         editInstance: async (data) => {
-          this.prepairData(data.editedItem);
-          await ConversionRateController.Edit(data.editedItem)
+          // this.prepairData(data.editedItem);
+          // await ConversionRateController.Edit(data.editedItem)
+          return false;
         },
         addInstance: async (data, agent) => {
           this.prepairData(agent);

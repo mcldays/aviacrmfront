@@ -189,14 +189,14 @@
         </v-icon>
       </template>
 
-      <template v-slot:no-data>
-        <v-btn
-            color="primary"
-            @click="initialize"
-        >
-          Обновить
-        </v-btn>
-      </template>
+<!--      <template v-slot:no-data>-->
+<!--        <v-btn-->
+<!--            color="primary"-->
+<!--            @click="initialize"-->
+<!--        >-->
+<!--          Обновить-->
+<!--        </v-btn>-->
+<!--      </template>-->
     </v-data-table>
   </div>
 </template>
@@ -283,8 +283,8 @@ export default {
         if(res === false) return;
         Object.assign(this.items[this.editedIndex], this.editedItem)
       } else {
-        let person = Object.filter(this.editedItem, t=>(t !== "" && t!== null)); // отфильтровываем пустые поля
-        let res = await this.parent.addInstance(this.$data, person);
+        // let person = Object.filter(this.editedItem, t=>(t !== "" && t!== null)); // отфильтровываем пустые поля
+        let res = await this.parent.addInstance(this.$data, this.editedItem);
         if(res === -1) return;
         this.editedItem.id = res;
 

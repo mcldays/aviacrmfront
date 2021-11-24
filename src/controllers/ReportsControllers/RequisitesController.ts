@@ -1,19 +1,15 @@
 // @ts-ignore
-import Axios from '/axios_settings';
+    import Axios, { AxiosPromise, AxiosResponse } from '/axios_settings';
 import {RequisitesModel} from "@/models/reports/RequisitesModel";
+// Axios.defaults.baseURL = 'http://89.108.103.251';
+export class RequisitesController {
 
-export class RequisitesController{
-
-    public static async GetAll(id: '0') {
-        return Axios.get("/api/Requisites/Get")
+    public GetAllReq() : AxiosPromise<RequisitesModel[]> {
+        let response = Axios.get("api/requisites/get")
+        return response
     }
-
-
-    public static async Add(model : RequisitesModel) {
-        return Axios.post("/api/Requisites/Add", model)
-    }
-
-    public static async Edit(model : RequisitesModel) {
-        return Axios.post("/api/Requisites/Update", model)
+    public async UpdateReq(model : RequisitesModel){
+        return Axios.post("/api/requisites/update", model)
     }
 }
+

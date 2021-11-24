@@ -131,6 +131,7 @@
                     block
                     elevation="2"
                     color="blue"
+                    @click="Export"
                 >
                   Экспорт
                 </v-btn>
@@ -138,7 +139,7 @@
             </v-row>
           </div>
         <span style="font-weight: bold; margin-left: 5px;">
-          Курс валюты:
+          Курс валюты: {{rate}}
         </span>
 
         <v-data-table
@@ -162,6 +163,9 @@ import {CarriersController} from "@/controllers/CarriersController";
 import {AgentsController} from "@/controllers/AgentsController";
 import {TransportationController} from "@/controllers/TransportationController";
 import {ConversionRateController} from "@/controllers/ConversionRateController";
+import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
+import {BankReportsModel} from "@/models/reports/BankReportsModel";
+import {CarrierModel} from "@/models/transportations/CarrierModel";
 
 @Component({
   components:{
@@ -188,6 +192,9 @@ export default class ListCarriers extends Vue {
   private loading : boolean = false;
   private rate : number
   private transModel = new TransportationModel();
+  private respcontroller  = new ReportsExportController()
+  private bankModel = new BankReportsModel();
+  private Carriers : CarrierModel[] = []
 
   rules()
   {
@@ -208,11 +215,6 @@ export default class ListCarriers extends Vue {
     else
       alert("dd")
     return true
-  }
-
-  private getRate()
-  {
-    return 0
   }
 
   private menuTitle : object =[
@@ -246,8 +248,23 @@ export default class ListCarriers extends Vue {
   async getData(){
     if(!this.rules())
       return
-    loading: false;
-    this.rate = this.getRate()
+    await ConversionRateController.GetAll().then((t: any)=>{
+      let rt = 0
+      let bool = false
+      let dd = new Date(this.date3);
+      let d3 = new Date(this.date3);
+      for (let datum of t.data) {
+        let d = new Date(datum.date);
+        if(dd<d)
+          continue
+        if(d<d3&&bool)
+          continue
+        bool = true
+        d3 = d;
+        rt = rt = datum.value
+      }
+      this.rate = rt;
+    })
     let model = await this.controller.GetAllTransportations().then((t : any)=>{
       this.loading = false
       return t.data
@@ -272,10 +289,11 @@ export default class ListCarriers extends Vue {
         model.totalWeight += place.totalWeight
       }
       try {
-        model.totalRub = 0//model.agentPrice.TotalPrice * this.rate;
+        model.totalRub = this.rate * 50//model.agentPrice.TotalPrice;
       }catch (Ex){}
       newObject.push(model);
     }
+    this.bankModel.transportationModels = newObject;
     return newObject
   }
   filter(model : any)
@@ -313,6 +331,7 @@ export default class ListCarriers extends Vue {
   async mounted(){
     await CarriersController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
+        this.Carriers.push(datum)
         this.carriers.push({
           name : datum.name,
           id : datum.id
@@ -329,7 +348,19 @@ export default class ListCarriers extends Vue {
     })
     console.log(this.carriers)
   }
-
+  Export()
+  {
+    if(this.transModel.carrierId!=null) {
+      let id = this.transModel.carrierId;
+      this.bankModel.carrier = this.Carriers[id - 1]
+    }
+    this.bankModel.dateFrom = this.date1;
+    this.bankModel.dateTo = this.date2
+    this.bankModel.rate = this.rate;
+    this.bankModel.dateMake = new Date().toLocaleDateString()
+    console.log(this.bankModel)
+    this.respcontroller.GetAgent(this.bankModel)
+  }
 }
 
 </script>

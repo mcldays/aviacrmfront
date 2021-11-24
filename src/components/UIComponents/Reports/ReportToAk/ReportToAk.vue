@@ -2,16 +2,15 @@
   <v-app>
     <div id="app">
       <v-card>
-          <v-card-title>Отчет для авиакомпании
-            <v-toolbar dense flat>
-              <v-spacer></v-spacer>
-
-              <v-btn icon
-                     @click="findData">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-toolbar>
-          </v-card-title>
+        <v-card-title>Отчет для авиакомпании
+          <v-toolbar dense flat>
+            <v-spacer></v-spacer>
+            <v-btn icon
+                   @click="findData">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </v-toolbar>
+        </v-card-title>
         <div v-show="this.finderVision" style="display: flex">
           <v-row class="vrowStyle ma-0 pa-0 ">
             <v-col  >
@@ -24,14 +23,23 @@
                   min-width="auto"
               >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      v-model="date1"
-                      label="С"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
+                  <v-form
+                      ref="form"
+                      v-model="valid"
+                      lazy-validation
+                  >
+                    <v-text-field
+                        :rules="[v => !!v || 'You must agree to continue!']"
+                        required
+                        v-model="date1"
+                        label="С"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                    >
+                    </v-text-field>
+                  </v-form>
                 </template>
                 <v-date-picker
                     v-model="date1"
@@ -89,10 +97,17 @@
                   @change="transModel.airportFromId= $event"
               >
                 ></v-select>
-
+              <v-select
+                  :label="'Перевозчик'"
+                  :items="carriers"
+                  item-text="name"
+                  item-value="id"
+                  :value="transModel.carrierId"
+                  @change="transModel.carrierId= $event"
+              >
+                ></v-select>
             </v-col>
           </v-row>
-
           <v-row class="vrowStyle" style="margin: auto;">
             <v-col>
               <v-btn
@@ -107,6 +122,7 @@
                   block
                   elevation="2"
                   color="blue"
+                  @click="Export()"
               >
                 Экспорт
               </v-btn>
@@ -120,15 +136,6 @@
             :items-per-page="5"
             class="elevation-1"
         >
-          <template v-slot:item.actions="{ item }">
-            <v-icon
-                small
-                class="mr-2"
-                @click="editItem(item)"
-            >
-              mdi-download
-            </v-icon>
-          </template>
         </v-data-table>
       </v-card>
     </div>
@@ -141,11 +148,16 @@ import 'vue-resize/dist/vue-resize.css'
 import {CarriersController} from "@/controllers/CarriersController";
 import {StationsController} from "@/controllers/StationsController";
 import {TransportationModel} from "@/models/transportations/TransportationModel";
+import {BankReportsModel} from "@/models/reports/BankReportsModel";
 import {TransportationController} from "@/controllers/TransportationController";
+import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
+import {CarrierModel} from "@/models/transportations/CarrierModel";
+
 @Component({
   components:{
   }
 })
+
 export default class ListCarriers extends Vue {
   handleResize(){
     console.log("Changed!")
@@ -162,21 +174,14 @@ export default class ListCarriers extends Vue {
     }
   ]
   private headers : object = [
-    {
-      text: '№',
-      align: 'start',
-      sortable: false,
-      value: 'position',
-    },
+
     { text: 'Номер а/н', value: 'number' },
-    { text: 'Дата выпуска а/н', value: 'dateAN' },
     { text: 'Фактическая дата вылета', value: 'dateOfLeave' },
     { text: 'Аэропорт отправления', value: 'airportFrom.name' },
     { text: 'Аэропорт назначения', value: 'airportTo.name' },
-    { text: 'Характер груза', value: 'goodsNatureCode' },
     { text: 'Кол-во мест', value: 'totalSeats' },
     { text: 'Фактический вес (кг)', value: 'totalWeight' },
-    { text: 'Оплачиваемый вес (кг)', value: 'carrierPrice.PayedWeight' },
+    { text: 'Объемный вес (кг)', value: 'totalVolume' },
     { text: 'Тариф (USD)', value: 'carrierPrice.PriceKg' },
     { text: 'Сумма авиафрахта (USD)', value: 'fzPrice' },
     { text: 'Агент. Вознаграждение\n' +
@@ -199,6 +204,8 @@ export default class ListCarriers extends Vue {
       return false;
     if(this.rule(this.transModel.airportFromId))
       return false;
+    if(this.rule(this.transModel.carrierId))
+      return false;
     return true
   }
   rule(p : any)
@@ -212,12 +219,19 @@ export default class ListCarriers extends Vue {
   private menu1: boolean = false;
   private menu2: boolean = false;
   private stations :  object[] = []
-  private dateType : number
+  private carriers :  object[] = []
+  private Carriers : CarrierModel[] = []
+
+  private dateType : number =-1
   private date1 : string
   private date2 : string
   private controller  = new TransportationController()
+  private respcontroller  = new ReportsExportController()
   private loading : boolean = false;
   private transModel = new TransportationModel();
+  private valid : boolean = true;
+  private bankModel = new BankReportsModel();
+
   data()
   {
     return{
@@ -229,6 +243,15 @@ export default class ListCarriers extends Vue {
     await StationsController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
         this.stations.push({
+          name : datum.name,
+          id : datum.id
+        })
+      }
+    })
+    await CarriersController.GetAll().then((t: any)=>{
+      for (let datum of t.data) {
+        this.Carriers.push(datum)
+        this.carriers.push({
           name : datum.name,
           id : datum.id
         })
@@ -258,20 +281,23 @@ export default class ListCarriers extends Vue {
         model.position = i
       }
       catch (Ex){}
+      model.totalVolume = 0
       model.totalWeight = 0
-      for (let place of model.places) {
-        model.totalWeight += place.totalWeight
-      }
       model.totalSeats= 0
       for (let place of model.places) {
         model.totalSeats += place.seats
+        model.totalVolume += place.volumeWeight
+        model.totalWeight += place.totalWeight
       }
       newObject.push(model);
     }
+    this.bankModel.transportationModels = newObject;
     return newObject
   }
   filter(model : any)
   {
+    if(model.carrierId != this.transModel.carrierId)
+      return true
     if(model.airportFromId != this.transModel.airportFromId)
       return true
     let d = new Date(this.dateType==0 ? model.dateAN : model.dateOfLeave);
@@ -285,6 +311,17 @@ export default class ListCarriers extends Vue {
   parseToTable(response : TransportationModel[]){
     this.items = response
     console.log(this.items)
+  }
+  Export()
+  {
+    if(this.transModel.carrierId!=null) {
+      let id = this.transModel.carrierId;
+      this.bankModel.carrier = this.Carriers[id - 1]
+    }
+    this.bankModel.dateFrom = this.date1;
+    this.bankModel.dateTo = this.date2
+    this.bankModel.dateMake = new Date().toLocaleDateString()
+    this.respcontroller.GetAk(this.bankModel)
   }
 }
 </script>

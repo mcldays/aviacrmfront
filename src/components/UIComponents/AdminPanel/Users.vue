@@ -40,6 +40,7 @@
         </v-card>
       </template>
     </v-dialog>
+
   </div>
 </template>
 
@@ -47,6 +48,12 @@
 import {Field} from "@/models/Field";
 import {UsersController} from "@/controllers/UsersController";
 import TableComponent from "@/components/UIComponents/CRUDTableComponent";
+
+let roles = [
+  {id: 0, name: "Администратор"},
+  {id: 1, name: "Менеджер"},
+];
+
 
 export default {
   components: {TableComponent},
@@ -59,14 +66,19 @@ export default {
           { text: 'ФИО', value: 'fio' },
           { text: 'E-mail', value: 'email' },
           { text: 'Номер телефона', value: 'phone' },
-          { text: 'Смена пароля', value: 'addit', sortable: false },
+          { text: 'Роль', value: 'role' },
+          { text: 'Смена пароля', value: 'addit1', sortable: false },
           { text: 'Взаимодействия', value: 'actions', sortable: false },
         ],
         fields: [
           new Field("username", "Логин", {rules: [t=> t !== null || "Логин должен быть введен"]}),
-          new Field("fio", "ФИО"),
-          new Field("email", "E-mail", {rules: [t=> t !== null || "E-mail должен быть введен"]}),
+          new Field("fio", "ФИО", {rules: [t=> !!t || "ФИО должно быть заполнено"]}),
+          new Field("email", "E-mail", {rules: [
+              t=> t !== null || "E-mail должен быть введен",
+              t=> this.validateEmail(t) || "Email не соответствет требованиям"
+            ]}),
           new Field("phone", "Номер телефона"),
+          new Field("role", "Роль", {fieldType: "select", fieldParams: {items: roles, text: "name", value: "id"}}),
         ],
         instanceNameRod: "пользователя",
         instanceNameIm: "пользователя",
@@ -74,7 +86,14 @@ export default {
           data.items = (await UsersController.GetAll()).data;
         },
         toTableView: (data, model) => {
-          return model
+          return {
+            id: model.id,
+            username: model.username,
+            fio: model.fio,
+            phone: model.phone,
+            email: model.email,
+            role: roles.find(t=>t.id === model.role).name,
+          }
         },
         removeInstance: async (data) => {
           await UsersController.Remove(data.items[data.editedIndex].id)
@@ -86,8 +105,8 @@ export default {
           let res = await UsersController.Add(agent);
           return res.data;
         },
-        additIco: "mdi-lock",
-        additCallback: (model) =>{
+        addit1Ico: "mdi-lock",
+        addit1Callback: (model) =>{
           this.chosedUserId = model.id
           this.passDialog = true;
         },
@@ -103,6 +122,10 @@ export default {
       await UsersController.SetPassword({ id: this.chosedUserId, newPassword: this.newPassword});
       this.newPassword = this.chosedUserId = null;
       this.passDialog = false;
+    },
+    validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
     }
   },
 }

@@ -55,7 +55,7 @@
 
                         <v-select
                             v-if="field.fieldType==='select'"
-                            :items="field.fieldParams.items()"
+                            :items="(typeof field.fieldParams.items === 'function') ? field.fieldParams.items() : field.fieldParams.items"
                             :item-text="field.fieldParams.text"
                             :item-value="field.fieldParams.value"
                             v-model="editedItem[field.key]"
@@ -181,13 +181,13 @@
           mdi-delete
         </v-icon>
       </template>
-      <template v-slot:item.addit="{ item }">
+      <template v-slot:item.addit1="{ item }">
         <v-icon
             small
             class="mr-2"
-            @click="parent.additCallback(item)"
+            @click="parent.addit1Callback(item)"
         >
-          {{parent.additIco}}
+          {{parent.addit1Ico}}
         </v-icon>
       </template>
 
@@ -282,12 +282,18 @@ export default {
       if(!this.is_valid) return;
       if (this.editedIndex > -1) {
         let res = await this.parent.editInstance(this.$data);
-        if(res === false) return;
+        if(res === false) {
+          alert("Одно или несколько полей заполнено не верно");
+          return;
+        }
         Object.assign(this.items[this.editedIndex], this.editedItem)
       } else {
         let dataForSend = Object.filter(this.editedItem, t=>(t !== "" && t!== null)); // отфильтровываем пустые поля
         let res = await this.parent.addInstance(this.$data, dataForSend, this.editedItem);
-        if(res === -1) return;
+        if(res === -1){
+          alert("Одно или несколько полей заполнено не верно");
+          return;
+        }
         this.editedItem.id = res;
 
         this.items.push(this.editedItem)

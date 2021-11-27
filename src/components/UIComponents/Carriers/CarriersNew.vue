@@ -53,7 +53,7 @@ export default {
           { text: 'Название на русском', value: 'rusName' },
           { text: 'Тип перевозчика', value: 'type' },
           { text: 'Префикс а/н по умолчанию', value: 'prefix' },
-          { text: 'Сборы', value: 'addit' },
+          { text: 'Сборы', value: 'addit1' },
           { text: 'Взаимодействия', value: 'actions', sortable: false },
         ],
         fields: [
@@ -86,14 +86,14 @@ export default {
           let res = await CarriersController.Add(agent);
           return res.data;
         },
-        additCallback: async (item) =>{
+        addit1Callback: async (item) =>{
           this.carrierId = item.id
           this.feesDialog = true
 
           if(this.$refs.innerTable)
             await this.feesInfo.initialize(this.$refs.innerTable.$data)
         },
-        additIco: "mdi-cash-multiple"
+        addit1Ico: "mdi-cash-multiple"
       },
       feesDialog: false,
       carrierId: null,

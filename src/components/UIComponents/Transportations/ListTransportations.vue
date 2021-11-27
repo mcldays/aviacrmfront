@@ -215,6 +215,7 @@ export default class ListTransportations extends Vue {
         model.totalValue+= place.volume
       }
       newObject.push(model);
+
     }
     return newObject
   }

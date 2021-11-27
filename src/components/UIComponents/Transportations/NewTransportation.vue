@@ -775,11 +775,10 @@ export default class NewTransportation extends Vue {
       this.totalCount.volumeWeight = 0
     }
     else{
-      this.totalCount.totalSeats -= Number(model.seats).toFixed(3)
-      this.totalCount.totalWeight -= model.totalWeight.toFixed(3)
-      this.totalCount.totalVolume -= model.volumeWeight.toFixed(3)
-      this.totalCount.volumeWeight -= model.volume.toFixed(3)
-
+      this.totalCount.totalSeats -= Number((model.seats).toFixed(3))
+      this.totalCount.totalWeight -= Number((model.totalWeight).toFixed(3))
+      this.totalCount.totalVolume -= Number((model.volumeWeight).toFixed(3))
+      this.totalCount.volumeWeight -= Number((model.volume).toFixed(3))
     }
   }
 
@@ -828,10 +827,10 @@ export default class NewTransportation extends Vue {
   }
 
   calculateTotalCount(){
-    this.totalCount.totalSeats += Number(this.place.seats).toFixed(3)
-    this.totalCount.totalWeight += this.place.totalWeight.toFixed(3)
-    this.totalCount.totalVolume +=this.place.volumeWeight.toFixed(3)
-    this.totalCount.volumeWeight +=this.place.volume.toFixed(3)
+    this.totalCount.totalSeats += Number((this.place.seats).toFixed(3))
+    this.totalCount.totalWeight += Number((this.place.totalWeight).toFixed(3))
+    this.totalCount.totalVolume += Number((this.place.volumeWeight).toFixed(3))
+    this.totalCount.volumeWeight += Number((this.place.volume).toFixed(3))
   }
 
 

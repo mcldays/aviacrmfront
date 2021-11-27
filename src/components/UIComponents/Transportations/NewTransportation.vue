@@ -267,6 +267,7 @@
               class="elevation-1"
               show-select
               :items="places"
+              v-model="selected"
           >
             <template v-slot:top>
               <v-toolbar
@@ -276,7 +277,7 @@
               <v-spacer></v-spacer>
                 <v-btn
                     icon
-                    @click="dialogNewPlace=true"
+                    @click="deletePlaces"
                 >
                   <v-icon>
                     mdi-delete
@@ -692,7 +693,7 @@ export default class NewTransportation extends Vue {
   private menu2: boolean = false;
   private loading : boolean = false;
   private menu3: boolean = false;
-  private selected :  boolean[] = []
+  private selected :  PlaceModel[] = []
   private singleSelect : boolean = false
   private valid : boolean = true
   private newPlaceState : boolean = false
@@ -755,6 +756,33 @@ export default class NewTransportation extends Vue {
     })
   }
 
+  deletePlaces(){
+    console.log(this.selected)
+    for (const placeModel of this.selected) {
+      let index = this.places.indexOf(placeModel)
+      if(index > -1) {
+        this.places.splice(index, 1)
+        this.calculateFromDelete(placeModel)
+      }
+    }
+  }
+
+  calculateFromDelete(model : PlaceModel){
+    if(this.places.length === 0){
+      this.totalCount.totalSeats  = 0
+      this.totalCount.totalWeight = 0
+      this.totalCount.totalVolume = 0
+      this.totalCount.volumeWeight = 0
+    }
+    else{
+      this.totalCount.totalSeats -= Number(model.seats).toFixed(3)
+      this.totalCount.totalWeight -= model.totalWeight.toFixed(3)
+      this.totalCount.totalVolume -= model.volumeWeight.toFixed(3)
+      this.totalCount.volumeWeight -= model.volume.toFixed(3)
+
+    }
+  }
+
   prepareDataFromAirports(model : any[]) : [object[], object[]]{
     let airportsTo : any[] = []
     let airportsFrom : any[] = []
@@ -794,12 +822,16 @@ export default class NewTransportation extends Vue {
   public SaveVolume(){
     let result = this.calculateVolume(this.place)
     this.places.push(result)
-    this.totalCount.totalSeats += Number(this.place.seats)
-    this.totalCount.totalWeight += this.place.totalWeight
-    this.totalCount.totalVolume +=this.place.volumeWeight
-    this.totalCount.volumeWeight +=this.place.volume
+    this.calculateTotalCount()
     this.place = new PlaceModel()
     this.newPlaceState = false;
+  }
+
+  calculateTotalCount(){
+    this.totalCount.totalSeats += Number(this.place.seats).toFixed(3)
+    this.totalCount.totalWeight += this.place.totalWeight.toFixed(3)
+    this.totalCount.totalVolume +=this.place.volumeWeight.toFixed(3)
+    this.totalCount.volumeWeight +=this.place.volume.toFixed(3)
   }
 
 
@@ -873,6 +905,8 @@ async AddModel(){
     this.totalCount.totalWeight = 0
     this.totalCount.volumeWeight = 0
     this.totalCount.totalVolume = 0
+    this.selected = []
+    this.newPlaceState = false
     this.$emit("successAdd")
 
   }

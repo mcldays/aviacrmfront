@@ -8,7 +8,10 @@
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
 
-          <v-btn icon>
+          <v-btn icon @click="searchEmergency" v-if="emergencyFilterState">
+            <v-icon color="red">mdi-alert-circle</v-icon>
+          </v-btn>
+          <v-btn icon @click="searchEmergency" v-else>
             <v-icon>mdi-alert-circle</v-icon>
           </v-btn>
 
@@ -17,9 +20,11 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-toolbar>
+        <v-scroll-y-transition mode="out-in">
         <Finder
-        v-show="this.finderVision"/>
-
+        v-if="finderVision"
+        @find="find"/>
+        </v-scroll-y-transition>
       <v-data-table
           v-model="readTransModel"
           :key="componentKey"
@@ -43,6 +48,23 @@
           >
             mdi-delete
           </v-icon>
+        </template>
+        <template v-slot:item.emergency="{ item }">
+          <v-simple-checkbox
+              v-if="item.emergency"
+              v-model="item.emergency"
+              input-value="true"
+              disabled
+              color="red"
+          ></v-simple-checkbox>
+          <v-simple-checkbox
+              v-else
+              input-value="false"
+              v-model="item.emergency"
+              disabled
+              color="red"
+          ></v-simple-checkbox>
+
         </template>
       </v-data-table>
       </v-card>
@@ -88,9 +110,12 @@ import {PlaceModel} from "@/models/transportations/PlaceModel";
 export default class ListTransportations extends Vue {
   private finderVision : boolean = false;
   private modalVision : boolean = false;
+  private emergencyFilterState : boolean = false
   private componentKey : number = 0
   private items : any[] = []
+  private filterData :any = []
   private newTransKey : number = 0
+  private ResponseItems : TransportationModel[] = []
   private loading : boolean = true;
   private controller  = new TransportationController()
   private editModel = {} as TransportationModel
@@ -112,6 +137,7 @@ export default class ListTransportations extends Vue {
     { text: 'Обьем', value: 'totalValue' },
     { text: 'Направление', value: 'fromTo' },
     { text: 'Агент', value: 'agent.name' },
+    {text : "Экстренный", value:'emergency'},
     { text: 'Редактирование', value: 'actions', sortable: false },
 
 
@@ -134,7 +160,8 @@ export default class ListTransportations extends Vue {
   }
 
   parseToTable(response : TransportationModel[]){
-    this.items = response
+    this.ResponseItems = response
+    this.items = this.ResponseItems
     console.log(this.items)
   }
 
@@ -158,6 +185,15 @@ export default class ListTransportations extends Vue {
     this.items.splice(concatIndex, 1)
     console.log(this.items)
   }
+  searchEmergency(){
+    this.emergencyFilterState = !this.emergencyFilterState
+    if(this.emergencyFilterState){
+      this.items = this.items.filter((t:TransportationModel) => t.emergency == true)
+    }
+    else{
+      this.items = this.ResponseItems
+    }
+  }
 
   editItem(item : TransportationModel){
     this.editModel = item;
@@ -179,18 +215,28 @@ export default class ListTransportations extends Vue {
         model.totalValue+= place.volume
       }
       newObject.push(model);
+
     }
     return newObject
   }
+  find(findData : any){
 
-
-
-
-
+  }
 }
 </script>
 <style scoped>
 .vrowStyle{
   padding: 0 50px 0 0;
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>

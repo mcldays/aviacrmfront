@@ -3,7 +3,9 @@
     <router-view class="aut" name="aut"></router-view>
     <GlobalDisplayForm v-if="$store.getters.isLoggedIn">
       <template v-slot:content>
+        <v-fade-transition mode="out-in">
         <router-view class="main"></router-view>
+        </v-fade-transition>
       </template>
     </GlobalDisplayForm>
   </v-app>

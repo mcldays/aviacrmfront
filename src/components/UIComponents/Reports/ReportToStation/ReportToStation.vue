@@ -115,6 +115,7 @@
                   block
                   elevation="2"
                   color="blue"
+                  @click="Export"
               >
                 Экспорт
               </v-btn>
@@ -151,6 +152,9 @@ import {CarriersController} from "@/controllers/CarriersController";
 import {StationsController} from "@/controllers/StationsController";
 import {TransportationModel} from "@/models/transportations/TransportationModel";
 import {TransportationController} from "@/controllers/TransportationController";
+import {BankReportsModel} from "@/models/reports/BankReportsModel";
+import {CarrierModel} from "@/models/transportations/CarrierModel";
+import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
 @Component({
   components:{
   }
@@ -220,13 +224,17 @@ export default class ListCarriers extends Vue {
   private menu2: boolean = false;
   private carriers :  object[] = []
   private stations :  object[] = []
-  private dateType : number
+  private dateType : number =-1
   private date1 : string
   private date2 : string
   private controller  = new TransportationController()
   private loading : boolean = false;
   private rate : number
   private transModel = new TransportationModel();
+  private bankModel = new BankReportsModel();
+  private Carriers : CarrierModel[] = []
+  private respcontroller  = new ReportsExportController()
+
   data()
   {
     return{
@@ -237,6 +245,7 @@ export default class ListCarriers extends Vue {
   async mounted(){
     await CarriersController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
+        this.Carriers.push(datum)
         this.carriers.push({
           name : datum.name,
           id : datum.id
@@ -290,6 +299,7 @@ export default class ListCarriers extends Vue {
       }
       newObject.push(model);
     }
+    this.bankModel.transportationModels = newObject;
     return newObject
   }
   filter(model : any)
@@ -309,6 +319,18 @@ export default class ListCarriers extends Vue {
   parseToTable(response : TransportationModel[]){
     this.items = response
     console.log(this.items)
+  }
+  Export()
+  {
+    if(this.transModel.carrierId!=null) {
+      let id = this.transModel.carrierId;
+      this.bankModel.carrier = this.Carriers[id - 1]
+    }
+    this.bankModel.dateFrom = this.date1;
+    this.bankModel.dateTo = this.date2
+    this.bankModel.dateMake = new Date().toLocaleDateString()
+    console.log(this.bankModel)
+    this.respcontroller.GetStation(this.bankModel)
   }
 }
 

@@ -1,4 +1,5 @@
 <template>
+  <v-app>
   <div>
   <div>
     <v-form
@@ -35,17 +36,6 @@
             right
             offset-y
         >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-                dark
-                icon
-                v-bind="attrs"
-                v-on="on"
-                @click="closeModal"
-            >
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
         </v-menu>
       </v-toolbar>
       <v-card-text>
@@ -164,7 +154,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                  label="Flight code"
+                  label="Flight number"
                   required
                   :rules="emptyRule"
                   :value="transModel.flightCode"
@@ -205,6 +195,7 @@
             <v-col>
               <v-text-field
                   label="Goods Natures Code"
+                  disabled
                   required
                   :rules="emptyRule"
                   :value="transModel.goodsNatureCode"
@@ -214,8 +205,7 @@
             <v-col>
               <v-text-field
                   label="Агентское вознаграждение"
-                  required
-                  :rules="emptyRule"
+
                   v-model.number="transModel.agentsCommission"
               ></v-text-field>
             </v-col>
@@ -224,7 +214,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  label="FZ price"
+                  label="Airline price"
                   v-model.number="transModel.fzPrice"
               ></v-text-field>
             </v-col>
@@ -240,27 +230,42 @@
               <v-checkbox
                   label="Arrival General"
                   color="indigo"
-                  value="indigo"
-                  :value="transModel.arrivalGeneral"
-                  @change="transModel.arrivalGeneral = $event"
+                  v-model="transModel.arrivalGeneral"
                   hide-details
               ></v-checkbox>
               <v-checkbox
                   label="Emergency"
                   color="indigo darken-3"
-                  value="indigo"
                   hide-details
-                  :value="transModel.emergency"
-                  @change="transModel.emergency= $event"
+                  v-model="transModel.emergency"
+              ></v-checkbox>
+              <v-checkbox
+                  label="General Cargo"
+                  color="orange"
+                  v-model="transModel.isGeneral"
+                  hide-details
+              ></v-checkbox>
+              <v-checkbox
+                  label="DC cargo"
+                  color="info"
+                  hide-details
+                  v-model="transModel.isDG"
               ></v-checkbox>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col style="display: flex; margin: auto">
+
+            </v-col>
+          </v-row>
+
         </v-container>
         <v-container>
           <v-card-title class="pa-2">Места</v-card-title>
           <v-data-table
               :headers="headers"
               class="elevation-1"
+              show-select
               :items="places"
           >
             <template v-slot:top>
@@ -269,9 +274,17 @@
               >
                 <v-toolbar-title>Добавить место</v-toolbar-title>
               <v-spacer></v-spacer>
+                <v-btn
+                    icon
+                    @click="dialogNewPlace=true"
+                >
+                  <v-icon>
+                    mdi-delete
+                  </v-icon>
+                </v-btn>
               <v-btn
                   icon
-                  @click="dialogNewPlace=true"
+                  @click="addNewRow"
               >
                 <v-icon>
                   mdi-plus
@@ -354,14 +367,14 @@
                           text
                           @click="closeSeats"
                       >
-                        Cancel
+                        Отменить
                       </v-btn>
                       <v-btn
                           color="blue darken-1"
                           text
                           @click="SaveVolume"
                       >
-                        Save
+                        Сохранить
                       </v-btn>
                     </v-card-actions>
                   </v-card>
@@ -371,7 +384,65 @@
             <template
                 v-slot:body.append
             >
+              <tr v-if="newPlaceState">
+                <td>
+                </td>
+                <td class="inputTd">
+                  <v-text-field
+                      outlined
+                      hide-details
+                      dense
+                      v-model.number="place.seats"
+                  ></v-text-field>
+                </td>
+                <td class="inputTd">
+                  <v-text-field
+                      outlined
+                      hide-details
+                      dense
+                      v-model.number="place.weight"
+                  ></v-text-field>
+                </td>
+                <td class="inputTd">
+                  <v-text-field
+                      outlined
+                      hide-details
+                      dense
+                      v-model.number="place.width"
+                  ></v-text-field>
+                </td>
+                <td class="inputTd">
+                  <v-text-field
+                      outlined
+                      hide-details
+                      dense
+                      v-model.number="place.length"
+                  ></v-text-field>
+                </td>
+                <td class="inputTd">
+                  <v-text-field
+                      outlined
+                      hide-details
+                      dense
+                      v-model.number="place.height"
+                  ></v-text-field>
+                </td>
+                <td class="inputTd">
+
+                </td>
+                <td class="inputTd">
+
+                </td>
+                <td class="inputTd">
+                  <v-btn icon @click="SaveVolume">
+                    <v-icon>
+                      mdi-plus
+                    </v-icon>
+                  </v-btn>
+                </td>
+              </tr>
               <tr>
+                <td></td>
                 <td>{{totalCount.totalSeats}}</td>
                 <td></td>
                 <td></td>
@@ -589,6 +660,7 @@
     </v-form>
   </div>
   </div>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -614,12 +686,16 @@ export default class NewTransportation extends Vue {
   @Prop() editModel : TransportationModel
   @Prop() componentKey : number
   public editIndex : number = 0
+  private placeRows : PlaceModel[] = []
   private transModel = {} as TransportationModel
   private dialogNewPlace: boolean = false;
   private menu2: boolean = false;
   private loading : boolean = false;
   private menu3: boolean = false;
+  private selected :  boolean[] = []
+  private singleSelect : boolean = false
   private valid : boolean = true
+  private newPlaceState : boolean = false
   private totalCount : any = {
     totalSeats : 0,
     totalWeight : 0,
@@ -700,6 +776,10 @@ export default class NewTransportation extends Vue {
 
   }
 
+  AddNewPlace(){
+
+  }
+
 
   prepareDataForSelect(model:any[]){
     let pushModel : any[] = []
@@ -711,7 +791,6 @@ export default class NewTransportation extends Vue {
     }
     return pushModel
   }
-
   public SaveVolume(){
     let result = this.calculateVolume(this.place)
     this.places.push(result)
@@ -719,10 +798,20 @@ export default class NewTransportation extends Vue {
     this.totalCount.totalWeight += this.place.totalWeight
     this.totalCount.totalVolume +=this.place.volumeWeight
     this.totalCount.volumeWeight +=this.place.volume
-    this.closeSeats()
+    this.place = new PlaceModel()
+    this.newPlaceState = false;
   }
 
 
+  addNewRow(){
+    this.newPlaceState = true
+    this.place = new PlaceModel()
+   this.placeRows.push(new PlaceModel())
+  }
+
+  newItem(){
+    console.log("NewItem")
+  }
 
   public closeSeats() {
     this.dialogNewPlace = !this.dialogNewPlace
@@ -812,5 +901,12 @@ async AddModel(){
 <style scoped lang="scss">
 .rowAgents{
 
+}
+.v-input--selection-controls{
+  margin-top: 0!important;
+}
+.inputTd{
+  width: 50px!important;
+  height: 30px!important;
 }
 </style>

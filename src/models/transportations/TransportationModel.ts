@@ -33,6 +33,8 @@ export  class TransportationModel {
     totalSeats? : number
     totalVolume? : number
     position? : number
+    isDG? : boolean
+    isGeneral? :boolean
     totalRub? : number
     carrierPrice : CarrierPriceModel
     agentPrice : CarrierPriceModel

@@ -9,6 +9,7 @@
             <v-col>
               <v-text-field
                   label="Имя главного бухгалтера"
+                  @change="requisites.ChiefAccountant= $event"
                   :value="requisites.ChiefAccountant"
                   required
               ></v-text-field>
@@ -19,6 +20,7 @@
             <v-col>
               <v-text-field
                   :value="requisites.BankRequisites"
+                  @change="requisites.BankRequisites= $event"
                   label="Банковские реквизиты"
                   required
               ></v-text-field>
@@ -29,6 +31,7 @@
             <v-col>
               <v-text-field
                   :value="requisites.CompanyAddres"
+                  @change="requisites.CompanyAddres= $event"
                   label="Адрес компании"
                   required
               ></v-text-field>
@@ -39,6 +42,7 @@
             <v-col>
               <v-text-field
                   :value="requisites.NameSign"
+                  @change="requisites.NameSign= $event"
                   label="Имя подписанта со стороны компании"
                   required
               ></v-text-field>
@@ -48,7 +52,9 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
+                  id="fdf"
                   :value="requisites.PostSign"
+                  @change="requisites.PostSign= $event"
                   label="Должность подписанта со стороны компании"
                   required
               ></v-text-field>
@@ -102,18 +108,13 @@ export default class ListCarriers extends Vue {
   }
   Cancel()
   {
-
+    console.log(this.requisites)
   }
   async mounted(){
     let controller = new RequisitesController()
     await controller.GetAllReq().then((t: any)=>{
-      alert(t.data)
-      for (let datum of t.data) {
-        if(datum.id ==0)
-        {
-          this.requisites = datum
-        }
-      }
+      this.requisites = t.data
+
     })
   }
 }

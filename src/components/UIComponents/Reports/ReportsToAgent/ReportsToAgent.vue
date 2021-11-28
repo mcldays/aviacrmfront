@@ -120,6 +120,7 @@
             <v-row class="vrowStyle" style="margin: auto;">
               <v-col>
                 <v-btn
+                    style="color: azure"
                     block
                     elevation="2"
                     color="green"
@@ -127,11 +128,11 @@
                   Утвердить отчет
                 </v-btn>
                 <v-btn
-                    style="margin-top: 10px"
+                    style="margin-top: 10px; color: azure"
                     block
                     elevation="2"
                     color="blue"
-                    @click="Export"
+                    @click="Export()"
                 >
                   Экспорт
                 </v-btn>
@@ -190,7 +191,7 @@ export default class ListCarriers extends Vue {
   private items : any[] = []
   private controller  = new TransportationController()
   private loading : boolean = false;
-  private rate : number
+  private rate : number = 0
   private transModel = new TransportationModel();
   private respcontroller  = new ReportsExportController()
   private bankModel = new BankReportsModel();
@@ -329,6 +330,7 @@ export default class ListCarriers extends Vue {
   private agents :  object[] = []
 
   async mounted(){
+    this.transModel.carrierId=2
     await CarriersController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
         this.Carriers.push(datum)

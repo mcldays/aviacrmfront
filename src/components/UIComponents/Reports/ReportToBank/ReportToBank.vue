@@ -112,6 +112,7 @@
           <v-row class="vrowStyle" style="margin: auto;">
             <v-col>
               <v-btn
+                  style="color: azure"
                   block
                   elevation="2"
                   color="green"
@@ -119,7 +120,7 @@
                 Утвердить отчет
               </v-btn>
               <v-btn
-                  style="margin-top: 10px"
+                  style="margin-top: 10px; color: azure"
                   block
                   elevation="2"
                   color="blue"
@@ -241,6 +242,7 @@ export default class ListCarriers extends Vue {
     }
   }
   async mounted(){
+    this.transModel.carrierId=2
     await StationsController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
         this.stations.push({

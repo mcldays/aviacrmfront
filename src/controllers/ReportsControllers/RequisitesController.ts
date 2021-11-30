@@ -11,5 +11,8 @@ export class RequisitesController {
     public async UpdateReq(model : RequisitesModel){
         return Axios.post("/api/requisites/update", model)
     }
+    public async Add(model : RequisitesModel){
+        return Axios.post("/api/requisites/add", model)
+    }
 }
 

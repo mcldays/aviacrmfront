@@ -129,20 +129,7 @@
               </v-col>
             </v-row>
           </v-container>
-          <span style="font-weight: bold; margin-left: 5px;">
-          Курс валюты: {{rate}}
-        </span>
-
-          <v-data-table
-              :headers="headers"
-              :loading="loading"
-              :items="items"
-              :items-per-page="5"
-              class="elevation-1"
-          >
-          </v-data-table>
         </v-card-text>
-
       </v-card>
       </v-form>
     </div>

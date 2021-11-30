@@ -9,7 +9,7 @@
             <v-col>
               <v-text-field
                   label="Имя главного бухгалтера"
-                  :value="requisites.ChiefAccountant"
+                  v-model="requisites.chiefAccountant"
                   required
               ></v-text-field>
             </v-col>
@@ -18,7 +18,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.BankRequisites"
+                  v-model="requisites.bankRequisites"
                   label="Банковские реквизиты"
                   required
               ></v-text-field>
@@ -28,7 +28,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.CompanyAddres"
+                  v-model="requisites.companyAddres"
                   label="Адрес компании"
                   required
               ></v-text-field>
@@ -38,7 +38,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.NameSign"
+                  v-model="requisites.nameSign"
                   label="Имя подписанта со стороны компании"
                   required
               ></v-text-field>
@@ -48,7 +48,8 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.PostSign"
+                  id="fdf"
+                  v-model="requisites.postSign"
                   label="Должность подписанта со стороны компании"
                   required
               ></v-text-field>
@@ -97,23 +98,17 @@ export default class ListCarriers extends Vue {
   Save()
   {
     let controller = new RequisitesController()
-    this.requisites.Id = 0;
     controller.UpdateReq(this.requisites)
   }
   Cancel()
   {
-
+    console.log(this.requisites)
   }
   async mounted(){
     let controller = new RequisitesController()
     await controller.GetAllReq().then((t: any)=>{
-      alert(t.data)
-      for (let datum of t.data) {
-        if(datum.id ==0)
-        {
-          this.requisites = datum
-        }
-      }
+      this.requisites = t.data
+
     })
   }
 }

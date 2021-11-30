@@ -1,8 +1,8 @@
 export class RequisitesModel {
-    Id: number
-    ChiefAccountant: string
-    BankRequisites: string
-    CompanyAddres: string
-    NameSign: string
-    PostSign: string
+    id: number
+    chiefAccountant: string
+    bankRequisites: string
+    companyAddres: string
+    nameSign: string
+    postSign: string
 }

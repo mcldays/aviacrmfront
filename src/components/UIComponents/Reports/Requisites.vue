@@ -9,8 +9,7 @@
             <v-col>
               <v-text-field
                   label="Имя главного бухгалтера"
-                  @change="requisites.ChiefAccountant= $event"
-                  :value="requisites.ChiefAccountant"
+                  v-model="requisites.chiefAccountant"
                   required
               ></v-text-field>
             </v-col>
@@ -19,8 +18,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.BankRequisites"
-                  @change="requisites.BankRequisites= $event"
+                  v-model="requisites.bankRequisites"
                   label="Банковские реквизиты"
                   required
               ></v-text-field>
@@ -30,8 +28,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.CompanyAddres"
-                  @change="requisites.CompanyAddres= $event"
+                  v-model="requisites.companyAddres"
                   label="Адрес компании"
                   required
               ></v-text-field>
@@ -41,8 +38,7 @@
               style="height: 70px;">
             <v-col>
               <v-text-field
-                  :value="requisites.NameSign"
-                  @change="requisites.NameSign= $event"
+                  v-model="requisites.nameSign"
                   label="Имя подписанта со стороны компании"
                   required
               ></v-text-field>
@@ -53,8 +49,7 @@
             <v-col>
               <v-text-field
                   id="fdf"
-                  :value="requisites.PostSign"
-                  @change="requisites.PostSign= $event"
+                  v-model="requisites.postSign"
                   label="Должность подписанта со стороны компании"
                   required
               ></v-text-field>
@@ -103,7 +98,6 @@ export default class ListCarriers extends Vue {
   Save()
   {
     let controller = new RequisitesController()
-    this.requisites.Id = 0;
     controller.UpdateReq(this.requisites)
   }
   Cancel()

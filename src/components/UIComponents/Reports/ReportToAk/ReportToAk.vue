@@ -43,7 +43,7 @@
                 </template>
                 <v-date-picker
                     v-model="date1"
-                    @input="menu1 = false"
+                    @input="ChDate()"
                 ></v-date-picker>
               </v-menu>
 
@@ -67,10 +67,7 @@
                       v-on="on"
                   ></v-text-field>
                 </template>
-                <v-date-picker
-                    v-model="date2"
-                    @input="menu2 = false"
-                ></v-date-picker>
+
               </v-menu>
               <v-select
                   label="Тип даты"
@@ -184,7 +181,37 @@ export default class ListCarriers extends Vue {
     { text: 'Итого (USD)', value: 'carrierPrice.TotalPrice' },
   ];
   private items : object = []
-
+  ChDate()
+  {
+    let d = new Date(this.date1);
+    let d1: number
+    let d2: number
+    let m = d.getMonth()
+    let y = d.getFullYear()
+    if(d.getDate()<16)
+    {
+      d1 = 1
+      d2 = 15
+    }
+    else
+    {
+      d1 = 16
+      d2 = this.getLastDayOfMonth(y, m)
+    }
+    let dt1 =  new Date(y, m, d1);
+    let dt2 =  new Date(y, m, d2);
+    this.date1 = dt1.toLocaleDateString()
+    this.date2 = dt2.toLocaleDateString()
+    let split1 = this.date1.split('.')
+    let split2 = this.date2.split('.')
+    this.date1 = split1[2]+'-'+split1[1]+'-'+split1[0]
+    this.date2 = split2[2]+'-'+split2[1]+'-'+split2[0]
+    this.menu1 = false
+  }
+  getLastDayOfMonth(year: number, month: number) {
+    let date = new Date(year, month + 1, 0);
+    return date.getDate();
+  }
   findData(){
     this.finderVision = !this.finderVision;
   }

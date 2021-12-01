@@ -9,7 +9,7 @@ import Stations from "@/components/UIComponents/Stations/StationsNew.vue"
 import Tarifs from "@/components/UIComponents/Tarifs/Tarifs.vue"
 import Autorization from "@/components/GlobalForms/Authorization.vue"
 import AdminPanel from "@/components/UIComponents/AdminPanel/AdminPanel.vue"
-
+import CheckReports from "@/components/UIComponents/Reports/ReadyReports/CheckReports.vue"
 export default new VueRouter({
     routes: [
         {
@@ -88,6 +88,10 @@ export default new VueRouter({
         {
             path: '/AdminPanel',
             component: AdminPanel
+        },
+        {
+            path: '/CheckReports',
+            component: CheckReports
         },
     ]
 })

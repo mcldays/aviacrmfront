@@ -5,7 +5,6 @@
         <v-tab @click="component = 'ReportToAk'" style="font-size: 10px">Отчет для а/к</v-tab>
         <v-tab @click="component = 'ReportToStation'" style="font-size: 10px">Отчет по станции</v-tab>
         <v-tab @click="component = 'ReportsToAgent'" style="font-size: 10px">Отчеты для агента</v-tab>
-        <v-tab @click="component = 'CheckReports'" style="font-size: 10px">На утверждение агентам</v-tab>
         <v-tab @click="component = 'ReadyReports'" style="font-size: 10px">Утвержденные отчеты агентов</v-tab>
         <v-tab @click="component = 'Expense'" style="font-size: 10px">Счета</v-tab>
         <v-tab @click="component = 'Requisites'" style="font-size: 10px">Реквизиты отчетов</v-tab>

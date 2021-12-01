@@ -91,7 +91,6 @@ import {RolesController} from "@/controllers/RolesController";
         { id: 4, name: "Перевозчики", href: '/carriers' },
         { id: 5, name: "Агенты", href: '/agents' },
         { id: 6, name: "Курсы конвертации", href: '/conversionrates' },
-
       ],
     };
   },
@@ -122,6 +121,9 @@ import {RolesController} from "@/controllers/RolesController";
 
     if(role == "Admin"){
       this.$data.tabs.push({ id: 7, name: "Админ панель", href: '/adminPanel' })
+    }
+    if(role == "Agent"){
+      this.$data.tabs.push({ id: 8, name: "На утверждение агентам", href: '/checkReports' })
     }
   }
 })

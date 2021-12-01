@@ -47,13 +47,6 @@
                       @input="menu1 = false"
                   ></v-date-picker>
                 </v-menu>
-              <v-btn
-                  @click="getData()"
-                  block
-                  elevation="2"
-              >
-                Найти
-              </v-btn>
             </v-col>
             <v-col  >
               <v-menu
@@ -108,9 +101,11 @@
               >
                 ></v-select>
             </v-col>
+          </v-row>
+
+          <v-row class="vrowStyle" style="margin: auto;">
             <v-col>
           <v-btn
-                  style="margin-top: 10px; color: azure"
                   block
                   elevation="2"
                   color="blue"
@@ -118,8 +113,17 @@
               >
                 Экспорт
               </v-btn>
+              <v-btn
+                  block
+                  style="margin-top: 10px;"
+                  @click="getData()"
+                  elevation="2"
+              >
+                Найти
+              </v-btn>
             </v-col>
           </v-row>
+
         </div>
 
         <v-data-table
@@ -169,7 +173,7 @@ export default class ListCarriers extends Vue {
   private headers : object = [
 
     { text: 'Номер а/н', value: 'number' },
-    { text: 'Фактическая дата вылета', value: 'dateOfLeave' },
+    { text: 'Фактическая дата вылета', value: 'dateOfLeaveTable' },
     { text: 'Аэропорт отправления', value: 'airportFrom.name' },
     { text: 'Аэропорт назначения', value: 'airportTo.name' },
     { text: 'Кол-во мест', value: 'totalSeats' },
@@ -286,6 +290,8 @@ export default class ListCarriers extends Vue {
         model.position = i
       }
       catch (Ex){}
+      let d = new Date(model.dateOfLeave);
+      model.dateOfLeaveTable = d.toLocaleDateString()
       model.totalVolume = 0
       model.totalWeight = 0
       model.totalSeats= 0

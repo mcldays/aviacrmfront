@@ -38,13 +38,6 @@
                     @input="menu1 = false"
                 ></v-date-picker>
               </v-menu>
-              <v-btn
-                  @click="getData()"
-                  block
-                  elevation="2"
-              >
-                Найти
-              </v-btn>
             </v-col>
             <v-col  >
               <v-menu
@@ -99,7 +92,10 @@
               >
                 ></v-select>
             </v-col>
-            <v-col>
+          </v-row>
+          <v-row class="vrowStyle" style="margin: auto;">
+
+          <v-col>
               <v-btn
                   style="margin-top: 10px; color: azure"
                   block
@@ -109,6 +105,14 @@
               >
                 Экспорт
               </v-btn>
+            <v-btn
+                block
+                style="margin-top: 10px;"
+                @click="getData()"
+                elevation="2"
+            >
+              Найти
+            </v-btn>
             </v-col>
           </v-row>
         </div>
@@ -173,7 +177,7 @@ export default class ListCarriers extends Vue {
       value: 'position',
     },
     { text: 'Номер а/н', value: 'number' },
-    { text: 'Дата выпуска а/н', value: 'dateAN' },
+    { text: 'Дата выпуска а/н', value: 'dateANTable' },
     { text: 'Аэропорт отправления', value: 'airportFrom.name' },
     { text: 'Аэропорт назначения', value: 'airportTo.name' },
     { text: 'Фактический вес (кг)', value: 'totalWeight' },
@@ -181,7 +185,7 @@ export default class ListCarriers extends Vue {
     { text: 'Кол-во мест', value: 'totalSeats' },
     { text: 'Объем', value: 'totalVolume' },
     { text: 'Характер груза', value: 'goodsNatureCode' },
-    { text: 'Фактическая дата вылета', value: 'dateOfLeave' },
+    { text: 'Фактическая дата вылета', value: 'dateOfLeaveTable' },
     { text: 'Итого', value: 'carrierPrice.TotalPrice' },
   ];
   private items : object = []
@@ -282,6 +286,13 @@ export default class ListCarriers extends Vue {
         model.position = i
       }
       catch (Ex){}
+
+      let d = new Date(model.dateOfLeave);
+      model.dateOfLeaveTable = d.toLocaleDateString()
+
+      d = new Date(model.dateAN);
+      model.dateANTable = d.toLocaleDateString()
+
       model.totalWeight = 0
       for (let place of model.places) {
         model.totalWeight += place.totalWeight

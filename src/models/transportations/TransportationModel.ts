@@ -11,7 +11,9 @@ export  class TransportationModel {
     number : number
     totalValue : number
     dateAN : string
+    dateANTable? : string
     dateOfLeave : string
+    dateOfLeaveTable? : string
     agent : AgentModel
     agentId : number
     airportFromId : number

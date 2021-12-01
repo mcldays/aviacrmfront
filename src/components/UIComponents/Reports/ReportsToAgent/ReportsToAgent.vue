@@ -238,8 +238,8 @@ export default class ListCarriers extends Vue {
     },
     { text: 'Номер а/н', value: 'number' },
     { text: 'ФИО отв.', value: 'fio' },
-    { text: 'Дата выпуска а/н', value: 'dateAN' },
-    { text: 'Фактическая дата вылета', value: 'dateOfLeave' },
+    { text: 'Дата выпуска а/н', value: 'dateANTable' },
+    { text: 'Фактическая дата вылета', value: 'dateOfLeaveTable' },
     { text: 'Аэропорт отправления', value: 'airportFrom.name' },
     { text: 'Аэропорт назначения', value: 'airportTo.name' },
     { text: 'Фактический вес (кг)', value: 'totalWeight' },
@@ -295,6 +295,12 @@ export default class ListCarriers extends Vue {
         model.position = i
       }
       catch (Ex){}
+      let d = new Date(model.dateOfLeave);
+      model.dateOfLeaveTable = d.toLocaleDateString()
+
+      d = new Date(model.dateAN);
+      model.dateANTable = d.toLocaleDateString()
+
       model.totalWeight = 0
       for (let place of model.places) {
         model.totalWeight += place.totalWeight

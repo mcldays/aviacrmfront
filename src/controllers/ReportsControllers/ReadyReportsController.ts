@@ -1,6 +1,7 @@
 // @ts-ignore
     import Axios, { AxiosPromise, AxiosResponse } from '/axios_settings';
 import {BankReportsModel} from "@/models/reports/BankReportsModel";
+import {TransportationModel} from "@/models/transportations/TransportationModel";
 // Axios.defaults.baseURL = 'http://89.108.103.251';
 export class ReadyReportsController {
 
@@ -16,6 +17,10 @@ export class ReadyReportsController {
     }
     public async Remove(id : number){
         return Axios.get("/api/readyReports/remove?ids=" + id)
+    }
+    public GetAllTs(id : number) : AxiosPromise<TransportationModel[]> {
+        let response = Axios.get("api/readyReports/GetTransportations?ids=" + id)
+        return response
     }
 }
 

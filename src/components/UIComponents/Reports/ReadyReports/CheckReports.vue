@@ -306,9 +306,6 @@ export default class ListCarriers extends Vue {
       this.loading = false
       return t.data
     })
-
-    console.log(model)
-
     model = this.processData(model)
     this.parseToTable(model)
   }
@@ -329,7 +326,7 @@ export default class ListCarriers extends Vue {
     return newObject
   }
   async getsData(){
-    let model = await this.controller.GetAll().then((t : any)=>{
+    let model = await this.ReadyReportsController.GetAllTs(Number(this.EditedModel.id)).then((t : any)=>{
       this.loading = false
       return t.data
     })
@@ -340,13 +337,7 @@ export default class ListCarriers extends Vue {
   tsData(models : TransportationModel[]){
     let newObject : TransportationModel[] = []
     let i = 0;
-    let idsS = ""
-    if(this.EditedModel.transportations!=null)
-      idsS = this.EditedModel.transportations
-    let ids: string[] = []
-    for(let id of idsS.split(';'))
-      ids.push(id)
-    console.log(ids)
+
     let total = new TransportationModel()
     total.agentPrice = new CarrierPriceModel()
     total.agentPrice.Fees = 'Итого:'
@@ -354,8 +345,6 @@ export default class ListCarriers extends Vue {
     let rub: number = 0
     this.EditedModel.transportationModels = []
     for (let model of models) {
-      if(!ids.includes(model.id.toString()))
-        continue
       i++
       try{
         model.position = i

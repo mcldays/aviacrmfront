@@ -103,16 +103,14 @@
                     :items="agents"
                     item-text="name"
                     item-value="id"
-                    :value="transModel.agentId"
-                    @change="transModel.agentId= $event"
+                    v-model="transModel.agentId"
                 ></v-select>
                 <v-select
                     :label="'Перевозчик'"
                     :items="carriers"
                     item-text="name"
                     item-value="id"
-                    :value="transModel.carrierId"
-                    @change="transModel.carrierId= $event"
+                    v-model="transModel.carrierId"
                 ></v-select>
               </v-col>
             </v-row>
@@ -378,7 +376,7 @@ export default class ListCarriers extends Vue {
   {
     if(this.transModel.carrierId!=null) {
       let id = this.transModel.carrierId;
-      this.bankModel.carrier = this.Carriers[id - 1]
+      this.bankModel.carrierId = id
     }
     if(this.transModel.agentId!=null) {
       let id = this.transModel.agentId;
@@ -414,7 +412,11 @@ export default class ListCarriers extends Vue {
   {
     if(this.transModel.carrierId!=null) {
       let id = this.transModel.carrierId;
-      this.bankModel.carrier = this.Carriers[id - 1]
+      this.bankModel.carrierId = id
+    }
+    if(this.transModel.agentId!=null) {
+      let id = this.transModel.agentId;
+      this.bankModel.agentId = id
     }
     this.bankModel.dateFrom = this.date1;
     this.bankModel.dateTo = this.date2

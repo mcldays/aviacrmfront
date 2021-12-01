@@ -327,7 +327,11 @@ export default class ListCarriers extends Vue {
   {
     if(this.transModel.carrierId!=null) {
       let id = this.transModel.carrierId;
-      this.bankModel.carrier = this.Carriers[id - 1]
+      this.bankModel.carrierId = id
+    }
+    if(this.transModel.agentId!=null) {
+      let id = this.transModel.agentId;
+      this.bankModel.agentId = id
     }
     this.bankModel.dateFrom = this.date1;
     this.bankModel.dateTo = this.date2

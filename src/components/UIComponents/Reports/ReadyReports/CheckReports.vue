@@ -5,7 +5,7 @@
         <v-card-title>Утвержденные отчеты агентов</v-card-title>
         <v-data-table
             :headers="headers"
-            :items="lorem"
+            :items="items"
             :items-per-page="5"
             class="elevation-1"
         >
@@ -30,107 +30,128 @@
     <div v-show="!this.modalVision" >
       <v-form>
 
-      <v-card >
-        <v-card-title>
-          <v-icon
-            small
-            class="mr-2"
-            @click="editModal"
-        >
-          mdi-arrow-left-bold
-        </v-icon>Отчеты для агента ООО "КаргоМодуль"</v-card-title>
-        <v-card-text>
-          <v-container >
-            <v-row >
-              <v-col>
-                <v-card-title class="pa-1">Выставление счета</v-card-title>
-                <v-row>
-                  <v-text-field
-                      label="Номер счета"
-                      required
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-menu
-                      v-model="menu2"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
+        <v-card >
+          <v-card-title>
+            <v-icon
+                small
+                class="mr-2"
+                @click="editModal"
+            >
+              mdi-arrow-left-bold
+            </v-icon>Отчеты для агента ООО "КаргоМодуль"</v-card-title>
+          <v-card-text>
+            <v-container >
+              <v-row >
+                <v-col>
+                  <v-card-title class="pa-1">Выставление счета</v-card-title>
+                  <v-row>
+                    <v-text-field
+                        label="Номер счета"
+                        required
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-menu
+                        v-model="menu2"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="date2"
+                            label="Счет от "
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
                           v-model="date2"
-                          label="Счет от "
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                        v-model="date2"
-                        @input="menu2 = false"
-                    ></v-date-picker>
-                  </v-menu>
-                </v-row>
-                <v-row>
-                  <v-checkbox
-                      label="Подпись"
-                      color="indigo"
-                      value="indigo"
-                      hide-details
-                  ></v-checkbox>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                      label="Коррекция"
-                      required
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="dialog = false"
-                  >
-                    Выставить счет
-                  </v-btn>
-                </v-row>
-              </v-col>
-              <v-col style="padding-left: 100px">
-                <v-row>
-                  <v-checkbox
-                      label="Подпись"
-                      color="indigo"
-                      value="indigo"
-                      hide-details
-                  ></v-checkbox>
-                </v-row>
-                <v-row>
-                  <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="dialog = false"
-                  >
-                    Экспорт
-                  </v-btn>
-                </v-row>
-                <v-row>
-                  <v-btn
-                      color="red darken-1"
-                      text
-                      @click="dialog = false"
-                  >
-                    Удаление
-                  </v-btn>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-      </v-card>
+                          @input="menu2 = false"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-row>
+                  <v-row>
+                    <v-checkbox
+                        label="Подпись"
+                        color="indigo"
+                        value="indigo"
+                        hide-details
+                    ></v-checkbox>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                        label="Коррекция"
+                        required
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="dialog = false"
+                    >
+                      Выставить счет
+                    </v-btn>
+                  </v-row>
+                </v-col>
+                <v-col style="padding-left: 100px">
+                  <v-row>
+                    <v-checkbox
+                        label="Подпись"
+                        color="indigo"
+                        value="indigo"
+                        hide-details
+                    ></v-checkbox>
+                  </v-row>
+                  <v-row>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="Export()"
+                    >
+                      Экспорт
+                    </v-btn>
+                  </v-row>
+                  <v-row>
+                    <v-btn
+                        color="red darken-1"
+                        text
+                        @click="Delete()"
+                    >
+                      Удаление
+                    </v-btn>
+                  </v-row>
+                  <v-row>
+                    <v-btn
+                        color="yellow"
+                        text
+                        @click="Approve()"
+                    >
+                      Утвердить
+                    </v-btn>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-container>
+            <div style="height: 100px"></div>
+            <span style="font-weight: bold; margin-left: 5px;">
+          Курс валюты: {{rate}}
+        </span>
+            <v-data-table
+                :headers="ts_headers"
+                :loading="loading"
+                :items="ts_items"
+                :items-per-page="5"
+                class="elevation-1"
+            >
+            </v-data-table>
+          </v-card-text>
+        </v-card>
       </v-form>
     </div>
   </v-app>
@@ -140,7 +161,16 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import 'vue-resize/dist/vue-resize.css'
 import FindExpense from "@/components/UIComponents/Reports/Expenses/FindExpense.vue";
-
+import {ReadyReportsController} from "@/controllers/ReportsControllers/ReadyReportsController";
+import {StationsController} from "@/controllers/StationsController";
+import {CarriersController} from "@/controllers/CarriersController";
+import {TransportationModel} from "@/models/transportations/TransportationModel";
+import {BankReportsModel} from "@/models/reports/BankReportsModel";
+import {CarrierModel} from "@/models/transportations/CarrierModel";
+import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
+import {ConversionRateController} from "@/controllers/ConversionRateController";
+import {TransportationController} from "@/controllers/TransportationController";
+import {CarrierPriceModel} from "@/models/transportations/CarrierPriceModel";
 @Component({
   components:{
     FindExpense
@@ -150,34 +180,50 @@ export default class ListCarriers extends Vue {
   handleResize(){
     console.log("Changed!")
   }
+  private loading : boolean = true;
+  private ReadyReportsController = new ReadyReportsController();
   private modalVision : boolean = true;
-  private menuTitle : object =[
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me' },
-    { title: 'Click Me 2' }
-  ]
+  private ResponseItems : BankReportsModel[] = []
+  private respcontroller  = new ReportsExportController()
+  private rate: number = 0
+  private ts_headers : object = [
+    {
+      text: '№',
+      align: 'start',
+      sortable: false,
+      value: 'position',
+    },
+    { text: 'Номер а/н', value: 'number' },
+    { text: 'ФИО отв.', value: 'fio' },
+    { text: 'Дата выпуска а/н', value: 'dateAN' },
+    { text: 'Фактическая дата вылета', value: 'dateOfLeave' },
+    { text: 'Аэропорт отправления', value: 'airportFrom.name' },
+    { text: 'Аэропорт назначения', value: 'airportTo.name' },
+    { text: 'Фактический вес (кг)', value: 'totalWeight' },
+    { text: 'Оплачиваемый вес (кг)', value: 'agentPrice.PayedWeight' },
+    { text: 'Тариф (USD)', value: 'agentPrice.PriceKg' },
+    { text: 'Сумма авиафрахта (USD)', value: 'fzPrice' },
+    { text: 'Сборы (USD)', value: 'agentPrice.Fees' },
+    { text: 'Итого (USD)', value: 'agentPrice.TotalPrice' },
+    { text: 'Итого, руб', value: 'totalRub' },
+  ];
+
   private headers : object = [
-    { text: 'Агент', value: 'agent' },
-    { text: 'Перевозчик', value: 'carrier' },
+    { text: 'Агент', value: 'agent.name' },
+    { text: 'Перевозчик', value: 'carrier.name' },
     { text: 'Период', value: 'period' },
     { text: '', value: 'actions', sortable: false },
 
   ];
-  private lorem : object = [
-    {
-      agent: 'КаргоМодуль',
-      carrier: 'н/д',
-      period: '16.10.2021 — 31.10.2021'
-    },
-    {
-      agent: 'КаргоМодуль',
-      carrier: 'н/д',
-      period: '16.10.2021 — 31.10.2021'
-    }
-  ]
-  editModal(){
+  private items : object = []
+  private ts_items : object = []
+  private controller  = new TransportationController()
+  private EditedModel = new BankReportsModel()
+  editModal(item: BankReportsModel){
+    this.EditedModel = item
     this.modalVision = !this.modalVision;
+    console.log(this.EditedModel)
+    this.getsData()
   };
   data() {
     return {
@@ -185,9 +231,127 @@ export default class ListCarriers extends Vue {
       date2:''
     }
   }
-  deleteItem(item: any)
+  Export()
   {
+    this.respcontroller.GetAgent(this.EditedModel)
+  }
+  async Approve()
+  {
+    if(this.EditedModel.transportationModels==null)
+    {
+      alert('Не действительный список перевозок')
+      return
+    }
+    console.log(this.EditedModel)
+    if(this.EditedModel.id != null)
+      await this.ReadyReportsController.Update(this.EditedModel.id)
+    this.modalVision = !this.modalVision;
+    this.items = []
+    await this.getData()
+  }
+  async Delete()
+  {
+    if(this.EditedModel.id != null)
+      await this.ReadyReportsController.Remove(this.EditedModel.id)
+    this.modalVision = !this.modalVision;
+    this.items = []
+    await this.getData()
+  }
 
+  async  deleteItem(item: any)
+  {
+    if(item.id != null)
+      await this.ReadyReportsController.Remove(item.id)
+    this.items = []
+    await this.getData()
+  }
+  async mounted(){
+    await this.getData()
+  }
+  async getData(){
+    let model = await this.ReadyReportsController.GetAll().then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
+
+    console.log(model)
+
+    model = this.processData(model)
+    this.parseToTable(model)
+  }
+
+  parseToTable(response : BankReportsModel[]){
+    this.ResponseItems = response
+    this.items = this.ResponseItems
+    console.log(this.items)
+  }
+  processData(models : BankReportsModel[]){
+    let newObject : BankReportsModel[] = []
+    for (let model of models) {
+      if(model.isApprovedManager&&!model.isApprovedAgent) {
+        model.period = model.dateFrom + ' - ' + model.dateTo
+        newObject.push(model);
+      }
+    }
+    return newObject
+  }
+  async getsData(){
+    let model = await this.controller.GetAll().then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
+    model = this.tsData(model)
+    this.tsToTable(model)
+  }
+
+  tsData(models : TransportationModel[]){
+    let newObject : TransportationModel[] = []
+    let i = 0;
+    let idsS = ""
+    if(this.EditedModel.transportations!=null)
+      idsS = this.EditedModel.transportations
+    let ids: string[] = []
+    for(let id of idsS.split(';'))
+      ids.push(id)
+    console.log(ids)
+    let total = new TransportationModel()
+    total.agentPrice = new CarrierPriceModel()
+    total.agentPrice.Fees = 'Итого:'
+    let usd: number = 0
+    let rub: number = 0
+    this.EditedModel.transportationModels = []
+    for (let model of models) {
+      if(!ids.includes(model.id.toString()))
+        continue
+      i++
+      try{
+        model.position = i
+      }
+      catch (Ex){}
+      model.totalWeight = 0
+      for (let place of model.places) {
+        model.totalWeight += place.totalWeight
+      }
+      try {
+        model.totalRub = this.EditedModel.rate * 50//model.agentPrice.TotalPrice;
+      }catch (Ex){}
+      if(model.agentPrice != null) {
+        usd += Number(model.agentPrice.TotalPrice)
+        rub += Number(model.totalRub)
+      }
+      newObject.push(model);
+      this.EditedModel.transportationModels.push(model);
+    }
+    total.agentPrice.TotalPrice = usd.toString()
+    total.totalRub = rub
+    newObject.push(total);
+
+    return newObject
+  }
+
+  tsToTable(response : TransportationModel[]){
+    this.ts_items = response
+    console.log(this.items)
   }
 }
 

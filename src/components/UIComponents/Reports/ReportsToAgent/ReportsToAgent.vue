@@ -124,6 +124,7 @@
                     block
                     elevation="2"
                     color="green"
+                    @click="Approve()"
                 >
                   Утвердить отчет
                 </v-btn>
@@ -167,6 +168,8 @@ import {ConversionRateController} from "@/controllers/ConversionRateController";
 import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
 import {BankReportsModel} from "@/models/reports/BankReportsModel";
 import {CarrierModel} from "@/models/transportations/CarrierModel";
+import {ReadyReportsController} from "@/controllers/ReportsControllers/ReadyReportsController";
+import {CarrierPriceModel} from "@/models/transportations/CarrierPriceModel";
 
 @Component({
   components:{
@@ -196,6 +199,9 @@ export default class ListCarriers extends Vue {
   private respcontroller  = new ReportsExportController()
   private bankModel = new BankReportsModel();
   private Carriers : CarrierModel[] = []
+  private Agents : CarrierModel[] = []
+
+  private ReadyReportsController = new ReadyReportsController();
 
   rules()
   {
@@ -277,6 +283,12 @@ export default class ListCarriers extends Vue {
   processData(models : TransportationModel[]){
     let newObject : TransportationModel[] = []
     let i = 0;
+    let total = new TransportationModel()
+    total.agentPrice = new CarrierPriceModel()
+    total.agentPrice.Fees = 'Итого:'
+    let usd: number = 0
+    let rub: number = 0
+    this.bankModel.transportationModels=[]
     for (let model of models) {
       if (this.filter(model))
         continue
@@ -290,11 +302,22 @@ export default class ListCarriers extends Vue {
         model.totalWeight += place.totalWeight
       }
       try {
-        model.totalRub = this.rate * 50//model.agentPrice.TotalPrice;
+        if(model.agentPrice==null)
+          model.agentPrice = new CarrierPriceModel()
+
+        if(model.agentPrice.TotalPrice!=null) {
+          model.totalRub = this.rate * Number(model.agentPrice.TotalPrice);
+          usd += Number(model.agentPrice.TotalPrice)
+          rub += Number(model.totalRub)
+        }
       }catch (Ex){}
       newObject.push(model);
+      this.bankModel.transportationModels.push(model);
     }
-    this.bankModel.transportationModels = newObject;
+    total.agentPrice.TotalPrice = usd.toString()
+    total.totalRub = rub
+    newObject.push(total);
+    console.log(this.bankModel.transportationModels)
     return newObject
   }
   filter(model : any)
@@ -342,6 +365,7 @@ export default class ListCarriers extends Vue {
     })
     await AgentsController.GetAll().then((t: any)=>{
       for (let datum of t.data) {
+        this.Agents.push(datum)
         this.agents.push({
           name : datum.name,
           id : datum.id
@@ -349,6 +373,36 @@ export default class ListCarriers extends Vue {
       }
     })
     console.log(this.carriers)
+  }
+  Approve()
+  {
+    if(this.transModel.carrierId!=null) {
+      let id = this.transModel.carrierId;
+      this.bankModel.carrier = this.Carriers[id - 1]
+    }
+    if(this.transModel.agentId!=null) {
+      let id = this.transModel.agentId;
+      this.bankModel.agentId = id
+    }
+    this.bankModel.rate = this.rate
+    this.bankModel.isApprovedManager = true
+    this.bankModel.dateFrom = this.date1;
+    this.bankModel.dateTo = this.date2
+    this.bankModel.dateMake = new Date().toLocaleDateString()
+    let nums: number[] = []
+    for (let model of  this.bankModel.transportationModels)
+    {
+      nums.push(model.id)
+    }
+    this.bankModel.transportationsId = nums
+    console.log(this.bankModel.transportations)
+
+    if(this.bankModel.transportationModels == null)
+    {
+      alert('Не действительный список перевозок')
+      return
+    }
+    this.ReadyReportsController.Add(this.bankModel)
   }
   Export()
   {

@@ -137,7 +137,7 @@ export default class ListTransportations extends Vue {
     { text: 'Обьем', value: 'totalValue' },
     { text: 'Направление', value: 'fromTo' },
     { text: 'Агент', value: 'agent.name' },
-    {text : "Экстренный", value:'emergency'},
+    { text : "Экстренный", value:'emergency'},
     { text: 'Редактирование', value: 'actions', sortable: false },
 
 
@@ -181,7 +181,7 @@ export default class ListTransportations extends Vue {
   deleteItem(item :any){
     this.controller.RemoveTransportationFromId(item.id)
     let findItem = this.items.find(t=>t.id == item.id)
-   let concatIndex =  this.items.indexOf(findItem)
+    let concatIndex =  this.items.indexOf(findItem)
     this.items.splice(concatIndex, 1)
     console.log(this.items)
   }

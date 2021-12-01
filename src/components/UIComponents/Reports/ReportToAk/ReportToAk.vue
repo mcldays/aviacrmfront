@@ -107,17 +107,7 @@
               >
                 ></v-select>
             </v-col>
-          </v-row>
-          <v-row class="vrowStyle" style="margin: auto;">
             <v-col>
-              <v-btn
-                  style="color: azure"
-                  block
-                  elevation="2"
-                  color="green"
-              >
-                Утвердить отчет
-              </v-btn>
               <v-btn
                   style="margin-top: 10px; color: azure"
                   block
@@ -153,6 +143,7 @@ import {BankReportsModel} from "@/models/reports/BankReportsModel";
 import {TransportationController} from "@/controllers/TransportationController";
 import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
 import {CarrierModel} from "@/models/transportations/CarrierModel";
+import {CarrierPriceModel} from "@/models/transportations/CarrierPriceModel";
 
 @Component({
   components:{
@@ -275,6 +266,17 @@ export default class ListCarriers extends Vue {
   processData(models : TransportationModel[]){
     let newObject : TransportationModel[] = []
     let i = 0;
+    let total = new TransportationModel()
+    total.carrierPrice = new CarrierPriceModel()
+    total.airportTo = []
+    total.airportTo.name = 'Итого:'
+    let totalVolume : number = 0;
+    let totalWeight : number = 0;
+    let agentsCommission: number = 0;
+    let fzPrice: number = 0;
+    let carrierPrice_Fee: number = 0;
+    let carrierPrice_TotalPrice: number = 0;
+    this.bankModel.transportationModels = []
     for (let model of models) {
       if (this.filter(model))
         continue
@@ -291,9 +293,27 @@ export default class ListCarriers extends Vue {
         model.totalVolume += place.volumeWeight
         model.totalWeight += place.totalWeight
       }
+      totalVolume += model.totalVolume
+      totalWeight += model.totalWeight
+      agentsCommission += model.agentsCommission
+      fzPrice += model.fzPrice
+      if(model.carrierPrice==null)
+        model.carrierPrice= new CarrierPriceModel()
+      if(model.carrierPrice.Fees!=null)
+        carrierPrice_Fee += Number(model.carrierPrice.Fees)
+      if(model.carrierPrice.TotalPrice!=null)
+        carrierPrice_TotalPrice += Number(model.carrierPrice.TotalPrice)
+
+      this.bankModel.transportationModels.push(model);
       newObject.push(model);
     }
-    this.bankModel.transportationModels = newObject;
+    total.totalVolume = totalVolume
+    total.totalWeight = totalWeight
+    total.agentsCommission = agentsCommission
+    total.fzPrice = fzPrice
+    total.carrierPrice.Fees = carrierPrice_Fee.toString()
+    total.carrierPrice.TotalPrice = carrierPrice_TotalPrice.toString()
+    newObject.push(total);
     return newObject
   }
   filter(model : any)

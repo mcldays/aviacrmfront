@@ -10,9 +10,7 @@
         <v-tab @click="component = 'Expense'" style="font-size: 10px">Счета</v-tab>
         <v-tab @click="component = 'Requisites'" style="font-size: 10px">Реквизиты отчетов</v-tab>
       </v-tabs>
-    <keep-alive>
       <component :is="component"/>
-    </keep-alive>
   </v-app>
 </template>
 

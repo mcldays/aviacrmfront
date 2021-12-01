@@ -99,18 +99,7 @@
               >
                 ></v-select>
             </v-col>
-          </v-row>
-
-          <v-row class="vrowStyle" style="margin: auto;">
             <v-col>
-              <v-btn
-                  style="color: azure"
-                  block
-                  elevation="2"
-                  color="green"
-              >
-                Утвердить отчет
-              </v-btn>
               <v-btn
                   style="margin-top: 10px; color: azure"
                   block
@@ -156,6 +145,7 @@ import {TransportationController} from "@/controllers/TransportationController";
 import {BankReportsModel} from "@/models/reports/BankReportsModel";
 import {CarrierModel} from "@/models/transportations/CarrierModel";
 import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
+import {CarrierPriceModel} from "@/models/transportations/CarrierPriceModel";
 @Component({
   components:{
   }
@@ -279,6 +269,11 @@ export default class ListCarriers extends Vue {
   processData(models : TransportationModel[]){
     let newObject : TransportationModel[] = []
     let i = 0;
+    let total = new TransportationModel()
+    total.carrierPrice = new CarrierPriceModel()
+    total.dateOfLeave = 'Итого:'
+    let usd: number = 0
+    this.bankModel.transportationModels = []
     for (let model of models) {
       if (this.filter(model))
         continue
@@ -299,9 +294,15 @@ export default class ListCarriers extends Vue {
       for (let place of model.places) {
         model.totalVolume += place.volume
       }
+      if(model.carrierPrice==null)
+        model.carrierPrice = new CarrierPriceModel()
+      if(model.carrierPrice.TotalPrice!=null)
+        usd+= Number(model.carrierPrice.TotalPrice)
       newObject.push(model);
+      this.bankModel.transportationModels.push(model);
     }
-    this.bankModel.transportationModels = newObject;
+    total.carrierPrice.TotalPrice = usd.toString()
+    newObject.push(total);
     return newObject
   }
   filter(model : any)

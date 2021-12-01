@@ -48,6 +48,7 @@
                     <v-text-field
                         label="Номер счета"
                         required
+                        v-model="expenseModel.number"
                     ></v-text-field>
                   </v-row>
                   <v-row>
@@ -61,7 +62,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                            v-model="date2"
+                            v-model="expenseModel.dateFrom"
                             label="Счет от "
                             prepend-icon="mdi-calendar"
                             readonly
@@ -70,7 +71,7 @@
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                          v-model="date2"
+                          v-model="expenseModel.dateFrom"
                           @input="menu2 = false"
                       ></v-date-picker>
                     </v-menu>
@@ -79,21 +80,23 @@
                     <v-checkbox
                         label="Подпись"
                         color="indigo"
-                        value="indigo"
+                        :value="true"
                         hide-details
+                        v-model="expenseModel.sign"
                     ></v-checkbox>
                   </v-row>
                   <v-row>
                     <v-text-field
                         label="Коррекция"
                         required
+                        v-model="expenseModel.correction"
                     ></v-text-field>
                   </v-row>
                   <v-row>
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false"
+                        @click="AddExpense()"
                     >
                       Выставить счет
                     </v-btn>
@@ -151,7 +154,6 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import 'vue-resize/dist/vue-resize.css'
-import FindExpense from "@/components/UIComponents/Reports/Expenses/FindExpense.vue";
 import {ReadyReportsController} from "@/controllers/ReportsControllers/ReadyReportsController";
 import {StationsController} from "@/controllers/StationsController";
 import {CarriersController} from "@/controllers/CarriersController";
@@ -162,9 +164,10 @@ import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsE
 import {ConversionRateController} from "@/controllers/ConversionRateController";
 import {TransportationController} from "@/controllers/TransportationController";
 import {CarrierPriceModel} from "@/models/transportations/CarrierPriceModel";
+import {ExpenseModel} from "@/models/reports/ExpenseModel";
+import {ExpensesController} from "@/controllers/ReportsControllers/ExpensesController";
 @Component({
   components:{
-    FindExpense
   }
 })
 export default class ListCarriers extends Vue {
@@ -206,10 +209,12 @@ export default class ListCarriers extends Vue {
     { text: '', value: 'actions', sortable: false },
 
   ];
+  private expenseModel = new ExpenseModel()
   private items : object = []
   private ts_items : object = []
   private controller  = new TransportationController()
   private EditedModel = new BankReportsModel()
+  private checkS: any = null
   editModal(item: BankReportsModel){
     this.EditedModel = item
     this.modalVision = !this.modalVision;
@@ -226,7 +231,20 @@ export default class ListCarriers extends Vue {
   {
     this.respcontroller.GetAgent(this.EditedModel)
   }
-
+  async Approve()
+  {
+    if(this.EditedModel.transportationModels==null)
+    {
+      alert('Не действительный список перевозок')
+      return
+    }
+    console.log(this.EditedModel)
+    if(this.EditedModel.id != null)
+      await this.ReadyReportsController.Update(this.EditedModel.id)
+    this.modalVision = !this.modalVision;
+    this.items = []
+    await this.getData()
+  }
   async Delete()
   {
     if(this.EditedModel.id != null)
@@ -243,7 +261,6 @@ export default class ListCarriers extends Vue {
     this.items = []
     await this.getData()
   }
-
   async mounted(){
     await this.getData()
   }
@@ -312,7 +329,7 @@ export default class ListCarriers extends Vue {
         model.totalWeight += place.totalWeight
       }
       try {
-        model.totalRub = this.EditedModel.rate * 50//model.agentPrice.TotalPrice;
+        model.totalRub = this.EditedModel.rate * Number(model.agentPrice.TotalPrice);
       }catch (Ex){}
       if(model.agentPrice != null) {
         usd += Number(model.agentPrice.TotalPrice)
@@ -324,12 +341,25 @@ export default class ListCarriers extends Vue {
     total.agentPrice.TotalPrice = usd.toString()
     total.totalRub = rub
     newObject.push(total);
+
     return newObject
   }
 
   tsToTable(response : TransportationModel[]){
     this.ts_items = response
     console.log(this.items)
+  }
+  async  AddExpense()
+  {
+    this.expenseModel.banksReportId = Number(this.EditedModel.id)
+    console.log(this.expenseModel)
+    let Excontroller = new ExpensesController()
+    let response = await Excontroller.Add(this.expenseModel).then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
+    if(response != 'Ok')
+      alert(response)
   }
 }
 

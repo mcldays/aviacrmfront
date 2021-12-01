@@ -136,6 +136,17 @@
             <span style="font-weight: bold; margin-left: 5px;">
           Курс валюты: {{rate}}
         </span>
+            <v-dialog v-model="dialogDelete" max-width="600px">
+              <v-card>
+                <v-card-title class="text-h5">Вы уверены, что хотите удалить отчет</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="closeDelete">Отмена</v-btn>
+                  <v-btn color="blue darken-1" text @click="deleteItemConfirm">Да</v-btn>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
             <v-data-table
                 :headers="ts_headers"
                 :loading="loading"
@@ -213,6 +224,8 @@ export default class ListCarriers extends Vue {
   private items : object = []
   private ts_items : object = []
   private controller  = new TransportationController()
+  private dialogDelete = false
+  private deletedItem = null
   private EditedModel = new BankReportsModel()
   private checkS: any = null
   editModal(item: BankReportsModel){
@@ -231,20 +244,7 @@ export default class ListCarriers extends Vue {
   {
     this.respcontroller.GetAgent(this.EditedModel)
   }
-  async Approve()
-  {
-    if(this.EditedModel.transportationModels==null)
-    {
-      alert('Не действительный список перевозок')
-      return
-    }
-    console.log(this.EditedModel)
-    if(this.EditedModel.id != null)
-      await this.ReadyReportsController.Update(this.EditedModel.id)
-    this.modalVision = !this.modalVision;
-    this.items = []
-    await this.getData()
-  }
+
   async Delete()
   {
     if(this.EditedModel.id != null)
@@ -255,6 +255,12 @@ export default class ListCarriers extends Vue {
   }
 
   async  deleteItem(item: any)
+  {
+    this.deletedItem = item
+    this.dialogDelete = true
+  }
+
+  async delReq(item: any)
   {
     if(item.id != null)
       await this.ReadyReportsController.Remove(item.id)
@@ -275,7 +281,14 @@ export default class ListCarriers extends Vue {
     model = this.processData(model)
     this.parseToTable(model)
   }
-
+  async deleteItemConfirm () {
+    await this.delReq(this.deletedItem)
+    this.closeDelete()
+  }
+  closeDelete () {
+    this.deletedItem = null
+    this.dialogDelete = false
+  }
   parseToTable(response : BankReportsModel[]){
     this.ResponseItems = response
     this.items = this.ResponseItems

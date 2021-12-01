@@ -145,6 +145,18 @@
             <span style="font-weight: bold; margin-left: 5px;">
           Курс валюты: {{rate}}
         </span>
+            <v-dialog v-model="dialogDelete" max-width="600px">
+              <v-card>
+                <v-card-title class="text-h5">Вы уверены, что хотите удалить отчет</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="closeDelete">Отмена</v-btn>
+                  <v-btn color="blue darken-1" text @click="deleteItemConfirm">Да</v-btn>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
             <v-data-table
                 :headers="ts_headers"
                 :loading="loading"
@@ -223,6 +235,8 @@ export default class ListCarriers extends Vue {
   private ts_items : object = []
   private controller  = new TransportationController()
   private EditedModel = new BankReportsModel()
+  private dialogDelete = false
+  private deletedItem = null
   editModal(item: BankReportsModel){
     this.EditedModel = item
     this.modalVision = !this.modalVision;
@@ -235,6 +249,15 @@ export default class ListCarriers extends Vue {
       date2:''
     }
   }
+  async deleteItemConfirm () {
+    await this.delReq(this.deletedItem)
+    this.closeDelete()
+  }
+  closeDelete () {
+    this.deletedItem = null
+    this.dialogDelete = false
+  }
+
   Export()
   {
     this.respcontroller.GetAgent(this.EditedModel)
@@ -263,6 +286,12 @@ export default class ListCarriers extends Vue {
   }
 
   async  deleteItem(item: any)
+  {
+    this.deletedItem = item
+    this.dialogDelete = true
+  }
+
+  async delReq(item: any)
   {
     if(item.id != null)
       await this.ReadyReportsController.Remove(item.id)

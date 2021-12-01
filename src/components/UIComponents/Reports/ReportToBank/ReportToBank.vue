@@ -206,6 +206,7 @@ export default class ListCarriers extends Vue {
     if(p!=null)
       return false
     else
+      alert("Одно или несколько полей не заполнено")
     return true
   }
   private menu1: boolean = false;

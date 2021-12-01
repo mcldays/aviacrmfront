@@ -15,6 +15,11 @@
         <div v-show="this.finderVision" style="display: flex">
           <v-row class="vrowStyle ma-0 pa-0 ">
             <v-col  >
+              <v-text-field
+                  label="Номер"
+                  required
+                  v-model="number"
+              ></v-text-field>
               <v-menu
                   v-model="menu2"
                   :close-on-content-click="false"
@@ -38,8 +43,16 @@
                     @input="menu2 = false"
                 ></v-date-picker>
               </v-menu>
+
             </v-col>
             <v-col  >
+              <v-select
+                  :label="'Агент'"
+                  :items="agents"
+                  v-model="agent"
+                  item-text="name"
+                  item-value="id"
+              ></v-select>
               <v-menu
                   v-model="menu1"
                   :close-on-content-click="false"
@@ -63,14 +76,6 @@
                     @input="menu1 = false"
                 ></v-date-picker>
               </v-menu>
-            </v-col>
-            <v-col  >
-              <v-select
-                  :label="'Агент'"
-                  :items="agents"
-                  item-text="name"
-                  item-value="id"
-              ></v-select>
             </v-col>
           </v-row>
 
@@ -116,6 +121,7 @@ import {CarriersController} from "@/controllers/CarriersController";
 import {ExpensesController} from "@/controllers/ReportsControllers/ExpensesController";
 import {BankReportsModel} from "@/models/reports/BankReportsModel";
 import {AgentsController} from "@/controllers/AgentsController";
+import {ReportsExportController} from "@/controllers/ReportsControllers/ReportsExportController";
 
 @Component({
   components:{
@@ -125,6 +131,10 @@ export default class ListCarriers extends Vue {
   handleResize(){
     console.log("Changed!")
   }
+  private date1 : string
+  private date2 : string
+  private number: string = ''
+  private agent: number = 0
   private agents :  object[] = []
   private finderVision : boolean = false;
   private modalVision : boolean = false;
@@ -157,6 +167,8 @@ export default class ListCarriers extends Vue {
   private expenseModel = new ExpenseModel()
   private items : object = []
   private expensesController = new ExpensesController()
+  private downloadController = new ReportsExportController()
+
   data() {
     return {
       date2: '',
@@ -174,7 +186,44 @@ export default class ListCarriers extends Vue {
         })
       }
     })
+    this.getData()
+  }
+  async findExpenses() {
+    this.items = []
+    let model = await this.expensesController.GetAll().then((t: any) => {
+      this.loading = false
+      return t.data
+    })
+    console.log(model)
 
+    model = this.processData(model)
+    let newObject: ExpenseModel[] = []
+    for (let m of model) {
+      console.log(this.number)
+      if (this.agent != 0) {
+        if (m.banksReport.agentId != this.agent)
+          continue
+      }
+      if (this.number != '') {
+        if (m.number != this.number)
+          continue
+      }
+      let d = new Date(m.dateFrom);
+      let d1 = new Date(this.date2);
+      d1.setDate(d1.getDate());
+      let d2 = new Date(this.date1);
+      if(d1!=null)
+        if(d < d1)
+        continue
+      if(d2!=null)
+      if(d > d2)
+        continue
+      newObject.push(m)
+    }
+    this.parseToTable(newObject)
+  }
+  async getData()
+  {
     let model = await this.expensesController.GetAll().then((t : any)=>{
       this.loading = false
       return t.data
@@ -191,6 +240,7 @@ export default class ListCarriers extends Vue {
   processData(models : ExpenseModel[]){
     let newObject : ExpenseModel[] = []
     for (let model of models) {
+      model.banksReport.period = model.banksReport.dateFrom + ' - ' + model.banksReport.dateTo
       newObject.push(model);
     }
     return newObject
@@ -200,6 +250,7 @@ export default class ListCarriers extends Vue {
     this.finderVision = !this.finderVision;
   }
   download(item: any){
+    this.downloadController.GetExpense(item)
   }
 }
 

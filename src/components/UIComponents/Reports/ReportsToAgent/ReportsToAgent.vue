@@ -220,7 +220,7 @@ export default class ListCarriers extends Vue {
     if(p!=null)
       return false
     else
-      alert("dd")
+      alert("Одно или несколько полей не заполнено")
     return true
   }
 
@@ -374,7 +374,7 @@ export default class ListCarriers extends Vue {
     })
     console.log(this.carriers)
   }
-  Approve()
+  async Approve()
   {
     if(this.transModel.carrierId!=null) {
       let id = this.transModel.carrierId;
@@ -402,7 +402,13 @@ export default class ListCarriers extends Vue {
       alert('Не действительный список перевозок')
       return
     }
-    this.ReadyReportsController.Add(this.bankModel)
+    let response = await this.ReadyReportsController.Add(this.bankModel).then((t : any)=>{
+      this.loading = false
+      return t.data
+    })
+    if(response != 'Ok')
+      alert(response)
+
   }
   Export()
   {

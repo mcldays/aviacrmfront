@@ -23,7 +23,7 @@ export default {
           { text: 'Агент', value: 'agent' },
           { text: 'Телефон', value: 'phone' },
           { text: 'Эл. почта', value: 'email' },
-          { text: 'Взаимодействия', value: 'actions', sortable: false },
+          { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
           new Field("name", "Имя", {rules: [t=>!!t|| "Имя должно быть введено"]}),

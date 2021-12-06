@@ -48,10 +48,9 @@
 import {Field} from "@/models/Field";
 import {UsersController} from "@/controllers/UsersController";
 import TableComponent from "@/components/UIComponents/CRUDTableComponent";
+import {RolesController} from "@/controllers/RolesController";
 
 let roles = [
-  {id: 0, name: "Администратор"},
-  {id: 1, name: "Менеджер"},
 ];
 
 
@@ -67,8 +66,8 @@ export default {
           { text: 'E-mail', value: 'email' },
           { text: 'Номер телефона', value: 'phone' },
           { text: 'Роль', value: 'role' },
-          { text: 'Смена пароля', value: 'addit1', sortable: false },
-          { text: 'Взаимодействия', value: 'actions', sortable: false },
+          { text: 'Смена пароля', value: 'addit1', sortable: false, align: "center" },
+          { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
           new Field("username", "Логин", {rules: [t=> t !== null || "Логин должен быть введен"]}),
@@ -78,21 +77,29 @@ export default {
               t=> this.validateEmail(t) || "Email не соответствет требованиям"
             ]}),
           new Field("phone", "Номер телефона"),
-          new Field("role", "Роль", {fieldType: "select", fieldParams: {items: roles, text: "name", value: "id"}}),
+          new Field("role", "Роль", {fieldType: "select", fieldParams: {items: this.getRoles, text: "name", value: "id"}}),
         ],
         instanceNameRod: "пользователя",
         instanceNameIm: "пользователя",
         initialize: async (data) =>  {
+          roles = (await RolesController.GetAll()).data.map(t=>
+          {
+            return {
+              id: t.id,
+              name: t.name
+            }
+          });
           data.items = (await UsersController.GetAll()).data;
         },
         toTableView: (data, model) => {
+          let role = roles.find(t=>t.id === model.role);
           return {
             id: model.id,
             username: model.username,
             fio: model.fio,
             phone: model.phone,
             email: model.email,
-            role: roles.find(t=>t.id === model.role).name,
+            role: role !== undefined ? role.name : "Отсутствует",
           }
         },
         removeInstance: async (data) => {
@@ -126,6 +133,12 @@ export default {
     validateEmail(email) {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
+    },
+    getRoles(){
+      return roles;
+    },
+    async created(){
+
     }
   },
 }

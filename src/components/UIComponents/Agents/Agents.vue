@@ -24,7 +24,7 @@ export default {
           { text: 'Название', value: 'name' },
           { text: 'Станция', value: 'station' },
           { text: 'Реквизиты', value: 'requisites' },
-          { text: 'Взаимодействия', value: 'actions', sortable: false },
+          { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
           new Field("name", "Название", {rules: [t=>!!t|| "Название должно бвыть введено"]}),

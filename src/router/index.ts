@@ -65,7 +65,7 @@ export default new VueRouter({
             }
         },
         {
-            path: '/ConversionRate',
+            path: '/ConversionRates',
             component: ConversionRate,
             meta: {
                 requiresAuth: true

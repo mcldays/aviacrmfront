@@ -6,7 +6,7 @@ export class TransportationController {
     public AddNewTransportation(model : TransportationModel) {
        return  Axios.post("/api/transportations/add", model)
 }
-    public GetAllTransportations() : AxiosPromise<TransportationModel[]> {
+    public GetAll() : AxiosPromise<TransportationModel[]> {
         let response = Axios.get("api/transportations/getmy")
         return response
     }

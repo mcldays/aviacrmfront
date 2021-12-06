@@ -58,7 +58,14 @@ export default class Authorization extends Vue {
     let login = this.login
     let password = this.password
     await this.$store.dispatch('login', { login, password }).then(()=>
-         this.$router.push('/Transportations')
+    {
+      let strChapters = window.localStorage.getItem("availableChapters");
+      let chapters = strChapters != undefined ? JSON.parse(strChapters) : ["aut"];
+      if(chapters.includes("transportations"))
+        this.$router.push('/Transportations')
+      else
+        this.$router.push('/' + chapters[0])
+    }
      ).catch(()=>{
        this.snackbar =true
     })

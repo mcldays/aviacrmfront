@@ -76,6 +76,7 @@
 import { Vue, Component} from "vue-property-decorator";
 import AviaToolbar from "@/components/UIComponents/aviaToolbar.vue";
 import store from "@/store/index"
+import {RolesController} from "@/controllers/RolesController";
 @Component({
   components:{
     AviaToolbar,
@@ -89,7 +90,7 @@ import store from "@/store/index"
         { id: 3, name: "География", href: '/stations' },
         { id: 4, name: "Перевозчики", href: '/carriers' },
         { id: 5, name: "Агенты", href: '/agents' },
-        { id: 6, name: "Курсы конвертации", href: '/ConversionRate' },
+        { id: 6, name: "Курсы конвертации", href: '/conversionrates' },
 
       ],
     };
@@ -99,11 +100,26 @@ import store from "@/store/index"
       let current = this.$router.currentRoute;
       let tab = this.$data.tabs.find((t : any)=>t.href.toLowerCase() == current.fullPath.toLowerCase())
       if(tab) return tab.id
-      return 1
+      if(this.$data.tabs.find((t:any)=>t.id == 1))
+        return 1
+      let newTab = this.$data.tabs[0];
+      return newTab.id;
     }
   },
-  created() {
+  async created() {
     var role = window.localStorage.getItem("role");
+    var avalibleStr = window.localStorage.getItem("availableChapters");
+    if(avalibleStr === null) avalibleStr = "[]";
+    var avalible = JSON.parse(avalibleStr);
+
+    let newTabs = [];
+    for(let tab of this.$data.tabs){
+      if(avalible.includes(tab.href.substr(1))){
+          newTabs.push(tab);
+      }
+    }
+    this.$data.tabs = newTabs;
+
     if(role == "Admin"){
       this.$data.tabs.push({ id: 7, name: "Админ панель", href: '/adminPanel' })
     }

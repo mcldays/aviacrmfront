@@ -34,7 +34,7 @@ export default {
           { text: 'Страна', value: 'country' },
           { text: 'Направление', value: 'direction' },
           { text: 'Описание', value: 'description' },
-          { text: 'Взаимодействия', value: 'actions', sortable: false },
+          { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
           new Field("name", "Название", {rules: [t=>!!t|| "Название должно быть введено"]}),

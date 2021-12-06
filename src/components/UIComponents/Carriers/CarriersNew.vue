@@ -54,7 +54,7 @@ export default {
           { text: 'Тип перевозчика', value: 'type' },
           { text: 'Префикс а/н по умолчанию', value: 'prefix' },
           { text: 'Сборы', value: 'addit1' },
-          { text: 'Взаимодействия', value: 'actions', sortable: false },
+          { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
           new Field("name", "Название", {rules: [t=>!!t|| "Название должно быть введено"]}),
@@ -102,7 +102,7 @@ export default {
           { text: 'Название', value: 'name' },
           { text: 'Значение', value: 'value' },
           { text: 'Метод', value: 'method' },
-          { text: 'Взаимодействия', value: 'actions', sortable: false },
+          { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
           new Field("name", "Название", {rules: [t=>!!t|| "Название должно быть введено"]}),

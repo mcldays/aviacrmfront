@@ -19,7 +19,7 @@ export default {
         headers: [
           { text: 'Дата', value: 'date', sort: (a,b) => this.compareDates(moment(a, "dd.MM.yyyy").toDate(), moment(b, "dd.MM.yyyy").toDate()) },
           { text: 'Значение', value: 'value' },
-          { text: 'Взаимодействия', value: 'actions_remove', sortable: false },
+          { text: 'Взаимодействия', value: 'actions_remove', sortable: false, align: "center" },
         ],
         fields: [
           new Field("date", "Дата", {

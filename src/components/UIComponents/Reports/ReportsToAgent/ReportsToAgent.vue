@@ -266,7 +266,7 @@ export default class ListCarriers extends Vue {
       }
       this.rate = rt;
     })
-    let model = await this.controller.GetAllTransportations().then((t : any)=>{
+    let model = await this.controller.GetAll().then((t : any)=>{
       this.loading = false
       return t.data
     })

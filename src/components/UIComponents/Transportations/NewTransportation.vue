@@ -196,8 +196,6 @@
               <v-text-field
                   label="Goods Natures Code"
                   disabled
-                  required
-                  :rules="emptyRule"
                   :value="transModel.goodsNatureCode"
                   @change="transModel.goodsNatureCode = $event"
               ></v-text-field>

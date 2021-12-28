@@ -69,6 +69,9 @@ export default {
           return copy
         },
         removeInstance: async (data) => {
+          let roleName = data.items[data.editedIndex].name
+          if(roleName === "Admin" || roleName === "Agent")
+            return
           await RolesController.Remove(data.items[data.editedIndex].id)
         },
         editInstance: async (data) => {

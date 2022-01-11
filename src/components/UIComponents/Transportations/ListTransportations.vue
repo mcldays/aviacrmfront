@@ -203,17 +203,20 @@ export default class ListTransportations extends Vue {
   processData(models : TransportationModel[]){
     let newObject : TransportationModel[] = []
     for (let model of models) {
-      model.dateOfLeave = model.dateOfLeave.slice(0,10)
-      model.dateAN= model.dateAN.slice(0,10)
+      let parsedDateLeave = new Date(model.dateOfLeave)
+      model.dateOfLeave = this.formatDate(parsedDateLeave)
+      let parsedDateAN = new Date(model.dateAN)
+      model.dateAN = this.formatDate(parsedDateAN)
       model.totalSeats = 0
       model.totalWeight = 0
       model.totalValue = 0
       model.fromTo = model.airportFrom.name + " - " + model.airportTo.name
       for (let place of model.places) {
         model.totalSeats += place.seats
-        model.totalWeight += place.totalWeight
         model.totalValue+= place.volume
       }
+      model.totalWeight = Number(model.totalWeight.toFixed(5))
+      model.totalValue= Number(model.totalValue.toFixed(5))
       newObject.push(model);
 
     }
@@ -222,6 +225,22 @@ export default class ListTransportations extends Vue {
   find(findData : any){
 
   }
+
+ formatDate(date : Date){
+   let dd : any = date.getDate();
+   if (dd < 10){
+     dd = '0' + dd;
+   }
+
+   let mm : any= date.getMonth() + 1;
+   if (mm < 10) mm = '0' + mm;
+
+   let yy : any = date.getFullYear();
+   if (yy < 10) yy = '0' + yy;
+
+   return dd + '-' + mm + '-' + yy;
+  }
+
 }
 </script>
 <style scoped>

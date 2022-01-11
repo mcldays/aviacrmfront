@@ -244,7 +244,7 @@
                   hide-details
               ></v-checkbox>
               <v-checkbox
-                  label="DC cargo"
+                  label="DG cargo"
                   color="info"
                   hide-details
                   v-model="transModel.isDG"
@@ -266,6 +266,7 @@
               show-select
               :items="places"
               v-model="selected"
+              @click:row="rowClick"
           >
             <template v-slot:top>
               <v-toolbar
@@ -292,10 +293,11 @@
                 <v-dialog
                     v-model="dialogNewPlace"
                     max-width="500px"
+                    @click:outside="calculateFromEdit(true)"
                 >
                   <v-card>
                     <v-card-title>
-                      <span class="text-h5">Добавить место</span>
+                      <span class="text-h5">Редактировать место</span>
                     </v-card-title>
                     <v-card-text>
                       <v-container>
@@ -340,6 +342,17 @@
                           >
                             <v-text-field
                                 type="number"
+                                v-model.number="place.height"
+                                label="Высота"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                          >
+                            <v-text-field
+                                type="number"
                                 v-model.number="place.width"
                                 label="Ширина"
                             ></v-text-field>
@@ -351,31 +364,13 @@
                           >
                             <v-text-field
                                 type="number"
-                                v-model.number="place.height"
-                                label="Высота"
+                                v-model.number="place.totalWeight"
+                                label="Общий вес"
                             ></v-text-field>
                           </v-col>
                         </v-row>
                       </v-container>
                     </v-card-text>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                          color="blue darken-1"
-                          text
-                          @click="closeSeats"
-                      >
-                        Отменить
-                      </v-btn>
-                      <v-btn
-                          color="blue darken-1"
-                          text
-                          @click="SaveVolume"
-                      >
-                        Сохранить
-                      </v-btn>
-                    </v-card-actions>
                   </v-card>
                 </v-dialog>
               </v-toolbar>
@@ -430,7 +425,12 @@
 
                 </td>
                 <td class="inputTd">
-
+                  <v-text-field
+                      outlined
+                      hide-details
+                      dense
+                      v-model.number="place.totalWeight"
+                  ></v-text-field>
                 </td>
                 <td class="inputTd">
                   <v-btn icon @click="SaveVolume">
@@ -725,6 +725,7 @@ export default class NewTransportation extends Vue {
     {text: 'Обьемный вес', value: 'volumeWeight'},
   ];
 
+
   emailRules = [
     (v:any) => !!v || 'Поле Email должно быть заполнено',
     (v:any) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Неверный формат Email',
@@ -760,23 +761,8 @@ export default class NewTransportation extends Vue {
       let index = this.places.indexOf(placeModel)
       if(index > -1) {
         this.places.splice(index, 1)
-        this.calculateFromDelete(placeModel)
+        this.calculateFromEdit(false)
       }
-    }
-  }
-
-  calculateFromDelete(model : PlaceModel){
-    if(this.places.length === 0){
-      this.totalCount.totalSeats  = 0
-      this.totalCount.totalWeight = 0
-      this.totalCount.totalVolume = 0
-      this.totalCount.volumeWeight = 0
-    }
-    else{
-      this.totalCount.totalSeats -= Number((model.seats).toFixed(3))
-      this.totalCount.totalWeight -= Number((model.totalWeight).toFixed(3))
-      this.totalCount.totalVolume -= Number((model.volumeWeight).toFixed(3))
-      this.totalCount.volumeWeight -= Number((model.volume).toFixed(3))
     }
   }
 
@@ -805,7 +791,6 @@ export default class NewTransportation extends Vue {
 
   }
 
-
   prepareDataForSelect(model:any[]){
     let pushModel : any[] = []
     for (let modelElement of model) {
@@ -819,18 +804,32 @@ export default class NewTransportation extends Vue {
   public SaveVolume(){
     let result = this.calculateVolume(this.place)
     this.places.push(result)
-    this.calculateTotalCount()
+    this.calculateFromEdit(false)
     this.place = new PlaceModel()
     this.newPlaceState = false;
   }
 
-  calculateTotalCount(){
-    this.totalCount.totalSeats += Number((this.place.seats).toFixed(3))
-    this.totalCount.totalWeight += Number((this.place.totalWeight).toFixed(3))
-    this.totalCount.totalVolume += Number((this.place.volumeWeight).toFixed(3))
-    this.totalCount.volumeWeight += Number((this.place.volume).toFixed(3))
-  }
 
+  calculateFromEdit(edit : boolean) {
+    if (edit) {
+      this.place = this.calculateVolume(this.place)
+    }
+    this.totalCount.totalSeats = 0
+    this.totalCount.totalWeight = 0
+    this.totalCount.totalVolume = 0
+    this.totalCount.volumeWeight = 0
+    for (let place of this.places) {
+      this.totalCount.totalSeats += Number((place.seats))
+      this.totalCount.totalWeight += Number((place.totalWeight))
+      this.totalCount.totalVolume += Number((place.volumeWeight))
+      this.totalCount.volumeWeight += Number((place.volume))
+    }
+    this.totalCount.totalSeats = Number((this.totalCount.totalSeats).toFixed(5))
+    this.totalCount.totalWeight = Number((this.totalCount.totalWeight).toFixed(5))
+    this.totalCount.totalVolume = Number((this.totalCount.totalVolume).toFixed(5))
+    this.totalCount.volumeWeight = Number((this.totalCount.volumeWeight).toFixed(5))
+
+  }
 
   addNewRow(){
     this.newPlaceState = true
@@ -838,9 +837,7 @@ export default class NewTransportation extends Vue {
    this.placeRows.push(new PlaceModel())
   }
 
-  newItem(){
-    console.log("NewItem")
-  }
+
 
   public closeSeats() {
     this.dialogNewPlace = !this.dialogNewPlace
@@ -849,10 +846,12 @@ export default class NewTransportation extends Vue {
 
 
   calculateVolume(place : PlaceModel){
+    if(!place.hasOwnProperty("totalWeight")) {
       place.totalWeight = place.seats * place.weight
+    }
       place.volume = Number(((place.length * 0.01) * (place.height* 0.01)
-          * (place.weight * 0.01)).toFixed(3))
-      place.volumeWeight = Number(((place.volume) / 6000).toFixed(3))
+          * (place.weight * 0.01)).toFixed(5))
+      place.volumeWeight = Number(((place.volume) / 6000).toFixed(7))
        return place
   }
   validate () {
@@ -880,7 +879,7 @@ async AddModel(){
     delete this.transModel.fromTo
     delete this.transModel.carrier
     delete this.transModel.totalValue
-    delete this.transModel.totalWeight
+    //delete this.transModel.totalWeight
     delete this.transModel.totalSeats
     delete this.transModel.airportFrom
     delete this.transModel.airportTo
@@ -913,17 +912,25 @@ async AddModel(){
   getDataForEdit(){
     if(Object.keys(this.editModel).length != 0){
       this.editIndex = -1
+      this.editModel.dateAN = this.formatDate(this.editModel.dateAN)
+      this.editModel.dateOfLeave = this.formatDate(this.editModel.dateOfLeave)
+      //this.editModel.dateOfLeave = this.formatDate(this.editModel.dateOfLeave)
       this.transModel = this.editModel
       this.places = this.editModel.places
-      for (let place of this.places) {
-        this.totalCount.totalSeats +=place.seats
-        this.totalCount.totalWeight += place.totalWeight
-        this.totalCount.totalVolume +=place.volumeWeight
-        this.totalCount.volumeWeight +=place.volume
-      }
+      this.calculateFromEdit(false)
     }
   }
 
+  formatDate (date : any) {
+    const [day, month, year] = date.split('-')
+    return `${year}-${month}-${day}`
+  }
+
+  rowClick(value : PlaceModel){
+    this.dialogNewPlace = true
+    this.place = value
+    console.log(value)
+  }
 
 }
 

@@ -17,12 +17,7 @@
             >
               mdi-pencil
             </v-icon>
-            <v-icon
-                small
-                @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
+
           </template>
         </v-data-table>
       </v-card>
@@ -120,15 +115,7 @@
                       Экспорт
                     </v-btn>
                   </v-row>
-                  <v-row>
-                    <v-btn
-                        color="red darken-1"
-                        text
-                        @click="Delete()"
-                    >
-                      Удаление
-                    </v-btn>
-                  </v-row>
+
                   <v-row>
                     <v-btn
                         color="yellow"

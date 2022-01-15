@@ -1,6 +1,29 @@
 <template>
   <div>
     <TableComponent :parent="info"></TableComponent>
+    <v-dialog
+        transition="dialog-bottom-transition"
+        max-width="1000"
+        v-model="personDialog"
+    >
+
+      <template v-slot:default="dialog">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">Редактирование ответственных лиц</span>
+          </v-card-title>
+          <v-card-text>
+            <PersonsComponent ref="innerTable" :chosedPerson="chosedPerson"></PersonsComponent>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+                text
+                @click="dialog.value = false"
+            >Закрыть</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
   </div>
 </template>
 
@@ -11,12 +34,13 @@ import {AgentsController} from "@/controllers/AgentsController"
 import {StationsController} from "@/controllers/StationsController"
 import {Field} from "@/models/Field"
 import TableComponent from "@/components/UIComponents/CRUDTableComponent";
+import PersonsComponent from "@/components/UIComponents/Agents/Persons";
 
 let stations = [];
 
 
 export default {
-  components: {TableComponent},
+  components: {TableComponent, PersonsComponent},
   data () {
     return {
       info: {
@@ -24,6 +48,7 @@ export default {
           { text: 'Название', value: 'name' },
           { text: 'Станция', value: 'station' },
           { text: 'Реквизиты', value: 'requisites' },
+          { text: 'Ответственные лмца', value: 'addit1', sortable: false, align: "center" },
           { text: 'Взаимодействия', value: 'actions', sortable: false, align: "center" },
         ],
         fields: [
@@ -73,8 +98,19 @@ export default {
         addInstance: async (data, agent, editedItem) => {
           let res = await AgentsController.Add(agent);
           return res.data;
-        }
+        },
+        addit1Ico: "mdi-account-details",
+        addit1Callback: async (model) =>{
+          this.chosedPerson = {id: model.id}
+          this.personDialog = true;
+
+          if(this.$refs.innerTable)
+            await this.$refs.innerTable.$refs.Table.initialize()
+            // await this.$refs.innerTable.$data.info.initialize(this.$refs.innerTable.$refs.Table.$data)
+        },
       },
+      personDialog: false,
+      chosedPerson: null,
     }
   },
   methods: {

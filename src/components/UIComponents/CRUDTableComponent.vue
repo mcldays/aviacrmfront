@@ -235,6 +235,7 @@ export default {
   },
   methods: {
     async initialize () {
+      this.items = [];
       this.loading = true
 
       this.defaultItem = Object.fromEntries(this.parent.fields.map(t=>[t.key, t.defaultValue]))

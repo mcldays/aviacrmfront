@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableComponent :parent="info"></TableComponent>
+    <TableComponent ref="Table" :parent="info"></TableComponent>
   </div>
 </template>
 
@@ -13,7 +13,11 @@ import TableComponent from "@/components/UIComponents/CRUDTableComponent";
 let agents = [];
 
 export default {
-  name: "Persons",
+  props: {
+    chosedPerson: {
+      default: null
+    }
+  },
   components: {TableComponent},
   data(){
     return{
@@ -27,7 +31,7 @@ export default {
         ],
         fields: [
           new Field("name", "Имя", {rules: [t=>!!t|| "Имя должно быть введено"]}),
-          new Field("agent","Агент", {fieldType: "select", fieldParams: {items: this.getAgents, text: "name", value: "id"}}),
+          new Field("agent","Агент", {fieldType: "select", defaultValue: this.chosedPerson != null ? this.chosedPerson.id : undefined, fieldParams: {items: this.getAgents, text: "name", value: "id"}}),
           new Field("phone","Телефон"),
           new Field("email","Эл. почта"),
         ],
@@ -36,6 +40,9 @@ export default {
         initialize: async (data) =>  {
           agents = (await AgentsController.GetAll()).data;
           data.items = (await PersonsController.GetAll()).data
+          if(this.chosedPerson != null){
+            data.items = data.items.filter(t=>t["agent"] === this.chosedPerson.id)
+          }
         },
         toTableView: (data, model) => {
           let agent = agents.find(t=>t.id === model.agent)
@@ -62,6 +69,8 @@ export default {
   },
   methods:{
     getAgents(){
+      if(this.chosedPerson != null)
+        return agents.filter(t=>t.id === this.chosedPerson.id);
       return agents;
     }
   },

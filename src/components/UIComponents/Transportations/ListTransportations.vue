@@ -70,7 +70,6 @@
       </v-card>
       <v-dialog
           v-bind:value="this.modalVision"
-          persistent
           transition="dialog-bottom-transition"
           max-width="1500px"
           scrollable

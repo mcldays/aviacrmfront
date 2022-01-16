@@ -849,9 +849,9 @@ export default class NewTransportation extends Vue {
     if(!place.hasOwnProperty("totalWeight")) {
       place.totalWeight = place.seats * place.weight
     }
-      place.volume = Number(((place.length * 0.01) * (place.height* 0.01)
-          * (place.weight * 0.01)).toFixed(5))
-      place.volumeWeight = Number(((place.volume) / 6000).toFixed(7))
+      place.volume = Number(((place.length) * (place.height)
+          * (place.weight)).toFixed(5))
+      place.volumeWeight = Number((((place.volume) / 6000)*place.seats).toFixed(5))
        return place
   }
   validate () {

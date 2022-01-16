@@ -214,6 +214,7 @@ export default class ListTransportations extends Vue {
       for (let place of model.places) {
         model.totalSeats += place.seats
         model.totalValue+= place.volume
+        model.totalWeight+=place.totalWeight
       }
       model.totalWeight = Number(model.totalWeight.toFixed(5))
       model.totalValue= Number(model.totalValue.toFixed(5))

@@ -812,7 +812,7 @@ export default class NewTransportation extends Vue {
 
   calculateFromEdit(edit : boolean) {
     if (edit) {
-      this.place = this.calculateVolume(this.place)
+      this.place = this.calculateVolume(this.place, true)
     }
     this.totalCount.totalSeats = 0
     this.totalCount.totalWeight = 0
@@ -845,13 +845,16 @@ export default class NewTransportation extends Vue {
   }
 
 
-  calculateVolume(place : PlaceModel){
+  calculateVolume(place : PlaceModel, placeEditFlag : boolean = false){
     if(!place.hasOwnProperty("totalWeight")) {
       place.totalWeight = place.seats * place.weight
     }
-    let volume = ((place.length * 0.01) * (place.height * 0.01) * (place.width * 0.01)).toFixed(5)
-    place.volume = Number(volume)*place.seats
-      place.volumeWeight = (((place.height * place.width * place.length)/6000)*place.seats)
+    if(placeEditFlag){
+      place.totalWeight = place.seats * place.weight
+    }
+    let volume = Number(((place.length * 0.01) * (place.height * 0.01) * (place.width * 0.01)).toFixed(5))
+    place.volume = Number((volume*place.seats).toFixed(5))
+      place.volumeWeight = Number((((place.height * place.width * place.length)/6000)*place.seats).toFixed(5))
       //place.volumeWeight = Number((((place.volume) / 6000)*place.seats).toFixed(5))
        return place
   }

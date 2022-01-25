@@ -72,6 +72,7 @@
           v-bind:value="this.modalVision"
           transition="dialog-bottom-transition"
           max-width="1500px"
+          @click:outside="refresh"
           scrollable
       >
         <keep-alive>

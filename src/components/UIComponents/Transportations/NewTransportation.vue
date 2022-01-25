@@ -717,8 +717,8 @@ export default class NewTransportation extends Vue {
       value: 'seats',
     },
     {text: 'Вес к.г', value: 'weight'},
-    {text: 'Ширина, см', value: 'width'},
     {text: 'Длинна, см', value: 'length'},
+    {text: 'Ширина, см', value: 'width'},
     {text: 'Высота, см', value: 'height'},
     {text: 'Обьем', value: 'volume'},
     {text: 'Общий вес', value: 'totalWeight'},
@@ -776,7 +776,7 @@ export default class NewTransportation extends Vue {
             id : modElement.id
           })
       }
-      else{
+      if(modElement.isDestination){
         airportsTo.push({
           name: modElement.name,
           id : modElement.id
@@ -849,9 +849,10 @@ export default class NewTransportation extends Vue {
     if(!place.hasOwnProperty("totalWeight")) {
       place.totalWeight = place.seats * place.weight
     }
-      place.volume = Number(((place.length) * (place.height)
-          * (place.weight)).toFixed(5))
-      place.volumeWeight = Number((((place.volume) / 6000)*place.seats).toFixed(5))
+    let volume = ((place.length * 0.01) * (place.height * 0.01) * (place.width * 0.01)).toFixed(5)
+    place.volume = Number(volume)*place.seats
+      place.volumeWeight = (((place.height * place.width * place.length)/6000)*place.seats)
+      //place.volumeWeight = Number((((place.volume) / 6000)*place.seats).toFixed(5))
        return place
   }
   validate () {

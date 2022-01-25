@@ -109,6 +109,7 @@ import {PlaceModel} from "@/models/transportations/PlaceModel";
 })
 export default class ListTransportations extends Vue {
   private finderVision : boolean = false;
+  private dialogDelete : boolean = false
   private modalVision : boolean = false;
   private emergencyFilterState : boolean = false
   private componentKey : number = 0
@@ -147,9 +148,6 @@ export default class ListTransportations extends Vue {
   await this.getData()
   }
 
-
-
-
   async getData(){
     let model = await this.controller.GetAll().then((t : any)=>{
       this.loading = false
@@ -179,11 +177,14 @@ export default class ListTransportations extends Vue {
   }
 
   deleteItem(item :any){
-    this.controller.RemoveTransportationFromId(item.id)
-    let findItem = this.items.find(t=>t.id == item.id)
-    let concatIndex =  this.items.indexOf(findItem)
-    this.items.splice(concatIndex, 1)
-    console.log(this.items)
+   let result =  confirm("Вы действительно хотите удалить авианакладную номер " + item.number)
+    if(result){
+      this.controller.RemoveTransportationFromId(item.id)
+      let findItem = this.items.find(t=>t.id == item.id)
+      let concatIndex =  this.items.indexOf(findItem)
+      this.items.splice(concatIndex, 1)
+      console.log(this.items)
+    }
   }
   searchEmergency(){
     this.emergencyFilterState = !this.emergencyFilterState

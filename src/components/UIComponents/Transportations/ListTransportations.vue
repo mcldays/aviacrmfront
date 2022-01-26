@@ -72,12 +72,14 @@
           v-bind:value="this.modalVision"
           transition="dialog-bottom-transition"
           max-width="1500px"
+          :key="refreshValue"
           @click:outside="refresh"
           scrollable
       >
         <keep-alive>
       <NewTransportation
           :edit-model="editModel"
+          v-if="this.modalVision"
           :componentKey="this.newTransKey"
           @successAdd = "refresh"
           @closed="refresh"
@@ -121,6 +123,7 @@ export default class ListTransportations extends Vue {
   private controller  = new TransportationController()
   private editModel = {} as TransportationModel
   private readTransModel : TransportationReadModel[] = []
+  private refreshValue : number = 0
 
   private headers : object = [
     {
@@ -170,6 +173,8 @@ export default class ListTransportations extends Vue {
     this.modalVision = !this.modalVision;
   }
   refresh(){
+    this.editModel = new TransportationModel()
+    this.refreshValue ++
     this.modalVision = false
     this.newTransKey += 1
     this.items = []

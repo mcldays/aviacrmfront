@@ -725,6 +725,9 @@ export default class NewTransportation extends Vue {
     {text: 'Обьемный вес', value: 'volumeWeight'},
   ];
 
+  beforeDestroy(){
+    this.clean()
+  }
 
   emailRules = [
     (v:any) => !!v || 'Поле Email должно быть заполнено',

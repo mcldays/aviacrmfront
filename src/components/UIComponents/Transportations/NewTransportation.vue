@@ -26,7 +26,7 @@
           <v-btn
               dark
               text
-              @click="this.AddModel"
+              @click="this.validate"
           >
             Сохранить
           </v-btn>

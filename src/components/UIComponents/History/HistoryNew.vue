@@ -134,21 +134,21 @@
 
 
       <template v-slot:item.changes="{ item }" >
-        <div
-            class="delete-group"
-            v-if="item.type.id === 2">
-          <v-chip
-              class="custom-v-chip"
-              :color="item.type.color"
-              dark
-          >
-            {{item.type.name}}
-          </v-chip>
-          <span class="blockName" >{{item.blockName}}</span>
-        </div>
+<!--        <div-->
+<!--            class="delete-group"-->
+<!--            v-if="item.type.id === 2">-->
+<!--          <v-chip-->
+<!--              class="custom-v-chip"-->
+<!--              :color="item.type.color"-->
+<!--              dark-->
+<!--          >-->
+<!--            {{item.type.name}}-->
+<!--          </v-chip>-->
+<!--          <span class="blockName" >{{item.blockName}}</span>-->
+<!--        </div>-->
         <v-expansion-panels
             accordion
-            v-else
+
         >
           <v-expansion-panel
 

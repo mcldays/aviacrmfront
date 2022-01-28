@@ -402,7 +402,7 @@
                       outlined
                       hide-details
                       dense
-                      v-model.number="place.width"
+                      v-model.number="place.length"
                   ></v-text-field>
                 </td>
                 <td class="inputTd">
@@ -410,7 +410,7 @@
                       outlined
                       hide-details
                       dense
-                      v-model.number="place.length"
+                      v-model.number="place.width"
                   ></v-text-field>
                 </td>
                 <td class="inputTd">
